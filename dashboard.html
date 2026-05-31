@@ -92,7 +92,21 @@
     <div id="user-avatar" style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#D4AF37,#F7C948);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#000"></div>
     <button onclick="handleLogout()" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);border-radius:8px;color:rgba(255,255,255,0.45);font-size:12px;padding:7px 16px;cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.2s" onmouseover="this.style.borderColor='rgba(212,175,55,0.35)';this.style.color='#D4AF37'" onmouseout="this.style.borderColor='rgba(255,255,255,0.09)';this.style.color='rgba(255,255,255,0.45)'">Sign Out</button>
   </div>
+
+  <!-- Hamburger -->
+  <div class="hamburger" id="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></div>
 </nav>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobile-menu">
+  <div onclick="toggleMenu()" style="position:absolute;top:20px;right:20px;cursor:pointer;font-size:22px;color:rgba(255,255,255,0.4)">✕</div>
+  <a href="dashboard.html" onclick="toggleMenu()">Dashboard</a>
+  <a href="practice.html" onclick="toggleMenu()">Practice</a>
+  <a href="progress.html" onclick="toggleMenu()">Progress</a>
+  <a href="nirvo-chat.html" onclick="toggleMenu()">Chat with NIRVO</a>
+  <div style="height:1px;width:50px;background:rgba(212,175,55,0.25)"></div>
+  <a href="auth.html" onclick="toggleMenu()"><button style="background:linear-gradient(135deg,#D4AF37,#F7C948);border:none;border-radius:10px;color:#000;font-size:15px;font-weight:600;padding:13px 32px;cursor:pointer;font-family:inherit">Get Started Free</button></a>
+</div>
 
 <!-- MAIN -->
 <div style="max-width:1240px;margin:0 auto;padding:40px 52px;position:relative;z-index:1" class="dash-main">
