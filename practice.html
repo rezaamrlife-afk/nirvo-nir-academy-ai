@@ -169,12 +169,17 @@
   });
 
   // Auth check
-  sb.auth.getSession().then(({ data: { session } }) => {
+  async function initAuth() {
+    let { data: { session } } = await sb.auth.getSession();
+    if (!session) {
+      try { const r = await sb.auth.refreshSession(); session = r.data.session; } catch(e) {}
+    }
     if (!session) {
       const saved = localStorage.getItem('nirvo_user_email');
-      if (!saved) window.location.href = 'auth.html';
+      if (!saved) { window.location.href = 'auth.html'; return; }
     }
-  });
+  }
+  initAuth();
 
   // ── State ──
   let isListening = false;
