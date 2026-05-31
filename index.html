@@ -693,55 +693,19 @@
     waveBox.appendChild(bar);
   });
 
-  // Mic state
+  // Mic state - visual only on landing page
   let isListening = false;
-  let recognition = null;
 
   function toggleListen() {
+    isListening = !isListening;
+    updateMicUI(isListening);
+    // Auto stop after 3 seconds on landing page
     if (isListening) {
-      stopListen();
-    } else {
-      startListen();
-    }
-  }
-
-  function startListen() {
-    if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-      alert('Please use Chrome for voice input.');
-      return;
-    }
-    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-    recognition = new SR();
-    recognition.lang = 'en-US';
-    recognition.continuous = true;
-    recognition.interimResults = true;
-
-    recognition.onstart = () => {
-      isListening = true;
-      updateMicUI(true);
-    };
-
-    recognition.onend = () => {
-      if (isListening) {
+      setTimeout(() => {
         isListening = false;
         updateMicUI(false);
-      }
-    };
-
-    recognition.onerror = () => {
-      isListening = false;
-      updateMicUI(false);
-    };
-
-    try { recognition.start(); } catch(e) {}
-  }
-
-  function stopListen() {
-    isListening = false;
-    if (recognition) {
-      try { recognition.stop(); } catch(e) {}
+      }, 3000);
     }
-    updateMicUI(false);
   }
 
   function updateMicUI(on) {
@@ -750,7 +714,6 @@
     const label = document.getElementById('listenLabel');
     const bars  = waveBox.querySelectorAll('.wave-bar');
     const heights = [8,14,20,28,16,36,20,28,16,14,8,20,28,14,8,20,10,24,18];
-
     if (on) {
       btn.style.background = 'linear-gradient(135deg,#D4AF37,#F7C948)';
       btn.style.border = 'none';
@@ -758,10 +721,7 @@
       label.style.color = '#D4AF37';
       label.textContent = 'Listening...';
       waveBox.style.opacity = '1';
-      bars.forEach((b, i) => {
-        b.style.height = heights[i] + 'px';
-        b.classList.add('wave-active');
-      });
+      bars.forEach((b, i) => { b.style.height = heights[i]+'px'; b.classList.add('wave-active'); });
     } else {
       btn.style.background = 'rgba(255,255,255,0.05)';
       btn.style.border = '1px solid rgba(212,175,55,0.28)';
@@ -769,10 +729,7 @@
       label.style.color = 'rgba(255,255,255,0.3)';
       label.textContent = 'Tap to speak';
       waveBox.style.opacity = '0.35';
-      bars.forEach(b => {
-        b.style.height = '5px';
-        b.classList.remove('wave-active');
-      });
+      bars.forEach(b => { b.style.height = '5px'; b.classList.remove('wave-active'); });
     }
   }
 
