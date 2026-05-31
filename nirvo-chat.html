@@ -262,21 +262,26 @@ waveHeights.forEach((h,i) => {
 });
 
 // ── Auth ──
-sb.auth.getSession().then(({ data: { session } }) => {
+async function initAuth() {
+  let { data: { session } } = await sb.auth.getSession();
   if (!session) {
-    // Allow guest access for testing
-    userName = 'Student';
-    userInitial = 'S';
-    document.getElementById('user-avatar').textContent = 'S';
-    startGreeting();
-    return;
+    try { const r = await sb.auth.refreshSession(); session = r.data.session; } catch(e) {}
   }
-  const user = session.user;
-  userName = user.user_metadata?.first_name || user.email.split('@')[0];
+  if (session) {
+    const user = session.user;
+    userName = user.user_metadata?.first_name || user.email.split('@')[0];
+    localStorage.setItem('nirvo_user_name', userName);
+    localStorage.setItem('nirvo_user_email', user.email);
+  } else {
+    const saved = localStorage.getItem('nirvo_user_name');
+    const savedEmail = localStorage.getItem('nirvo_user_email');
+    userName = saved || (savedEmail ? savedEmail.split('@')[0] : 'Student');
+  }
   userInitial = userName[0].toUpperCase();
   document.getElementById('user-avatar').textContent = userInitial;
   startGreeting();
-});
+}
+initAuth();
 
 async function handleLogout() {
   await sb.auth.signOut();
@@ -477,11 +482,18 @@ function toggleMic() {
 }
 
 function startListening() {
+  // Kill any existing recognition first
+  if (recognition) {
+    try { recognition.abort(); } catch(e) {}
+    recognition = null;
+  }
+
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   recognition = new SR();
   recognition.lang = 'en-US';
   recognition.continuous = false;
   recognition.interimResults = false;
+  recognition.maxAlternatives = 1;
 
   recognition.onstart = () => {
     isListening = true;
@@ -493,7 +505,9 @@ function startListening() {
   recognition.onresult = (e) => {
     const text = e.results[0][0].transcript;
     document.getElementById('chat-input').value = text;
+    // Reset everything cleanly
     isListening = false;
+    recognition = null;
     document.getElementById('mic-btn').className = 'mic-btn idle';
     document.getElementById('chat-input').placeholder = 'Type your message or press the mic to speak...';
     setTimeout(() => sendMessage(), 300);
@@ -502,6 +516,7 @@ function startListening() {
   recognition.onerror = (e) => {
     console.error('Speech error:', e.error);
     isListening = false;
+    recognition = null;
     document.getElementById('mic-btn').className = 'mic-btn idle';
     document.getElementById('chat-input').placeholder = 'Type your message or press the mic to speak...';
   };
@@ -509,6 +524,7 @@ function startListening() {
   recognition.onend = () => {
     if (isListening) {
       isListening = false;
+      recognition = null;
       document.getElementById('mic-btn').className = 'mic-btn idle';
       document.getElementById('chat-input').placeholder = 'Type your message or press the mic to speak...';
     }
@@ -518,13 +534,17 @@ function startListening() {
     recognition.start();
   } catch(e) {
     console.error('Recognition start error:', e);
+    isListening = false;
+    recognition = null;
+    document.getElementById('mic-btn').className = 'mic-btn idle';
   }
 }
 
 function stopListening() {
   isListening = false;
   if (recognition) {
-    try { recognition.stop(); } catch(e) {}
+    try { recognition.abort(); } catch(e) {}
+    recognition = null;
   }
   document.getElementById('mic-btn').className = 'mic-btn idle';
   document.getElementById('chat-input').placeholder = 'Type your message or press the mic to speak...';
@@ -533,19 +553,21 @@ function stopListening() {
 // ── Avatar state ──
 function setNirvoState(state) {
   const statusEl = document.getElementById('nirvo-status');
-  const eyeL = document.getElementById('eye-l');
-  const eyeR = document.getElementById('eye-r');
+  const img = document.getElementById('nirvo-img');
+  const glow = document.getElementById('avatar-glow');
+
   if (state === 'thinking') {
-    statusEl.textContent = 'Thinking...';
-    eyeL.style.boxShadow = eyeR.style.boxShadow = '0 0 6px rgba(212,175,55,0.4)';
+    if (statusEl) statusEl.textContent = 'Thinking...';
+    if (img) img.style.filter = 'drop-shadow(0 0 20px rgba(212,175,55,0.4)) brightness(1.05)';
+    if (glow) glow.style.background = 'radial-gradient(circle,rgba(212,175,55,0.2) 0%,transparent 70%)';
   } else if (state === 'speaking') {
-    statusEl.textContent = 'Speaking...';
-    document.getElementById('avatar-body').classList.add('speaking');
-    eyeL.style.boxShadow = eyeR.style.boxShadow = '0 0 14px rgba(212,175,55,0.9)';
+    if (statusEl) statusEl.textContent = 'Speaking...';
+    if (img) img.style.filter = 'drop-shadow(0 0 32px rgba(212,175,55,0.7)) brightness(1.12)';
+    if (glow) glow.style.background = 'radial-gradient(circle,rgba(212,175,55,0.35) 0%,rgba(232,160,160,0.1) 50%,transparent 70%)';
   } else {
-    statusEl.textContent = 'Ready to help you';
-    document.getElementById('avatar-body').classList.remove('speaking');
-    eyeL.style.boxShadow = eyeR.style.boxShadow = '0 0 8px rgba(212,175,55,0.7)';
+    if (statusEl) statusEl.textContent = 'Ready to help you';
+    if (img) img.style.filter = 'drop-shadow(0 0 16px rgba(212,175,55,0.25))';
+    if (glow) glow.style.background = 'radial-gradient(circle,rgba(212,175,55,0.12) 0%,transparent 70%)';
   }
 }
 
