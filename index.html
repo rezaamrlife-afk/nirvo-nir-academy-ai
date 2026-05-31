@@ -791,6 +791,16 @@
     document.querySelectorAll('.topic-pill').forEach(p => p.classList.remove('active'));
     el.classList.add('active');
   }
+
+  // Hamburger menu toggle
+  function toggleMenu() {
+    const h = document.getElementById('hamburger');
+    const m = document.getElementById('mobile-menu');
+    if (!h || !m) return;
+    h.classList.toggle('open');
+    m.classList.toggle('open');
+    document.body.style.overflow = m.classList.contains('open') ? 'hidden' : '';
+  }
 </script>
 
 </body>
