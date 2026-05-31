@@ -380,23 +380,51 @@ function speak(text) {
   isSpeaking = true;
   setNirvoWave(true);
 
-  const utterance = new SpeechSynthesisUtterance(text);
-  utterance.rate = 0.92;
-  utterance.pitch = 1.1;
-  utterance.volume = 1;
+  function doSpeak() {
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.rate = 0.9;
+    utterance.pitch = 1.15;
+    utterance.volume = 1;
 
-  // Pick best female voice
+    const voices = window.speechSynthesis.getVoices();
+    const femaleVoice = voices.find(v =>
+      v.name.includes('Samantha') ||
+      v.name.includes('Google US English') ||
+      v.name.includes('Microsoft Zira') ||
+      v.name.includes('Karen') ||
+      v.name.includes('Moira') ||
+      (v.lang === 'en-US' && v.name.toLowerCase().includes('female'))
+    ) || voices.find(v => v.lang === 'en-US') || voices.find(v => v.lang.startsWith('en')) || voices[0];
+
+    if (femaleVoice) utterance.voice = femaleVoice;
+
+    utterance.onend = () => {
+      isSpeaking = false;
+      setNirvoState('idle');
+      setNirvoWave(false);
+    };
+    utterance.onerror = () => {
+      isSpeaking = false;
+      setNirvoState('idle');
+      setNirvoWave(false);
+    };
+    window.speechSynthesis.speak(utterance);
+  }
+
+  // Wait for voices if not loaded yet
   const voices = window.speechSynthesis.getVoices();
-  const femaleVoice = voices.find(v =>
-    (v.name.includes('Samantha') || v.name.includes('Google US English') ||
-     v.name.includes('Microsoft Zira') || v.name.includes('Female') ||
-     v.name.toLowerCase().includes('female'))
-  ) || voices.find(v => v.lang === 'en-US') || voices[0];
-
-  if (femaleVoice) utterance.voice = femaleVoice;
-  utterance.onend = () => { isSpeaking = false; setNirvoState('idle'); setNirvoWave(false); };
-  utterance.onerror = () => { isSpeaking = false; setNirvoState('idle'); setNirvoWave(false); };
-  window.speechSynthesis.speak(utterance);
+  if (voices.length > 0) {
+    doSpeak();
+  } else {
+    window.speechSynthesis.onvoiceschanged = () => {
+      window.speechSynthesis.onvoiceschanged = null;
+      doSpeak();
+    };
+    // Fallback timeout
+    setTimeout(() => {
+      if (isSpeaking) doSpeak();
+    }, 500);
+  }
 }
 
 function toggleTTS() {
@@ -424,7 +452,11 @@ function toggleMic() {
     alert('Please use Chrome for voice input.');
     return;
   }
-  isListening ? stopListening() : startListening();
+  if (isListening) {
+    stopListening();
+  } else {
+    startListening();
+  }
 }
 
 function startListening() {
@@ -444,18 +476,39 @@ function startListening() {
   recognition.onresult = (e) => {
     const text = e.results[0][0].transcript;
     document.getElementById('chat-input').value = text;
-    stopListening();
+    isListening = false;
+    document.getElementById('mic-btn').className = 'mic-btn idle';
+    document.getElementById('chat-input').placeholder = 'Type your message or press the mic to speak...';
     setTimeout(() => sendMessage(), 300);
   };
 
-  recognition.onerror = () => stopListening();
-  recognition.onend = () => stopListening();
-  recognition.start();
+  recognition.onerror = (e) => {
+    console.error('Speech error:', e.error);
+    isListening = false;
+    document.getElementById('mic-btn').className = 'mic-btn idle';
+    document.getElementById('chat-input').placeholder = 'Type your message or press the mic to speak...';
+  };
+
+  recognition.onend = () => {
+    if (isListening) {
+      isListening = false;
+      document.getElementById('mic-btn').className = 'mic-btn idle';
+      document.getElementById('chat-input').placeholder = 'Type your message or press the mic to speak...';
+    }
+  };
+
+  try {
+    recognition.start();
+  } catch(e) {
+    console.error('Recognition start error:', e);
+  }
 }
 
 function stopListening() {
   isListening = false;
-  if (recognition) recognition.stop();
+  if (recognition) {
+    try { recognition.stop(); } catch(e) {}
+  }
   document.getElementById('mic-btn').className = 'mic-btn idle';
   document.getElementById('chat-input').placeholder = 'Type your message or press the mic to speak...';
 }
@@ -546,7 +599,13 @@ function clearChat() {
 }
 
 // Load voices on ready
-window.speechSynthesis.onvoiceschanged = () => { window.speechSynthesis.getVoices(); };
+if (window.speechSynthesis.getVoices().length === 0) {
+  window.speechSynthesis.onvoiceschanged = () => {
+    window.speechSynthesis.getVoices();
+  };
+} else {
+  window.speechSynthesis.getVoices();
+}
 </script>
 
 </body>
