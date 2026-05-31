@@ -254,11 +254,8 @@ waveHeights.forEach((h,i) => {
 });
 
 // ── Auth ──
-async function initAuth() {
-  let { data: { session } } = await sb.auth.getSession();
-  if (!session) {
-    try { const r = await sb.auth.refreshSession(); session = r.data.session; } catch(e) {}
-  }
+let greetingStarted = false;
+sb.auth.onAuthStateChange((event, session) => {
   if (session) {
     const user = session.user;
     userName = user.user_metadata?.first_name || user.email.split('@')[0];
@@ -271,9 +268,11 @@ async function initAuth() {
   }
   userInitial = userName[0].toUpperCase();
   document.getElementById('user-avatar').textContent = userInitial;
-  startGreeting();
-}
-initAuth();
+  if (!greetingStarted) {
+    greetingStarted = true;
+    startGreeting();
+  }
+});
 
 async function handleLogout() {
   await sb.auth.signOut();
