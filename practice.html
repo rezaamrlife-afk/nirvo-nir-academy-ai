@@ -66,7 +66,19 @@
   .mobile-menu a { font-size:26px;color:rgba(255,255,255,0.75);text-decoration:none;font-family:'Cormorant Garamond',serif;font-weight:600;letter-spacing:0.04em;transition:color 0.2s; }
   .mobile-menu a:hover { color:#D4AF37; }
   .mobile-close { position:absolute;top:24px;right:24px;cursor:pointer;font-size:22px;color:rgba(255,255,255,0.4);width:40px;height:40px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:rgba(255,255,255,0.05); }
-  @media (max-width:768px) { .hamburger { display:flex !important; } }
+  @media (max-width:768px) {
+    .hamburger { display:flex !important; }
+    nav { padding:12px 16px !important; }
+    .practice-main { padding:24px 16px !important; }
+    .practice-grid { grid-template-columns:1fr !important; }
+    .score-cards-grid { grid-template-columns:repeat(2,1fr) !important; }
+    .topic-pills-wrap { gap:6px !important; }
+    h1 { font-size:28px !important; }
+  }
+  @media (max-width:480px) {
+    .score-cards-grid { grid-template-columns:1fr 1fr !important; }
+    .topic-pill { font-size:11px !important; padding:6px 10px !important; }
+  }
 
 </style>
 </head>
