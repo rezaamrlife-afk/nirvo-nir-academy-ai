@@ -64,7 +64,7 @@
 </nav>
 
 <!-- MAIN -->
-<div style="max-width:900px;margin:0 auto;padding:40px 24px;position:relative;z-index:1">
+<div style="max-width:900px;margin:0 auto;padding:40px 24px;position:relative;z-index:1" class="practice-main">
 
   <!-- Header -->
   <div style="text-align:center;margin-bottom:36px;animation:fadeUp 0.6s ease forwards">
@@ -81,7 +81,7 @@
   <!-- Topic selector -->
   <div class="card" style="margin-bottom:20px;animation:fadeUp 0.6s ease 0.1s forwards;opacity:0">
     <div style="font-size:10px;color:rgba(255,255,255,0.3);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:14px">Choose Topic</div>
-    <div style="display:flex;flex-wrap:wrap;gap:8px" id="topic-pills">
+    <div style="display:flex;flex-wrap:wrap;gap:8px" id="topic-pills" class="topic-pills-wrap">
       <div class="topic-pill active" onclick="setTopic(this,'Daily Life')">🏠 Daily Life</div>
       <div class="topic-pill" onclick="setTopic(this,'Business')">💼 Business</div>
       <div class="topic-pill" onclick="setTopic(this,'Education')">📚 Education</div>
@@ -92,7 +92,7 @@
   </div>
 
   <!-- Conversation + Mic area -->
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px" class="practice-grid">
 
     <!-- LEFT: Mic + Wave -->
     <div class="card" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;min-height:260px;animation:fadeUp 0.6s ease 0.2s forwards;opacity:0">
@@ -134,7 +134,7 @@
   <div id="feedback-section" style="display:none;animation:fadeUp 0.6s ease forwards">
 
     <!-- Score cards -->
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px" id="score-cards"></div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px" id="score-cards" class="score-cards-grid"></div>
 
     <!-- Detailed feedback -->
     <div class="card">
