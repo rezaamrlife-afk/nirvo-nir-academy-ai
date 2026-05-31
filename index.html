@@ -212,7 +212,7 @@
     <span class="nav-link">About</span>
   </div>
   <!-- CTA -->
-  <div style="display:flex;gap:10px;align-items:center">
+  <div style="display:flex;gap:10px;align-items:center" class="nav-cta">
     <a href="auth.html" id="nav-login" style="color:rgba(255,255,255,0.45);text-decoration:none;font-size:13px;letter-spacing:0.04em;display:none">Log in</a>
     <a href="dashboard.html" id="nav-dashboard" style="color:#D4AF37;text-decoration:none;font-size:13px;letter-spacing:0.04em;display:none">Dashboard →</a>
     <a href="auth.html" style="text-decoration:none" class="nav-links"><button class="btn-gold" style="padding:9px 22px;font-size:13px">Get Started Free</button></a>
@@ -339,13 +339,16 @@
   <div class="anim-fade-up d4 hero-right" style="padding-left:36px;display:flex;flex-direction:column;gap:15px">
 
     <!-- Quote with blush accent -->
-    <div style="margin-bottom:6px">
+    <div class="score-quote" style="margin-bottom:6px">
       <span style="font-size:48px;color:rgba(232,160,160,0.25);font-family:serif;line-height:0.5;display:block">"</span>
       <p style="font-family:'Cormorant Garamond',serif;font-size:25px;font-weight:600;line-height:1.35;margin:4px 0">
         Speak Clearly.<br>Speak Confidently.<br>
         <span style="color:#E8A0A0">Speak Powerfully.</span>
       </p>
     </div>
+
+    <!-- Score Rings — right-cards wrapper for mobile CSS alignment -->
+    <div class="right-cards">
 
     <!-- Score Rings -->
     <div class="card-dark" style="padding:20px 24px">
@@ -440,10 +443,10 @@
       </div>
     </div>
 
-  </div>
-</div>
+    </div><!-- end right-cards -->
 
-<!-- ═══════════════════════════════ FEATURES SECTION ═══════════════════════════════ -->
+  </div>
+</div> ═══════════════════════════════ -->
 <section id="features" style="padding:90px 60px;max-width:1440px;margin:0 auto;position:relative;z-index:1" class="features-grid">
 
   <!-- Section Header -->
