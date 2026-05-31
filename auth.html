@@ -222,9 +222,17 @@
 </div>
 
 <script>
-  // ── Supabase init ──
+  // ── Supabase init with persistent session ──
   const { createClient } = supabase;
-  const sb = createClient('https://liixgxwpcxusocpixadt.supabase.co', 'sb_publishable_XCepI_R9piNQUZSlIcyDiw_ZFaxqzvd');
+  const sb = createClient('https://liixgxwpcxusocpixadt.supabase.co', 'sb_publishable_XCepI_R9piNQUZSlIcyDiw_ZFaxqzvd', {
+    auth: {
+      persistSession: true,
+      storageKey: 'nirvo-auth',
+      storage: window.localStorage,
+      autoRefreshToken: true,
+      detectSessionInUrl: true
+    }
+  });
 
   // ── Helpers ──
   function showError(msg) {
