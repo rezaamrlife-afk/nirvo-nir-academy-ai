@@ -158,7 +158,15 @@
 <script>
   const GROQ_KEY = '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';
   const { createClient } = supabase;
-  const sb = createClient('https://liixgxwpcxusocpixadt.supabase.co', 'sb_publishable_XCepI_R9piNQUZSlIcyDiw_ZFaxqzvd');
+  const sb = createClient('https://liixgxwpcxusocpixadt.supabase.co', 'sb_publishable_XCepI_R9piNQUZSlIcyDiw_ZFaxqzvd', {
+    auth: {
+      persistSession: true,
+      storageKey: 'nirvo-auth',
+      storage: window.localStorage,
+      autoRefreshToken: true,
+      detectSessionInUrl: true
+    }
+  });
 
   // Auth check
   sb.auth.getSession().then(({ data: { session } }) => {
