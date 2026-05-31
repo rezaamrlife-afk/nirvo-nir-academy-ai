@@ -161,17 +161,14 @@
   const sb = createClient('https://liixgxwpcxusocpixadt.supabase.co', 'sb_publishable_XCepI_R9piNQUZSlIcyDiw_ZFaxqzvd');
 
   // Auth check
-  async function initAuth() {
-    let { data: { session } } = await sb.auth.getSession();
-    if (!session) {
-      try { const r = await sb.auth.refreshSession(); session = r.data.session; } catch(e) {}
-    }
-    if (!session) {
+  sb.auth.onAuthStateChange((event, session) => {
+    if (event === 'SIGNED_OUT') {
+      window.location.href = 'auth.html';
+    } else if (!session) {
       const saved = localStorage.getItem('nirvo_user_email');
-      if (!saved) { window.location.href = 'auth.html'; return; }
+      if (!saved) window.location.href = 'auth.html';
     }
-  }
-  initAuth();
+  });
 
   // ── State ──
   let isListening = false;
