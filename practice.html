@@ -228,6 +228,7 @@
   let recognition = null;
   let fullTranscript = '';
   let currentTopic = 'Daily Life';
+  let sessionStart = Date.now();
 
   // ── Build wave bars ──
   const waveHeights = [6,10,16,22,14,30,22,28,16,12,6,18,24,12,6,18,10,20,14];
@@ -369,6 +370,9 @@ Be specific, constructive, and encouraging. Base feedback on the actual words us
       const jsonMatch = raw.match(/\{[\s\S]*\}/);
       const result = JSON.parse(jsonMatch[0]);
 
+      // ── Save session to Supabase ──
+      saveSession(result);
+
       showFeedback(result);
     } catch(err) {
       console.error(err);
@@ -438,7 +442,33 @@ Be specific, constructive, and encouraging. Base feedback on the actual words us
     document.getElementById('feedback-section').style.display = 'none';
     document.getElementById('loading-section').style.display = 'none';
     document.getElementById('analyze-btn').disabled = true;
+    sessionStart = Date.now();
     window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  // ── Save session to Supabase ──
+  async function saveSession(result) {
+    try {
+      const { data: { session } } = await sb.auth.getSession();
+      if (!session) return;
+      const duration = Math.round((Date.now() - sessionStart) / 1000);
+      const { error } = await sb.from('sessions').insert({
+        user_id: session.user.id,
+        source: 'practice',
+        topic: currentTopic,
+        duration_sec: duration,
+        pronunciation_score: result.pronunciation_score || null,
+        fluency_score: result.fluency_score || null,
+        grammar_score: result.grammar_score || null,
+        vocabulary_score: result.vocabulary_score || null,
+        overall_score: result.overall_score || null,
+        transcript: fullTranscript.trim().slice(0, 2000),
+        insight: result.encouragement || null,
+      });
+      if (error) console.error('Session save error:', error);
+    } catch(e) {
+      console.error('Session save exception:', e);
+    }
   }
 </script>
 
