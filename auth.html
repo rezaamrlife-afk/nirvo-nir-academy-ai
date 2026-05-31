@@ -307,9 +307,14 @@
     const password = document.getElementById('signin-password').value;
     if (!email || !password) { showError('Please fill in all fields'); return; }
     setLoading('btn-signin', true);
-    const { error } = await sb.auth.signInWithPassword({ email, password });
+    const { data, error } = await sb.auth.signInWithPassword({ email, password });
     setLoading('btn-signin', false);
     if (error) { showError(error.message); return; }
+    // Save user info to localStorage for persistence
+    if (data.user) {
+      localStorage.setItem('nirvo_user_email', data.user.email);
+      localStorage.setItem('nirvo_user_name', data.user.user_metadata?.first_name || data.user.email.split('@')[0]);
+    }
     showSuccess('Signed in! Redirecting...');
     setTimeout(() => { window.location.href = 'dashboard.html'; }, 1200);
   }
