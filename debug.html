@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>NIRVO Debug Test</title>
+<style>
+  body { background:#111;color:#fff;font-family:sans-serif;padding:30px; }
+  button { background:#D4AF37;border:none;padding:12px 24px;border-radius:8px;cursor:pointer;font-size:14px;font-weight:600;margin:8px; }
+  #log { background:#000;padding:20px;border-radius:8px;margin-top:20px;font-size:13px;line-height:1.8;max-height:400px;overflow-y:auto; }
+  .ok { color:#5DCAA5; }
+  .err { color:#ff6b6b; }
+  .info { color:#D4AF37; }
+  input { background:#222;border:1px solid #444;padding:10px;border-radius:8px;color:#fff;width:400px;font-size:14px; }
+</style>
+</head>
+<body>
+<h2 style="color:#D4AF37">NIRVO Debug Panel</h2>
+
+<div>
+  <button onclick="testGroq()">1. Test Groq API</button>
+  <button onclick="testTTS()">2. Test Voice (TTS)</button>
+  <button onclick="testMic()">3. Test Microphone</button>
+  <button onclick="listVoices()">4. List Voices</button>
+</div>
+
+<div style="margin-top:16px">
+  <input type="text" id="msg-input" placeholder="Type a message and press Send..." value="Hello NIRVO, how are you?">
+  <button onclick="testChat()">Send to NIRVO</button>
+</div>
+
+<div id="log"><span class="info">Ready. Click buttons to test...</span></div>
+
+<script>
+const GROQ_KEY = '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';
+
+function log(msg, type='info') {
+  const el = document.getElementById('log');
+  const line = document.createElement('div');
+  line.className = type;
+  line.textContent = new Date().toLocaleTimeString() + ' — ' + msg;
+  el.appendChild(line);
+  el.scrollTop = el.scrollHeight;
+}
+
+// ── Test 1: Groq API ──
+async function testGroq() {
+  log('Testing Groq API...', 'info');
+  try {
+    const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + GROQ_KEY
+      },
+      body: JSON.stringify({
+        model: 'llama-3.1-8b-instant',
+        messages: [{ role: 'user', content: 'Say hello in one sentence.' }],
+        max_tokens: 50
+      })
+    });
+    const data = await res.json();
+    if (data.choices && data.choices[0]) {
+      log('✓ Groq OK: ' + data.choices[0].message.content, 'ok');
+    } else {
+      log('✗ Groq Error: ' + JSON.stringify(data), 'err');
+    }
+  } catch(e) {
+    log('✗ Groq Exception: ' + e.message, 'err');
+  }
+}
+
+// ── Test 2: TTS ──
+function testTTS() {
+  log('Testing TTS...', 'info');
+  const voices = window.speechSynthesis.getVoices();
+  log('Voices loaded: ' + voices.length, voices.length > 0 ? 'ok' : 'err');
+  
+  const utterance = new SpeechSynthesisUtterance('Hello, I am NIRVO, your speaking coach!');
+  utterance.rate = 0.9;
+  utterance.pitch = 1.1;
+  
+  const femaleVoice = voices.find(v => 
+    v.name.includes('Samantha') || v.name.includes('Google US English') ||
+    v.name.includes('Microsoft Zira') || v.name.includes('Karen')
+  ) || voices.find(v => v.lang === 'en-US') || voices[0];
+  
+  if (femaleVoice) {
+    utterance.voice = femaleVoice;
+    log('Using voice: ' + femaleVoice.name, 'ok');
+  } else {
+    log('No specific voice found, using default', 'info');
+  }
+  
+  utterance.onstart = () => log('TTS Started speaking...', 'ok');
+  utterance.onend = () => log('✓ TTS Finished!', 'ok');
+  utterance.onerror = (e) => log('✗ TTS Error: ' + e.error, 'err');
+  
+  window.speechSynthesis.cancel();
+  window.speechSynthesis.speak(utterance);
+}
+
+// ── Test 3: Microphone ──
+function testMic() {
+  if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+    log('✗ SpeechRecognition NOT supported in this browser!', 'err');
+    return;
+  }
+  log('✓ SpeechRecognition supported. Starting...', 'ok');
+  
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const r = new SR();
+  r.lang = 'en-US';
+  r.continuous = false;
+  r.interimResults = false;
+  
+  r.onstart = () => log('Mic is listening... speak now!', 'ok');
+  r.onresult = (e) => log('✓ Heard: "' + e.results[0][0].transcript + '"', 'ok');
+  r.onerror = (e) => log('✗ Mic Error: ' + e.error, 'err');
+  r.onend = () => log('Mic stopped.', 'info');
+  r.start();
+}
+
+// ── Test 4: List voices ──
+function listVoices() {
+  const voices = window.speechSynthesis.getVoices();
+  log('Total voices: ' + voices.length, 'info');
+  voices.filter(v => v.lang.startsWith('en')).forEach(v => {
+    log('  → ' + v.name + ' (' + v.lang + ')', 'ok');
+  });
+}
+
+// ── Test Chat ──
+async function testChat() {
+  const msg = document.getElementById('msg-input').value.trim();
+  if (!msg) return;
+  log('Sending to NIRVO: "' + msg + '"', 'info');
+  
+  try {
+    const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + GROQ_KEY
+      },
+      body: JSON.stringify({
+        model: 'llama-3.1-8b-instant',
+        messages: [
+          { role: 'system', content: 'You are NIRVO, a friendly female AI English speaking coach. Reply in 1-2 sentences.' },
+          { role: 'user', content: msg }
+        ],
+        max_tokens: 100
+      })
+    });
+    
+    const data = await res.json();
+    
+    if (data.error) {
+      log('✗ API Error: ' + data.error.message, 'err');
+      return;
+    }
+    
+    const reply = data.choices[0].message.content;
+    log('✓ NIRVO replied: ' + reply, 'ok');
+    
+    // Now speak it
+    log('Speaking reply...', 'info');
+    const voices = window.speechSynthesis.getVoices();
+    const utterance = new SpeechSynthesisUtterance(reply);
+    utterance.rate = 0.9; utterance.pitch = 1.1;
+    const voice = voices.find(v => v.lang === 'en-US') || voices[0];
+    if (voice) { utterance.voice = voice; log('Voice: ' + voice.name, 'info'); }
+    utterance.onend = () => log('✓ Done speaking!', 'ok');
+    utterance.onerror = (e) => log('✗ Speech error: ' + e.error, 'err');
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(utterance);
+    
+  } catch(e) {
+    log('✗ Exception: ' + e.message, 'err');
+  }
+}
+
+// Auto-load voices
+window.speechSynthesis.onvoiceschanged = () => {
+  const v = window.speechSynthesis.getVoices();
+  log('Voices loaded automatically: ' + v.length, 'info');
+};
+setTimeout(() => {
+  const v = window.speechSynthesis.getVoices();
+  if (v.length > 0) log('Voices ready: ' + v.length, 'ok');
+}, 1000);
+</script>
+</body>
+</html>
