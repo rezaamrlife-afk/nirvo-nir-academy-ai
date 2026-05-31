@@ -303,10 +303,10 @@
   let allSessions = [];
 
   // ── Auth check ──
-  async function initAuth() {
-    let { data: { session } } = await sb.auth.getSession();
-    if (!session) {
-      try { const r = await sb.auth.refreshSession(); session = r.data.session; } catch(e) {}
+  sb.auth.onAuthStateChange((event, session) => {
+    if (event === 'SIGNED_OUT') {
+      window.location.href = 'auth.html';
+      return;
     }
     if (session) {
       const user = session.user;
@@ -315,14 +315,13 @@
       localStorage.setItem('nirvo_user_name', fname);
       document.getElementById('user-avatar').textContent = fname[0].toUpperCase();
       loadProgress(user.id);
-      return;
+    } else {
+      const saved = localStorage.getItem('nirvo_user_email');
+      if (!saved) { window.location.href = 'auth.html'; return; }
+      const fname = localStorage.getItem('nirvo_user_name') || saved.split('@')[0];
+      document.getElementById('user-avatar').textContent = fname[0].toUpperCase();
     }
-    const saved = localStorage.getItem('nirvo_user_email');
-    if (!saved) { window.location.href = 'auth.html'; return; }
-    const fname = localStorage.getItem('nirvo_user_name') || saved.split('@')[0];
-    document.getElementById('user-avatar').textContent = fname[0].toUpperCase();
-  }
-  initAuth();
+  });
 
   // ── Logout ──
   async function handleLogout() {
