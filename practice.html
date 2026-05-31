@@ -429,9 +429,31 @@ Be specific, constructive, and encouraging. Base feedback on the actual words us
       <div style="margin-top:16px;padding:14px 16px;background:rgba(212,175,55,0.06);border:1px solid rgba(212,175,55,0.15);border-radius:10px;font-size:13px;color:rgba(212,175,55,0.85);line-height:1.6">
         💬 ${r.encouragement}
       </div>
+      <div style="margin-top:12px;padding:14px 16px;background:rgba(232,160,160,0.06);border:1px solid rgba(232,160,160,0.2);border-radius:10px">
+        <div style="font-size:10px;color:rgba(232,160,160,0.6);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:6px">🎯 Today's Focus</div>
+        <div style="font-size:14px;color:#E8A0A0;font-weight:500">${getInsight(r)}</div>
+      </div>
     `;
 
     document.getElementById('feedback-section').scrollIntoView({behavior:'smooth'});
+  }
+
+  // ── 1-insight rule engine ──
+  function getInsight(r) {
+    const scores = {
+      fluency: r.fluency_score,
+      pronunciation: r.pronunciation_score,
+      grammar: r.grammar_score,
+      vocabulary: r.vocabulary_score,
+    };
+    const lowest = Object.entries(scores).sort((a,b) => a[1]-b[1])[0];
+    const rules = {
+      fluency:       "Focus on reducing pauses — try to speak in longer, connected phrases without stopping.",
+      pronunciation: "Focus on word stress — emphasize the right syllable in multi-syllable words.",
+      grammar:       "Focus on sentence structure — try to use complete subject-verb-object sentences.",
+      vocabulary:    "Focus on word variety — try to replace repeated words with synonyms.",
+    };
+    return rules[lowest[0]] || "Keep practicing consistently — every session builds your confidence.";
   }
 
   // ── Clear all ──
