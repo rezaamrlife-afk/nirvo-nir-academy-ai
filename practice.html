@@ -5,7 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NIRVO AI — Speaking Practice</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
   function toggleMenu() {
     const h = document.getElementById('hamburger');
     const m = document.getElementById('mobile-menu');
@@ -14,7 +15,6 @@
     m.classList.toggle('open');
     document.body.style.overflow = m.classList.contains('open') ? 'hidden' : '';
   }
-
 </script>
 <style>
   * { margin:0;padding:0;box-sizing:border-box; }
@@ -114,13 +114,7 @@
   <a href="auth.html" onclick="handleLogout ? handleLogout() : null" style="font-size:16px;color:rgba(255,255,255,0.4)">Sign Out</a>
 </div>
 
-  <a href="dashboard.html" onclick="toggleMenu()">Dashboard</a>
-  <a href="practice.html" onclick="toggleMenu()">Practice</a>
-  <a href="progress.html" onclick="toggleMenu()">Progress</a>
-  <a href="nirvo-chat.html" onclick="toggleMenu()">Chat</a>
-  <div style="height:1px;width:50px;background:rgba(212,175,55,0.25)"></div>
-  <a href="auth.html" onclick="toggleMenu()"><button style="background:linear-gradient(135deg,#D4AF37,#F7C948);border:none;border-radius:10px;color:#000;font-size:15px;font-weight:600;padding:13px 32px;cursor:pointer;font-family:inherit">Get Started Free</button></a>
-</div>
+
 
 <!-- MAIN -->
 <div style="max-width:900px;margin:0 auto;padding:40px 24px;position:relative;z-index:1" class="practice-main">
