@@ -265,16 +265,27 @@
 
   // ── Auth check ──
   sb.auth.getSession().then(({ data: { session } }) => {
-    if (!session) { window.location.href = 'auth.html'; return; }
+    if (!session) {
+      // Check localStorage fallback
+      const savedEmail = localStorage.getItem('nirvo_user_email');
+      const savedName = localStorage.getItem('nirvo_user_name');
+      if (!savedEmail) { window.location.href = 'auth.html'; return; }
+      const fname = savedName || savedEmail.split('@')[0];
+      document.getElementById('user-name').textContent = fname + '!';
+      document.getElementById('user-name-nav').textContent = fname;
+      document.getElementById('user-email-nav').textContent = savedEmail;
+      document.getElementById('user-avatar').textContent = fname[0].toUpperCase();
+      return;
+    }
     const user = session.user;
     const fname = user.user_metadata?.first_name || user.email.split('@')[0];
     const initial = fname[0].toUpperCase();
-
+    localStorage.setItem('nirvo_user_email', user.email);
+    localStorage.setItem('nirvo_user_name', fname);
     document.getElementById('user-name').textContent = fname + '!';
     document.getElementById('user-name-nav').textContent = fname;
     document.getElementById('user-email-nav').textContent = user.email;
     document.getElementById('user-avatar').textContent = initial;
-
     loadSessions(user.id);
   });
 
