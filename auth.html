@@ -5,241 +5,131 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NIRVO AI — Sign In</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
-    background: #080808;
-    color: #fff;
+    background: #080808; color: #fff;
     font-family: 'Outfit', sans-serif;
     min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    overflow: hidden;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    position: relative; overflow: hidden;
   }
-
   @keyframes fadeUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
   @keyframes shimmer { 0%{background-position:-200% center} 100%{background-position:200% center} }
-  @keyframes pulseGlow { 0%,100%{box-shadow:0 0 20px rgba(212,175,55,0.15)} 50%{box-shadow:0 0 40px rgba(212,175,55,0.28)} }
+  @keyframes pulseGlow { 0%,100%{box-shadow:0 0 20px rgba(212,175,55,0.12)} 50%{box-shadow:0 0 40px rgba(212,175,55,0.25)} }
 
-  /* BG blobs */
-  .blob-1 {
-    position: fixed; top: -200px; right: -200px;
-    width: 600px; height: 600px; border-radius: 50%;
-    background: radial-gradient(circle, rgba(212,175,55,0.07) 0%, transparent 70%);
-    pointer-events: none;
-  }
-  .blob-2 {
-    position: fixed; bottom: -150px; left: -150px;
-    width: 500px; height: 500px; border-radius: 50%;
-    background: radial-gradient(circle, rgba(212,84,126,0.07) 0%, transparent 70%);
-    pointer-events: none;
-  }
+  .blob-1 { position:fixed;top:-200px;right:-200px;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(212,175,55,0.07) 0%,transparent 70%);pointer-events:none; }
+  .blob-2 { position:fixed;bottom:-150px;left:-150px;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(212,84,126,0.07) 0%,transparent 70%);pointer-events:none; }
 
-  /* Card */
   .auth-card {
-    width: 100%;
-    max-width: 440px;
-    background: #0f0f0f;
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 24px;
-    padding: 40px 36px;
-    position: relative;
-    z-index: 1;
-    animation: fadeUp 0.7s ease forwards;
-    animation: pulseGlow 4s ease infinite;
+    width:100%;max-width:440px;
+    background:#0f0f0f;
+    border:1px solid rgba(255,255,255,0.08);
+    border-radius:24px;padding:40px 36px;
+    position:relative;z-index:1;
+    animation:fadeUp 0.7s ease forwards, pulseGlow 4s ease infinite;
   }
 
-  /* Toggle tabs */
-  .tab-wrap {
-    display: flex;
-    background: rgba(255,255,255,0.05);
-    border-radius: 12px;
-    padding: 4px;
-    margin-bottom: 28px;
-  }
-  .tab {
-    flex: 1; text-align: center;
-    padding: 10px;
-    border-radius: 9px;
-    font-size: 14px; font-weight: 500;
-    cursor: pointer;
-    transition: all 0.25s;
-    color: rgba(255,255,255,0.4);
-    letter-spacing: 0.04em;
-  }
-  .tab.active {
-    background: rgba(212,175,55,0.15);
-    color: #D4AF37;
-    border: 1px solid rgba(212,175,55,0.3);
-  }
+  .tab-wrap { display:flex;background:rgba(255,255,255,0.05);border-radius:12px;padding:4px;margin-bottom:28px; }
+  .tab { flex:1;text-align:center;padding:10px;border-radius:9px;font-size:14px;font-weight:500;cursor:pointer;transition:all 0.25s;color:rgba(255,255,255,0.4);letter-spacing:0.04em; }
+  .tab.active { background:rgba(212,175,55,0.15);color:#D4AF37;border:1px solid rgba(212,175,55,0.3); }
 
-  /* Google btn */
   .btn-google {
-    width: 100%;
-    padding: 13px;
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 12px;
-    color: #fff;
-    font-size: 14px;
-    font-weight: 500;
-    font-family: 'Outfit', sans-serif;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    transition: all 0.25s;
-    margin-bottom: 20px;
+    width:100%;padding:13px;
+    background:rgba(255,255,255,0.05);
+    border:1px solid rgba(255,255,255,0.1);
+    border-radius:12px;color:#fff;
+    font-size:14px;font-weight:500;
+    font-family:'Outfit',sans-serif;
+    cursor:pointer;display:flex;align-items:center;
+    justify-content:center;gap:10px;
+    transition:all 0.25s;margin-bottom:20px;
   }
-  .btn-google:hover {
-    background: rgba(255,255,255,0.09);
-    border-color: rgba(255,255,255,0.2);
-  }
+  .btn-google:hover { background:rgba(255,255,255,0.09);border-color:rgba(255,255,255,0.2); }
 
-  /* Divider */
-  .divider {
-    display: flex; align-items: center; gap: 12px;
-    margin-bottom: 20px;
-  }
-  .divider-line { flex: 1; height: 0.5px; background: rgba(255,255,255,0.1); }
-  .divider span { font-size: 12px; color: rgba(255,255,255,0.3); letter-spacing: 0.06em; }
+  .divider { display:flex;align-items:center;gap:12px;margin-bottom:20px; }
+  .divider-line { flex:1;height:0.5px;background:rgba(255,255,255,0.1); }
+  .divider span { font-size:12px;color:rgba(255,255,255,0.3);letter-spacing:0.06em; }
 
-  /* Input group */
-  .input-group { margin-bottom: 16px; }
-  .input-label {
-    font-size: 10px;
-    color: rgba(255,255,255,0.35);
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    margin-bottom: 8px;
-    display: block;
-  }
+  .input-group { margin-bottom:16px; }
+  .input-label { font-size:10px;color:rgba(255,255,255,0.35);letter-spacing:0.16em;text-transform:uppercase;margin-bottom:8px;display:block; }
   .input-field {
-    width: 100%;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.09);
-    border-radius: 10px;
-    padding: 13px 16px;
-    color: #fff;
-    font-size: 14px;
-    font-family: 'Outfit', sans-serif;
-    outline: none;
-    transition: border-color 0.25s;
+    width:100%;background:rgba(255,255,255,0.04);
+    border:1px solid rgba(255,255,255,0.09);
+    border-radius:10px;padding:13px 16px;
+    color:#fff;font-size:14px;
+    font-family:'Outfit',sans-serif;outline:none;transition:border-color 0.25s;
   }
-  .input-field::placeholder { color: rgba(255,255,255,0.2); }
-  .input-field:focus { border-color: rgba(212,175,55,0.45); background: rgba(212,175,55,0.04); }
+  .input-field::placeholder { color:rgba(255,255,255,0.2); }
+  .input-field:focus { border-color:rgba(212,175,55,0.45);background:rgba(212,175,55,0.04); }
 
-  /* Password wrap */
-  .pw-wrap { position: relative; }
-  .pw-toggle {
-    position: absolute; right: 14px; top: 50%;
-    transform: translateY(-50%);
-    cursor: pointer; font-size: 16px; opacity: 0.4;
-    transition: opacity 0.2s;
-  }
-  .pw-toggle:hover { opacity: 0.8; }
+  .pw-wrap { position:relative; }
+  .pw-toggle { position:absolute;right:14px;top:50%;transform:translateY(-50%);cursor:pointer;font-size:16px;opacity:0.4;transition:opacity 0.2s; }
+  .pw-toggle:hover { opacity:0.8; }
 
-  /* Submit btn */
   .btn-submit {
-    width: 100%;
-    padding: 14px;
-    background: linear-gradient(135deg, #D4AF37, #F7C948);
-    border: none;
-    border-radius: 12px;
-    color: #000;
-    font-size: 15px;
-    font-weight: 600;
-    font-family: 'Outfit', sans-serif;
-    cursor: pointer;
-    letter-spacing: 0.04em;
-    transition: all 0.25s;
-    margin-top: 8px;
+    width:100%;padding:14px;
+    background:linear-gradient(135deg,#D4AF37,#F7C948);
+    border:none;border-radius:12px;
+    color:#000;font-size:15px;font-weight:600;
+    font-family:'Outfit',sans-serif;cursor:pointer;
+    letter-spacing:0.04em;transition:all 0.25s;margin-top:8px;
   }
-  .btn-submit:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 32px rgba(212,175,55,0.35);
-  }
-  .btn-submit:active { transform: translateY(0); }
+  .btn-submit:hover { transform:translateY(-2px);box-shadow:0 10px 32px rgba(212,175,55,0.35); }
+  .btn-submit:active { transform:translateY(0); }
+  .btn-submit:disabled { opacity:0.6;cursor:not-allowed;transform:none; }
 
-  /* Forgot password */
-  .forgot {
-    text-align: right;
-    margin-top: -8px;
-    margin-bottom: 12px;
-  }
-  .forgot a {
-    font-size: 12px;
-    color: rgba(212,175,55,0.6);
-    text-decoration: none;
-    transition: color 0.2s;
-  }
-  .forgot a:hover { color: #D4AF37; }
+  .forgot { text-align:right;margin-top:-8px;margin-bottom:12px; }
+  .forgot a { font-size:12px;color:rgba(212,175,55,0.6);text-decoration:none;transition:color 0.2s; }
+  .forgot a:hover { color:#D4AF37; }
 
-  /* Bottom text */
-  .bottom-text {
-    text-align: center;
-    margin-top: 20px;
-    font-size: 13px;
-    color: rgba(255,255,255,0.3);
-  }
-  .bottom-text span {
-    color: #D4AF37;
-    cursor: pointer;
-    transition: opacity 0.2s;
-  }
-  .bottom-text span:hover { opacity: 0.7; }
+  .bottom-text { text-align:center;margin-top:20px;font-size:13px;color:rgba(255,255,255,0.3); }
+  .bottom-text span { color:#D4AF37;cursor:pointer;transition:opacity 0.2s; }
+  .bottom-text span:hover { opacity:0.7; }
 
-  /* Back link */
-  .back-link {
-    position: fixed; top: 24px; left: 32px;
-    display: flex; align-items: center; gap: 8px;
-    font-size: 13px; color: rgba(255,255,255,0.35);
-    text-decoration: none; cursor: pointer;
-    transition: color 0.2s; z-index: 10;
-  }
-  .back-link:hover { color: #D4AF37; }
+  .back-link { position:fixed;top:24px;left:32px;display:flex;align-items:center;gap:8px;font-size:13px;color:rgba(255,255,255,0.35);text-decoration:none;cursor:pointer;transition:color 0.2s;z-index:10; }
+  .back-link:hover { color:#D4AF37; }
 
-  /* Name fields for signup */
-  .name-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-  }
+  .name-row { display:grid;grid-template-columns:1fr 1fr;gap:12px; }
 
-  /* Error message */
-  .error-msg {
-    font-size: 12px;
-    color: #ff6b6b;
-    margin-top: 6px;
-    display: none;
+  /* Alert messages */
+  .alert {
+    padding:12px 16px;border-radius:10px;
+    font-size:13px;margin-bottom:16px;
+    display:none;
   }
+  .alert-error { background:rgba(255,80,80,0.1);border:1px solid rgba(255,80,80,0.25);color:#ff6b6b; }
+  .alert-success { background:rgba(93,202,165,0.1);border:1px solid rgba(93,202,165,0.25);color:#5DCAA5; }
 
-  /* Terms text */
-  .terms-text {
-    font-size: 11px;
-    color: rgba(255,255,255,0.2);
-    text-align: center;
-    margin-top: 16px;
-    line-height: 1.6;
+  /* Password strength */
+  .strength-bars { display:flex;gap:4px;margin-top:8px; }
+  .strength-bar { flex:1;height:3px;border-radius:2px;background:rgba(255,255,255,0.08);transition:background 0.3s; }
+
+  .terms-text { font-size:11px;color:rgba(255,255,255,0.2);text-align:center;margin-top:16px;line-height:1.6; }
+  .terms-text a { color:rgba(212,175,55,0.5);text-decoration:none; }
+  .terms-text a:hover { color:#D4AF37; }
+
+  /* Loading spinner */
+  .spinner {
+    width:18px;height:18px;
+    border:2px solid rgba(0,0,0,0.3);
+    border-top-color:#000;
+    border-radius:50%;
+    animation:spin 0.7s linear infinite;
+    display:inline-block;margin-right:8px;vertical-align:middle;
   }
-  .terms-text a { color: rgba(212,175,55,0.5); text-decoration: none; }
-  .terms-text a:hover { color: #D4AF37; }
+  @keyframes spin { to{transform:rotate(360deg)} }
 </style>
 </head>
 <body>
 
-<!-- BG Blobs -->
 <div class="blob-1"></div>
 <div class="blob-2"></div>
 
-<!-- Back to home -->
 <a href="index.html" class="back-link">← Back to Home</a>
 
-<!-- Auth Card -->
 <div class="auth-card">
 
   <!-- Logo -->
@@ -254,6 +144,10 @@
     <div class="tab active" id="tab-signin" onclick="switchTab('signin')">Sign In</div>
     <div class="tab" id="tab-signup" onclick="switchTab('signup')">Sign Up</div>
   </div>
+
+  <!-- Alert -->
+  <div class="alert alert-error" id="alert-error"></div>
+  <div class="alert alert-success" id="alert-success"></div>
 
   <!-- Google -->
   <button class="btn-google" onclick="handleGoogle()">
@@ -286,8 +180,8 @@
         <span class="pw-toggle" onclick="togglePw('signin-password', this)">👁</span>
       </div>
     </div>
-    <div class="forgot"><a href="#">Forgot password?</a></div>
-    <button class="btn-submit" onclick="handleSignIn()">Sign In</button>
+    <div class="forgot"><a href="#" onclick="handleForgotPassword()">Forgot password?</a></div>
+    <button class="btn-submit" id="btn-signin" onclick="handleSignIn()">Sign In</button>
     <div class="terms-text">
       By signing in you agree to our <a href="#">Terms</a> and <a href="#">Privacy Policy</a>
     </div>
@@ -315,22 +209,20 @@
         <input type="password" class="input-field" placeholder="Min. 8 characters" id="signup-password" style="padding-right:44px" oninput="checkStrength(this.value)">
         <span class="pw-toggle" onclick="togglePw('signup-password', this)">👁</span>
       </div>
-      <!-- Password strength -->
-      <div style="display:flex;gap:4px;margin-top:8px" id="strength-bars">
-        <div style="flex:1;height:3px;border-radius:2px;background:rgba(255,255,255,0.08)" id="s1"></div>
-        <div style="flex:1;height:3px;border-radius:2px;background:rgba(255,255,255,0.08)" id="s2"></div>
-        <div style="flex:1;height:3px;border-radius:2px;background:rgba(255,255,255,0.08)" id="s3"></div>
-        <div style="flex:1;height:3px;border-radius:2px;background:rgba(255,255,255,0.08)" id="s4"></div>
+      <div class="strength-bars">
+        <div class="strength-bar" id="s1"></div>
+        <div class="strength-bar" id="s2"></div>
+        <div class="strength-bar" id="s3"></div>
+        <div class="strength-bar" id="s4"></div>
       </div>
       <div id="strength-label" style="font-size:11px;color:rgba(255,255,255,0.25);margin-top:4px"></div>
     </div>
-    <button class="btn-submit" onclick="handleSignUp()">Create Account</button>
+    <button class="btn-submit" id="btn-signup" onclick="handleSignUp()">Create Account</button>
     <div class="terms-text">
       By signing up you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
     </div>
   </div>
 
-  <!-- Bottom switch -->
   <div class="bottom-text" id="bottom-switch">
     Don't have an account? <span onclick="switchTab('signup')">Sign Up Free</span>
   </div>
@@ -338,86 +230,131 @@
 </div>
 
 <script>
-  // Switch between Sign In / Sign Up
-  function switchTab(tab) {
-    const isSignin = tab === 'signin';
+  // ── Supabase init ──
+  const { createClient } = supabase;
+  const sb = createClient('https://liixgxwpcxusocpixadt.supabase.co', 'sb_publishable_XCepI_R9piNQUZSlIcyDiw_ZFaxqzvd');
 
+  // ── Helpers ──
+  function showError(msg) {
+    const el = document.getElementById('alert-error');
+    el.textContent = '⚠ ' + msg;
+    el.style.display = 'block';
+    document.getElementById('alert-success').style.display = 'none';
+  }
+  function showSuccess(msg) {
+    const el = document.getElementById('alert-success');
+    el.textContent = '✓ ' + msg;
+    el.style.display = 'block';
+    document.getElementById('alert-error').style.display = 'none';
+  }
+  function clearAlerts() {
+    document.getElementById('alert-error').style.display = 'none';
+    document.getElementById('alert-success').style.display = 'none';
+  }
+  function setLoading(btnId, loading) {
+    const btn = document.getElementById(btnId);
+    if (loading) {
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner"></span>Please wait...';
+    } else {
+      btn.disabled = false;
+      btn.innerHTML = btnId === 'btn-signin' ? 'Sign In' : 'Create Account';
+    }
+  }
+
+  // ── Tab switch ──
+  function switchTab(tab) {
+    clearAlerts();
+    const isSignin = tab === 'signin';
     document.getElementById('tab-signin').className = 'tab' + (isSignin ? ' active' : '');
     document.getElementById('tab-signup').className = 'tab' + (!isSignin ? ' active' : '');
     document.getElementById('form-signin').style.display = isSignin ? 'block' : 'none';
     document.getElementById('form-signup').style.display = isSignin ? 'none' : 'block';
-
     document.getElementById('card-title').textContent = isSignin ? 'Welcome to NIRVO AI' : 'Create Your Account';
     document.getElementById('bottom-switch').innerHTML = isSignin
-      ? 'Don\'t have an account? <span onclick="switchTab(\'signup\')">Sign Up Free</span>'
-      : 'Already have an account? <span onclick="switchTab(\'signin\')">Sign In</span>';
+      ? "Don't have an account? <span onclick=\"switchTab('signup')\">Sign Up Free</span>"
+      : "Already have an account? <span onclick=\"switchTab('signin')\">Sign In</span>";
   }
 
-  // Toggle password visibility
+  // ── Password visibility ──
   function togglePw(id, btn) {
     const input = document.getElementById(id);
-    if (input.type === 'password') {
-      input.type = 'text';
-      btn.textContent = '🙈';
-    } else {
-      input.type = 'password';
-      btn.textContent = '👁';
-    }
+    input.type = input.type === 'password' ? 'text' : 'password';
+    btn.textContent = input.type === 'password' ? '👁' : '🙈';
   }
 
-  // Password strength checker
+  // ── Password strength ──
   function checkStrength(val) {
-    const bars = ['s1','s2','s3','s4'];
-    const label = document.getElementById('strength-label');
     let score = 0;
     if (val.length >= 8) score++;
     if (/[A-Z]/.test(val)) score++;
     if (/[0-9]/.test(val)) score++;
     if (/[^A-Za-z0-9]/.test(val)) score++;
-
     const colors = ['#ff4444','#ff8800','#D4AF37','#5DCAA5'];
     const labels = ['Weak','Fair','Good','Strong'];
-    bars.forEach((b, i) => {
+    ['s1','s2','s3','s4'].forEach((b,i) => {
       document.getElementById(b).style.background = i < score ? colors[score-1] : 'rgba(255,255,255,0.08)';
     });
-    label.textContent = val.length > 0 ? labels[score-1] || '' : '';
-    label.style.color = score > 0 ? colors[score-1] : 'rgba(255,255,255,0.25)';
+    const lbl = document.getElementById('strength-label');
+    lbl.textContent = val.length > 0 ? labels[score-1] || '' : '';
+    lbl.style.color = score > 0 ? colors[score-1] : 'rgba(255,255,255,0.25)';
   }
 
-  // Handle Sign In
-  function handleSignIn() {
-    const email = document.getElementById('signin-email').value;
+  // ── Sign In ──
+  async function handleSignIn() {
+    clearAlerts();
+    const email = document.getElementById('signin-email').value.trim();
     const password = document.getElementById('signin-password').value;
-    if (!email || !password) {
-      alert('Please fill in all fields');
-      return;
-    }
-    // TODO: connect to backend / Grok API
-    alert('Sign In coming soon! Backend integration in next phase.');
+    if (!email || !password) { showError('Please fill in all fields'); return; }
+    setLoading('btn-signin', true);
+    const { error } = await sb.auth.signInWithPassword({ email, password });
+    setLoading('btn-signin', false);
+    if (error) { showError(error.message); return; }
+    showSuccess('Signed in! Redirecting...');
+    setTimeout(() => { window.location.href = 'dashboard.html'; }, 1200);
   }
 
-  // Handle Sign Up
-  function handleSignUp() {
-    const fname = document.getElementById('signup-fname').value;
-    const email = document.getElementById('signup-email').value;
+  // ── Sign Up ──
+  async function handleSignUp() {
+    clearAlerts();
+    const fname = document.getElementById('signup-fname').value.trim();
+    const lname = document.getElementById('signup-lname').value.trim();
+    const email = document.getElementById('signup-email').value.trim();
     const password = document.getElementById('signup-password').value;
-    if (!fname || !email || !password) {
-      alert('Please fill in all fields');
-      return;
-    }
-    if (password.length < 8) {
-      alert('Password must be at least 8 characters');
-      return;
-    }
-    // TODO: connect to backend
-    alert('Account creation coming soon! Backend integration in next phase.');
+    if (!fname || !email || !password) { showError('Please fill in all fields'); return; }
+    if (password.length < 8) { showError('Password must be at least 8 characters'); return; }
+    setLoading('btn-signup', true);
+    const { error } = await sb.auth.signUp({
+      email, password,
+      options: { data: { first_name: fname, last_name: lname } }
+    });
+    setLoading('btn-signup', false);
+    if (error) { showError(error.message); return; }
+    showSuccess('Account created! Please check your email to confirm.');
   }
 
-  // Handle Google
-  function handleGoogle() {
-    // TODO: Google OAuth
-    alert('Google Sign In coming soon!');
+  // ── Google OAuth ──
+  async function handleGoogle() {
+    const { error } = await sb.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo: window.location.origin + '/dashboard.html' }
+    });
+    if (error) showError(error.message);
   }
+
+  // ── Forgot Password ──
+  async function handleForgotPassword() {
+    const email = document.getElementById('signin-email').value.trim();
+    if (!email) { showError('Enter your email first'); return; }
+    const { error } = await sb.auth.resetPasswordForEmail(email);
+    if (error) { showError(error.message); return; }
+    showSuccess('Password reset email sent!');
+  }
+
+  // ── Check if already logged in ──
+  sb.auth.getSession().then(( { data: { session } }) => {
+    if (session) window.location.href = 'dashboard.html';
+  });
 </script>
 
 </body>
