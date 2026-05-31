@@ -195,7 +195,8 @@
   </div>
   <!-- CTA -->
   <div style="display:flex;gap:10px;align-items:center">
-    <span class="nav-link" style="font-size:13px">Log in</span>
+    <a href="auth.html" id="nav-login" style="color:rgba(255,255,255,0.45);text-decoration:none;font-size:13px;letter-spacing:0.04em;display:none">Log in</a>
+    <a href="dashboard.html" id="nav-dashboard" style="color:#D4AF37;text-decoration:none;font-size:13px;letter-spacing:0.04em;display:none">Dashboard →</a>
     <a href="auth.html" style="text-decoration:none"><button class="btn-gold" style="padding:9px 22px;font-size:13px">Get Started Free</button></a>
   </div>
 </nav>
@@ -681,7 +682,25 @@
 </footer>
 
 <!-- ═══════════════════════════════ JAVASCRIPT ═══════════════════════════════ -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+  // ── Check if user is logged in ──
+  (async () => {
+    try {
+      const { createClient } = supabase;
+      const sb = createClient('https://liixgxwpcxusocpixadt.supabase.co', 'sb_publishable_XCepI_R9piNQUZSlIcyDiw_ZFaxqzvd');
+      const { data: { session } } = await sb.auth.getSession();
+      if (session) {
+        document.getElementById('nav-dashboard').style.display = 'inline';
+        document.getElementById('nav-login').style.display = 'none';
+      } else {
+        document.getElementById('nav-login').style.display = 'inline';
+        document.getElementById('nav-dashboard').style.display = 'none';
+      }
+    } catch(e) {
+      document.getElementById('nav-login').style.display = 'inline';
+    }
+  })();
   // Build audio wave bars
   const waveHeights = [8,14,20,28,16,36,20,28,16,14,8,20,28,14,8,20,10,24,18];
   const waveBox = document.getElementById('waveBox');
