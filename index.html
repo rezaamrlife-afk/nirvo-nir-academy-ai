@@ -323,16 +323,16 @@
       </div>
     </div>
 
-    <!-- Mic Button -->
-    <div style="position:relative;display:flex;align-items:center;justify-content:center">
-      <div id="pulseRing" style="position:absolute;inset:-14px;border-radius:50%;border:2px solid rgba(212,175,55,0.35);display:none;animation:pulseRing 1.5s ease infinite"></div>
-      <button id="micBtn" onclick="toggleListen()" style="width:62px;height:62px;border-radius:50%;background:rgba(255,255,255,0.05);border:1px solid rgba(212,175,55,0.28);cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;transition:all 0.3s">🎤</button>
-    </div>
+    <!-- Chat with NIRVO Button -->
+    <a href="nirvo-chat.html" style="text-decoration:none">
+      <button style="background:linear-gradient(135deg,rgba(212,175,55,0.12),rgba(232,160,160,0.08));border:1px solid rgba(212,175,55,0.4);border-radius:50px;color:#D4AF37;font-size:14px;font-weight:500;font-family:'Outfit',sans-serif;padding:14px 32px;cursor:pointer;letter-spacing:0.08em;transition:all 0.3s;display:flex;align-items:center;gap:10px"
+      onmouseover="this.style.background='rgba(212,175,55,0.2)';this.style.transform='translateY(-2px)'"
+      onmouseout="this.style.background='linear-gradient(135deg,rgba(212,175,55,0.12),rgba(232,160,160,0.08))';this.style.transform='none'">
+        💬 Chat with NIRVO
+      </button>
+    </a>
 
-    <!-- Audio Wave -->
-    <div id="waveBox" style="display:flex;align-items:center;gap:3px;height:40px;opacity:0.35;transition:opacity 0.4s"></div>
-
-    <div id="listenLabel" style="font-size:11px;color:rgba(255,255,255,0.3);letter-spacing:0.12em;text-transform:uppercase;transition:color 0.3s">Tap to speak</div>
+    <div style="font-size:11px;color:rgba(255,255,255,0.25);letter-spacing:0.12em;text-transform:uppercase">Your AI Speaking Coach</div>
   </div>
 
   <!-- ─── RIGHT ─── -->
@@ -735,57 +735,6 @@
       document.getElementById('nav-login').style.display = 'inline';
     }
   })();
-  // Build audio wave bars
-  const waveHeights = [8,14,20,28,16,36,20,28,16,14,8,20,28,14,8,20,10,24,18];
-  const waveBox = document.getElementById('waveBox');
-  waveHeights.forEach((h, i) => {
-    const bar = document.createElement('div');
-    bar.className = 'wave-bar';
-    bar.style.height = '5px';
-    bar.style.animationDelay = (i * 75) + 'ms';
-    waveBox.appendChild(bar);
-  });
-
-  // Mic state - visual only on landing page
-  let isListening = false;
-
-  function toggleListen() {
-    isListening = !isListening;
-    updateMicUI(isListening);
-    // Auto stop after 3 seconds on landing page
-    if (isListening) {
-      setTimeout(() => {
-        isListening = false;
-        updateMicUI(false);
-      }, 3000);
-    }
-  }
-
-  function updateMicUI(on) {
-    const btn   = document.getElementById('micBtn');
-    const ring  = document.getElementById('pulseRing');
-    const label = document.getElementById('listenLabel');
-    const bars  = waveBox.querySelectorAll('.wave-bar');
-    const heights = [8,14,20,28,16,36,20,28,16,14,8,20,28,14,8,20,10,24,18];
-    if (on) {
-      btn.style.background = 'linear-gradient(135deg,#D4AF37,#F7C948)';
-      btn.style.border = 'none';
-      ring.style.display = 'block';
-      label.style.color = '#D4AF37';
-      label.textContent = 'Listening...';
-      waveBox.style.opacity = '1';
-      bars.forEach((b, i) => { b.style.height = heights[i]+'px'; b.classList.add('wave-active'); });
-    } else {
-      btn.style.background = 'rgba(255,255,255,0.05)';
-      btn.style.border = '1px solid rgba(212,175,55,0.28)';
-      ring.style.display = 'none';
-      label.style.color = 'rgba(255,255,255,0.3)';
-      label.textContent = 'Tap to speak';
-      waveBox.style.opacity = '0.35';
-      bars.forEach(b => { b.style.height = '5px'; b.classList.remove('wave-active'); });
-    }
-  }
-
   // Topic pill selection
   function selectTopic(el) {
     document.querySelectorAll('.topic-pill').forEach(p => p.classList.remove('active'));
