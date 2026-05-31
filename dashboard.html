@@ -18,7 +18,8 @@
 </script>
 <style>
   * { margin:0;padding:0;box-sizing:border-box; }
-  body { background:#080808;color:#fff;font-family:'Outfit',sans-serif;min-height:100vh; }
+  html { overflow-x: hidden; }
+  body { background:#080808;color:#fff;font-family:'Outfit',sans-serif;min-height:100vh;overflow-x:hidden; }
   @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
   @keyframes shimmer { 0%{background-position:-200% center} 100%{background-position:200% center} }
   @keyframes pulseRing { 0%{transform:scale(0.9);opacity:0.7} 70%{transform:scale(1.2);opacity:0} 100%{transform:scale(0.9);opacity:0} }
@@ -40,6 +41,7 @@
     .dash-stats { grid-template-columns:repeat(2,1fr) !important; }
     .dash-row2 { grid-template-columns:1fr !important; }
     .session-row { flex-wrap:wrap !important; }
+    .session-row > div { min-width:auto; }
     .session-scores { gap:10px !important; }
     .nav-user-info { display:none !important; }
   }
@@ -307,6 +309,17 @@
       <div style="font-size:10px;color:rgba(255,255,255,0.3);letter-spacing:0.14em;text-transform:uppercase">Recent Sessions</div>
       <a href="progress.html" style="font-size:12px;color:rgba(212,175,55,0.6);text-decoration:none;transition:color 0.2s" onmouseover="this.style.color='#D4AF37'" onmouseout="this.style.color='rgba(212,175,55,0.6)'">View all →</a>
     </div>
+
+    <!-- Weakness banner -->
+    <div id="weakness-banner" style="display:none;margin-bottom:16px;padding:12px 16px;background:rgba(232,160,160,0.06);border:1px solid rgba(232,160,160,0.18);border-radius:10px;display:flex;align-items:center;gap:12px">
+      <span style="font-size:18px">🎯</span>
+      <div>
+        <div style="font-size:10px;color:rgba(232,160,160,0.6);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:3px">Your Current Focus</div>
+        <div id="weakness-text" style="font-size:13px;color:#E8A0A0;font-weight:500"></div>
+      </div>
+      <a href="practice.html" style="margin-left:auto;text-decoration:none;font-size:11px;color:rgba(232,160,160,0.5);border:1px solid rgba(232,160,160,0.2);border-radius:6px;padding:5px 10px;transition:all 0.2s" onmouseover="this.style.borderColor='rgba(232,160,160,0.5)';this.style.color='#E8A0A0'" onmouseout="this.style.borderColor='rgba(232,160,160,0.2)';this.style.color='rgba(232,160,160,0.5)'">Practice →</a>
+    </div>
+
     <div id="sessions-list" style="display:flex;flex-direction:column;gap:8px">
       <!-- loaded by JS -->
       <div style="text-align:center;padding:24px;color:rgba(255,255,255,0.2);font-size:13px">No sessions yet — <a href="practice.html" style="color:#D4AF37;text-decoration:none">start your first practice!</a></div>
@@ -370,27 +383,29 @@
 
     // Update stats
     document.getElementById('stat-sessions').textContent = data.length;
-    const totalMin = data.reduce((s,r) => s + (r.duration_min || 0), 0);
+    const totalMin = data.reduce((s,r) => s + Math.round((r.duration_sec||0)/60), 0);
     document.getElementById('stat-minutes').textContent = totalMin;
-    const best = Math.max(...data.map(r => r.overall_score || 0));
-    document.getElementById('stat-best').textContent = best + '%';
+    const scoredData = data.filter(r => r.overall_score);
+    if (scoredData.length) {
+      const best = Math.max(...scoredData.map(r => r.overall_score));
+      document.getElementById('stat-best').textContent = best + '%';
+    }
     const thisWeek = data.filter(r => {
-      const d = new Date(r.created_at);
-      const now = new Date();
-      const diff = (now - d) / (1000*60*60*24);
+      const diff = (new Date() - new Date(r.created_at)) / (1000*60*60*24);
       return diff <= 7;
     }).length;
     document.getElementById('stat-week').textContent = thisWeek;
 
+    // ── Weakness detection from last 5 sessions ──
+    detectWeakness(scoredData);
+
     // Render sessions
     const icons = { 'Daily Life':'🏠','Business':'💼','Travel':'✈️','Job Interview':'🤝','Education':'📚','Public Speaking':'🎯' };
-    const colors = [['#D4AF37',16],['#D4547E',24],['#5DCAA5',44]];
-    document.getElementById('sessions-list').innerHTML = data.map((s,i) => {
+    document.getElementById('sessions-list').innerHTML = data.map(s => {
       const score = s.overall_score || 0;
       const color = score >= 85 ? '#D4AF37' : score >= 70 ? '#D4547E' : '#5DCAA5';
       const icon = icons[s.topic] || '🎤';
-      const date = new Date(s.created_at);
-      const ago = getTimeAgo(date);
+      const ago = getTimeAgo(new Date(s.created_at));
       return `
         <div class="session-row">
           <span style="font-size:20px">${icon}</span>
@@ -401,10 +416,47 @@
           <div style="display:flex;gap:20px;align-items:center">
             <div style="text-align:right"><div style="font-size:11px;color:rgba(255,255,255,0.3)">Pronunciation</div><div style="font-size:13px;color:#D4AF37;font-weight:600">${s.pronunciation_score || '—'}%</div></div>
             <div style="text-align:right"><div style="font-size:11px;color:rgba(255,255,255,0.3)">Fluency</div><div style="font-size:13px;color:#D4547E;font-weight:600">${s.fluency_score || '—'}%</div></div>
-            <div style="text-align:center;min-width:52px"><div style="font-size:20px;font-weight:700;font-family:'Cormorant Garamond',serif;color:${color}">${score}%</div><div style="font-size:10px;color:rgba(255,255,255,0.3)">Overall</div></div>
+            <div style="text-align:center;min-width:52px"><div style="font-size:20px;font-weight:700;font-family:'Cormorant Garamond',serif;color:${color}">${score || '—'}%</div><div style="font-size:10px;color:rgba(255,255,255,0.3)">Overall</div></div>
           </div>
         </div>`;
     }).join('');
+  }
+
+  // ── Weakness detection ──
+  function detectWeakness(sessions) {
+    if (!sessions || sessions.length === 0) return;
+
+    const avg = key => {
+      const vals = sessions.map(s => s[key]).filter(v => v > 0);
+      return vals.length ? Math.round(vals.reduce((a,b)=>a+b,0)/vals.length) : null;
+    };
+
+    const scores = {
+      fluency:       avg('fluency_score'),
+      pronunciation: avg('pronunciation_score'),
+      grammar:       avg('grammar_score'),
+      vocabulary:    avg('vocabulary_score'),
+    };
+
+    // Only show if enough data
+    const valid = Object.entries(scores).filter(([,v]) => v !== null);
+    if (valid.length === 0) return;
+
+    const lowest = valid.sort((a,b) => a[1]-b[1])[0];
+
+    const insights = {
+      fluency:       `Fluency (avg ${lowest[1]}%) — Focus on speaking in longer phrases without pausing.`,
+      pronunciation: `Pronunciation (avg ${lowest[1]}%) — Focus on word stress and clear syllable emphasis.`,
+      grammar:       `Grammar (avg ${lowest[1]}%) — Focus on complete sentence structure.`,
+      vocabulary:    `Vocabulary (avg ${lowest[1]}%) — Try to use more varied words and avoid repetition.`,
+    };
+
+    const banner = document.getElementById('weakness-banner');
+    const text = document.getElementById('weakness-text');
+    if (banner && text) {
+      text.textContent = insights[lowest[0]];
+      banner.style.display = 'flex';
+    }
   }
 
   function getTimeAgo(date) {
