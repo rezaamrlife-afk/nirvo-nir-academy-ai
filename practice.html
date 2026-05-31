@@ -61,7 +61,21 @@
     </div>
   </div>
   <a href="dashboard.html" style="font-size:13px;color:rgba(255,255,255,0.4);text-decoration:none;transition:color 0.2s" onmouseover="this.style.color='#D4AF37'" onmouseout="this.style.color='rgba(255,255,255,0.4)'">← Back to Dashboard</a>
+
+  <!-- Hamburger -->
+  <div class="hamburger" id="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></div>
 </nav>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobile-menu">
+  <div onclick="toggleMenu()" style="position:absolute;top:20px;right:20px;cursor:pointer;font-size:22px;color:rgba(255,255,255,0.4)">✕</div>
+  <a href="dashboard.html" onclick="toggleMenu()">Dashboard</a>
+  <a href="practice.html" onclick="toggleMenu()">Practice</a>
+  <a href="progress.html" onclick="toggleMenu()">Progress</a>
+  <a href="nirvo-chat.html" onclick="toggleMenu()">Chat</a>
+  <div style="height:1px;width:50px;background:rgba(212,175,55,0.25)"></div>
+  <a href="auth.html" onclick="toggleMenu()"><button style="background:linear-gradient(135deg,#D4AF37,#F7C948);border:none;border-radius:10px;color:#000;font-size:15px;font-weight:600;padding:13px 32px;cursor:pointer;font-family:inherit">Get Started Free</button></a>
+</div>
 
 <!-- MAIN -->
 <div style="max-width:900px;margin:0 auto;padding:40px 24px;position:relative;z-index:1" class="practice-main">
