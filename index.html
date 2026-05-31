@@ -693,17 +693,65 @@
     waveBox.appendChild(bar);
   });
 
-  // Toggle microphone listen state
+  // Mic state
   let isListening = false;
+  let recognition = null;
+
   function toggleListen() {
-    isListening = !isListening;
-    const btn    = document.getElementById('micBtn');
-    const ring   = document.getElementById('pulseRing');
-    const label  = document.getElementById('listenLabel');
-    const bars   = waveBox.querySelectorAll('.wave-bar');
+    if (isListening) {
+      stopListen();
+    } else {
+      startListen();
+    }
+  }
+
+  function startListen() {
+    if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+      alert('Please use Chrome for voice input.');
+      return;
+    }
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    recognition = new SR();
+    recognition.lang = 'en-US';
+    recognition.continuous = true;
+    recognition.interimResults = true;
+
+    recognition.onstart = () => {
+      isListening = true;
+      updateMicUI(true);
+    };
+
+    recognition.onend = () => {
+      if (isListening) {
+        isListening = false;
+        updateMicUI(false);
+      }
+    };
+
+    recognition.onerror = () => {
+      isListening = false;
+      updateMicUI(false);
+    };
+
+    try { recognition.start(); } catch(e) {}
+  }
+
+  function stopListen() {
+    isListening = false;
+    if (recognition) {
+      try { recognition.stop(); } catch(e) {}
+    }
+    updateMicUI(false);
+  }
+
+  function updateMicUI(on) {
+    const btn   = document.getElementById('micBtn');
+    const ring  = document.getElementById('pulseRing');
+    const label = document.getElementById('listenLabel');
+    const bars  = waveBox.querySelectorAll('.wave-bar');
     const heights = [8,14,20,28,16,36,20,28,16,14,8,20,28,14,8,20,10,24,18];
 
-    if (isListening) {
+    if (on) {
       btn.style.background = 'linear-gradient(135deg,#D4AF37,#F7C948)';
       btn.style.border = 'none';
       ring.style.display = 'block';
