@@ -193,6 +193,21 @@
     <div id="user-avatar" style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#D4AF37,#F7C948);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#000"></div>
     <button onclick="handleLogout()" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:7px;color:rgba(255,255,255,0.4);font-size:12px;padding:6px 14px;cursor:pointer;font-family:'Outfit',sans-serif" onmouseover="this.style.color='#D4AF37'" onmouseout="this.style.color='rgba(255,255,255,0.4)'">Sign Out</button>
   </div>
+  <!-- Hamburger -->
+  <div class="hamburger" id="hamburger" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </div>
+</div>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobile-menu">
+  <div class="mobile-close" onclick="toggleMenu()">✕</div>
+  <a href="dashboard.html" onclick="toggleMenu()">Dashboard</a>
+  <a href="practice.html" onclick="toggleMenu()">Practice</a>
+  <a href="progress.html" onclick="toggleMenu()">Progress</a>
+  <a href="nirvo-chat.html" onclick="toggleMenu()">Chat</a>
+  <div style="width:50px;height:1px;background:rgba(212,175,55,0.2)"></div>
+  <a href="#" onclick="handleLogout()" style="font-size:16px;color:rgba(255,255,255,0.4)">Sign Out</a>
 </div>
 
 <!-- MODE SELECTOR -->
@@ -430,6 +445,19 @@ async function getNirvoResponse(userMsg) {
   }
 }
 
+// ── TTS unlock on first interaction ──
+let ttsUnlocked = false;
+function unlockTTS() {
+  if (ttsUnlocked) return;
+  const u = new SpeechSynthesisUtterance('');
+  u.volume = 0;
+  window.speechSynthesis.speak(u);
+  ttsUnlocked = true;
+}
+// Unlock on any click or keypress
+document.addEventListener('click', unlockTTS, { once: false });
+document.addEventListener('keydown', unlockTTS, { once: false });
+
 // ── TTS ──
 function speak(text) {
   if (!ttsEnabled) { setNirvoState('idle'); return; }
@@ -444,7 +472,7 @@ function speak(text) {
     utterance.volume = 1;
 
     const voices = window.speechSynthesis.getVoices();
-    const femaleVoice = 
+    const femaleVoice =
       voices.find(v => v.name === 'Microsoft Zira - English (United States)') ||
       voices.find(v => v.name === 'Google UK English Female') ||
       voices.find(v => v.name === 'Microsoft Susan - English (United Kingdom)') ||
@@ -470,7 +498,6 @@ function speak(text) {
     window.speechSynthesis.speak(utterance);
   }
 
-  // Wait for voices if not loaded yet
   const voices = window.speechSynthesis.getVoices();
   if (voices.length > 0) {
     doSpeak();
@@ -479,10 +506,7 @@ function speak(text) {
       window.speechSynthesis.onvoiceschanged = null;
       doSpeak();
     };
-    // Fallback timeout
-    setTimeout(() => {
-      if (isSpeaking) doSpeak();
-    }, 500);
+    setTimeout(() => { if (isSpeaking) doSpeak(); }, 500);
   }
 }
 
