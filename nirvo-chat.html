@@ -299,6 +299,7 @@ let recognition = null;
 let chatHistory = [];
 let userName = 'Student';
 let userInitial = 'S';
+let chatSessionStart = Date.now();
 
 // ── Build avatar wave ──
 const waveHeights = [4,6,10,16,10,20,16,10,6,4,8,14,8,4];
@@ -691,9 +692,42 @@ function clearMessages() {
 }
 
 function clearChat() {
+  // Save session before clearing
+  saveChatSession();
   chatHistory = [];
+  chatSessionStart = Date.now();
   clearMessages();
   startGreeting();
+}
+
+// ── Save chat session to Supabase ──
+async function saveChatSession() {
+  try {
+    if (chatHistory.length < 2) return; // min 1 exchange
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session) return;
+
+    const topic = document.getElementById('topic-select').value;
+    const duration = Math.round((Date.now() - chatSessionStart) / 1000);
+
+    // Build transcript from history
+    const transcript = chatHistory
+      .map(m => `${m.role === 'user' ? 'Student' : 'NIRVO'}: ${m.content}`)
+      .join('\n')
+      .slice(0, 2000);
+
+    const { error } = await sb.from('sessions').insert({
+      user_id: session.user.id,
+      source: 'chat',
+      topic: topic,
+      duration_sec: duration,
+      transcript: transcript,
+      // chat doesn't have scores — left null
+    });
+    if (error) console.error('Chat session save error:', error);
+  } catch(e) {
+    console.error('Chat session save exception:', e);
+  }
 }
 
 // Load voices on ready
