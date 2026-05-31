@@ -111,9 +111,27 @@
     --gold-light: #F7C948;
   }
 
-  /* ── Alive pulse on badge ── */
-  @keyframes alivePulse { 0%,100%{opacity:0.6} 50%{opacity:1} }
-  @keyframes breathe { 0%,100%{transform:scale(1)} 50%{transform:scale(1.015)} }
+  /* ── Hamburger Menu ── */
+  .hamburger { display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;z-index:20; }
+  .hamburger span { display:block;width:24px;height:2px;background:#D4AF37;border-radius:2px;transition:all 0.3s; }
+  .hamburger.open span:nth-child(1) { transform:rotate(45deg) translate(5px,5px); }
+  .hamburger.open span:nth-child(2) { opacity:0; }
+  .hamburger.open span:nth-child(3) { transform:rotate(-45deg) translate(5px,-5px); }
+
+  .mobile-menu {
+    display:none;position:fixed;top:0;left:0;right:0;bottom:0;
+    background:rgba(8,8,8,0.98);z-index:15;
+    flex-direction:column;align-items:center;justify-content:center;gap:32px;
+    backdrop-filter:blur(20px);
+  }
+  .mobile-menu.open { display:flex; }
+  .mobile-menu a { font-size:24px;color:rgba(255,255,255,0.7);text-decoration:none;font-family:'Cormorant Garamond',serif;font-weight:600;letter-spacing:0.06em;transition:color 0.2s; }
+  .mobile-menu a:hover { color:#D4AF37; }
+  .mobile-menu .mobile-cta { margin-top:16px; }
+
+  @media (max-width: 768px) {
+    .hamburger { display:flex !important; }
+  }
 
   /* ── Mobile responsive ── */
   @media (max-width: 768px) {
@@ -197,9 +215,25 @@
   <div style="display:flex;gap:10px;align-items:center">
     <a href="auth.html" id="nav-login" style="color:rgba(255,255,255,0.45);text-decoration:none;font-size:13px;letter-spacing:0.04em;display:none">Log in</a>
     <a href="dashboard.html" id="nav-dashboard" style="color:#D4AF37;text-decoration:none;font-size:13px;letter-spacing:0.04em;display:none">Dashboard →</a>
-    <a href="auth.html" style="text-decoration:none"><button class="btn-gold" style="padding:9px 22px;font-size:13px">Get Started Free</button></a>
+    <a href="auth.html" style="text-decoration:none" class="nav-links"><button class="btn-gold" style="padding:9px 22px;font-size:13px">Get Started Free</button></a>
+  </div>
+  <!-- Hamburger -->
+  <div class="hamburger" id="hamburger" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
   </div>
 </nav>
+
+<!-- Mobile Menu Overlay -->
+<div class="mobile-menu" id="mobile-menu">
+  <div onclick="toggleMenu()" style="position:absolute;top:20px;right:20px;cursor:pointer;font-size:24px;color:rgba(255,255,255,0.5)">✕</div>
+  <a href="#features" onclick="toggleMenu()">Features</a>
+  <a href="#" onclick="toggleMenu()">Practice</a>
+  <a href="#" onclick="toggleMenu()">Pricing</a>
+  <a href="#" onclick="toggleMenu()">About</a>
+  <div style="height:1px;width:60px;background:rgba(212,175,55,0.3)"></div>
+  <a href="auth.html" id="mobile-login" style="color:rgba(255,255,255,0.5);font-size:18px">Log in</a>
+  <a href="auth.html" class="mobile-cta"><button class="btn-gold" style="font-size:15px;padding:14px 36px">Get Started Free</button></a>
+</div>
 
 <!-- ═══════════════════════════════ HERO ═══════════════════════════════ -->
 <div style="display:grid;grid-template-columns:1fr 400px 1fr;gap:0;padding:55px 60px 70px;max-width:1440px;margin:0 auto;align-items:start;position:relative;z-index:1" class="hero-grid">
