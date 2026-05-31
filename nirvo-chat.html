@@ -332,8 +332,9 @@ async function startGreeting() {
     conversation: `Hello ${userName}! I'm NIRVO. Let's have a wonderful conversation about **${topic}** today. I'd love to hear your thoughts — what comes to mind when you think about ${topic}?`,
     roleplay: `Hello ${userName}! Let's do a roleplay practice for **${topic}**. I'll play my role and you play yours. This will feel like a real situation! Let's begin — go ahead! 🎭`
   };
+  // Show greeting as text only — no auto-speak (Chrome blocks TTS before user interaction)
   addMessage('nirvo', greetings[currentMode]);
-  speak(greetings[currentMode].replace(/\*\*/g,''));
+  // Don't call speak() here — user must interact first
 }
 
 // ── Send message ──
