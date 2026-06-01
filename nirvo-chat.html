@@ -327,6 +327,16 @@ sb.auth.onAuthStateChange((event, session) => {
   }
   userInitial = userName[0].toUpperCase();
   document.getElementById('user-avatar').textContent = userInitial;
+
+  // Show Today's Focus if available
+  const focus = getTodaysFocus();
+  if (focus) {
+    const indicator = document.getElementById('mode-indicator');
+    if (indicator) {
+      indicator.innerHTML = `🎓 Speaking Coach<br><span style="font-size:10px;color:rgba(232,160,160,0.7);margin-top:3px;display:block">Focus: ${focus.label}</span>`;
+    }
+  }
+
   if (!greetingStarted) {
     greetingStarted = true;
     startGreeting();
@@ -431,10 +441,30 @@ async function sendMessage() {
   await getNirvoResponse(text);
 }
 
+// ── Get Today's Focus from localStorage ──
+function getTodaysFocus() {
+  const focus = localStorage.getItem('nirvo_focus');
+  const score = localStorage.getItem('nirvo_focus_score');
+  if (!focus) return null;
+  const labels = {
+    fluency: 'Fluency', pronunciation: 'Pronunciation',
+    grammar: 'Grammar', vocabulary: 'Vocabulary'
+  };
+  return { key: focus, label: labels[focus] || focus, score: score };
+}
+
 // ── Get Groq response ──
 async function getNirvoResponse(userMsg) {
   const topic = document.getElementById('topic-select').value;
-  const systemPrompt = modeConfigs[currentMode].system.replace('{TOPIC}', topic);
+
+  // Inject Today's Focus into system prompt
+  const focus = getTodaysFocus();
+  const focusLine = focus
+    ? `\nStudent's Current Focus: ${focus.label} (avg ${focus.score}%) — when giving micro-tips, prioritize ${focus.label} corrections if relevant.`
+    : '';
+
+  const systemPrompt = modeConfigs[currentMode].system
+    .replace('{TOPIC}', topic) + focusLine;
 
   setNirvoState('thinking');
   showTyping();
