@@ -240,6 +240,30 @@
 
   </div>
 
+  <!-- ── Today's Focus Card ── -->
+  <div id="todays-focus-card" class="anim d2" style="display:none;margin-bottom:20px;background:rgba(232,160,160,0.05);border:1px solid rgba(232,160,160,0.2);border-radius:16px;padding:22px 28px">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap">
+      <div style="flex:1;min-width:200px">
+        <div style="font-size:10px;color:rgba(232,160,160,0.55);letter-spacing:0.16em;text-transform:uppercase;margin-bottom:10px">🎯 Today's Focus</div>
+        <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:14px">
+          <span id="focus-label" style="font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:700;color:#E8A0A0"></span>
+          <span id="focus-score" style="font-size:12px;color:rgba(232,160,160,0.5);background:rgba(232,160,160,0.1);padding:3px 10px;border-radius:20px"></span>
+        </div>
+        <div style="margin-bottom:8px">
+          <span style="font-size:11px;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:0.1em">Reason</span>
+          <p id="focus-reason" style="font-size:14px;color:rgba(255,255,255,0.55);margin-top:4px;line-height:1.6;font-weight:300"></p>
+        </div>
+        <div style="padding:12px 14px;background:rgba(232,160,160,0.07);border-left:2px solid rgba(232,160,160,0.35);border-radius:0 8px 8px 0">
+          <span style="font-size:11px;color:rgba(232,160,160,0.6);text-transform:uppercase;letter-spacing:0.1em">Action</span>
+          <p id="focus-action" style="font-size:14px;color:#E8A0A0;margin-top:4px;line-height:1.6;font-weight:400"></p>
+        </div>
+      </div>
+      <a href="practice.html" style="text-decoration:none;flex-shrink:0">
+        <button style="background:rgba(232,160,160,0.12);border:1px solid rgba(232,160,160,0.3);border-radius:10px;color:#E8A0A0;font-size:13px;font-weight:500;padding:12px 22px;cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.25s;white-space:nowrap" onmouseover="this.style.background='rgba(232,160,160,0.2)'" onmouseout="this.style.background='rgba(232,160,160,0.12)'">Practice Now →</button>
+      </a>
+    </div>
+  </div>
+
   <!-- ── ROW 2: Streak + Topics + Quick Stats ── -->
   <div class="anim d3 dash-row2" style="display:grid;grid-template-columns:1.2fr 1fr 0.8fr;gap:16px;margin-bottom:20px">
 
@@ -422,7 +446,31 @@
     }).join('');
   }
 
-  // ── Weakness detection ──
+  // ── Today's Focus rule engine ──
+  const focusRules = {
+    fluency: {
+      label: 'Fluency',
+      reason: 'Fluency has been your lowest-scoring skill in recent sessions.',
+      action: 'Speak in longer connected phrases and try to reduce pauses between words.',
+    },
+    pronunciation: {
+      label: 'Pronunciation',
+      reason: 'Pronunciation has been your lowest-scoring skill in recent sessions.',
+      action: 'Focus on word stress — emphasize the correct syllable in multi-syllable words.',
+    },
+    grammar: {
+      label: 'Grammar',
+      reason: 'Grammar has been your lowest-scoring skill in recent sessions.',
+      action: 'Use complete subject-verb-object sentences and pay attention to verb tenses.',
+    },
+    vocabulary: {
+      label: 'Vocabulary',
+      reason: 'Vocabulary has been your lowest-scoring skill in recent sessions.',
+      action: 'Try to replace repeated words with synonyms and use more varied expressions.',
+    },
+  };
+
+  // ── Detect weakness + show Today's Focus ──
   function detectWeakness(sessions) {
     if (!sessions || sessions.length === 0) return;
 
@@ -438,23 +486,32 @@
       vocabulary:    avg('vocabulary_score'),
     };
 
-    // Only show if enough data
     const valid = Object.entries(scores).filter(([,v]) => v !== null);
     if (valid.length === 0) return;
 
     const lowest = valid.sort((a,b) => a[1]-b[1])[0];
+    const [focusKey, focusScore] = lowest;
+    const rule = focusRules[focusKey];
 
-    const insights = {
-      fluency:       `Fluency (avg ${lowest[1]}%) — Focus on speaking in longer phrases without pausing.`,
-      pronunciation: `Pronunciation (avg ${lowest[1]}%) — Focus on word stress and clear syllable emphasis.`,
-      grammar:       `Grammar (avg ${lowest[1]}%) — Focus on complete sentence structure.`,
-      vocabulary:    `Vocabulary (avg ${lowest[1]}%) — Try to use more varied words and avoid repetition.`,
-    };
+    // ── Save focus to localStorage for chat awareness ──
+    localStorage.setItem('nirvo_focus', focusKey);
+    localStorage.setItem('nirvo_focus_score', focusScore);
 
+    // ── Update Today's Focus card ──
+    const card = document.getElementById('todays-focus-card');
+    if (card) {
+      card.style.display = 'block';
+      document.getElementById('focus-label').textContent = rule.label;
+      document.getElementById('focus-score').textContent = `avg ${focusScore}%`;
+      document.getElementById('focus-reason').textContent = rule.reason;
+      document.getElementById('focus-action').textContent = rule.action;
+    }
+
+    // ── Update old weakness banner (keep for compatibility) ──
     const banner = document.getElementById('weakness-banner');
     const text = document.getElementById('weakness-text');
     if (banner && text) {
-      text.textContent = insights[lowest[0]];
+      text.textContent = `${rule.label} (avg ${focusScore}%) — ${rule.action}`;
       banner.style.display = 'flex';
     }
   }
