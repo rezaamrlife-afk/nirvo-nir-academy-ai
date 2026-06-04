@@ -365,7 +365,6 @@
 </div>
 
 <script>
-const GROQ_KEY = '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';
 const { createClient } = supabase;
 const sb = createClient('https://liixgxwpcxusocpixadt.supabase.co', 'sb_publishable_XCepI_R9piNQUZSlIcyDiw_ZFaxqzvd');
 
@@ -551,9 +550,9 @@ async function getNirvoResponse(userMsg) {
   chatHistory.push({ role:'user', content: userMsg });
 
   try {
-    const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+    const res = await fetch('/api/groq', {
       method:'POST',
-      headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer ' + GROQ_KEY },
+      headers:{ 'Content-Type':'application/json' },
       body: JSON.stringify({
         model: 'llama-3.1-8b-instant',
         messages: [
