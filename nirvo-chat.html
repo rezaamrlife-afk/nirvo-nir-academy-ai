@@ -550,9 +550,9 @@ async function getNirvoResponse(userMsg) {
   chatHistory.push({ role:'user', content: userMsg });
 
   try {
-    const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+    const res = await fetch('/api/groq', {
       method:'POST',
-      headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer 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' },
+      headers:{ 'Content-Type':'application/json' },
       body: JSON.stringify({
         model: 'llama-3.1-8b-instant',
         messages: [
