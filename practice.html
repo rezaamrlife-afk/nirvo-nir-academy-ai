@@ -350,10 +350,11 @@ Provide a JSON response with this exact structure:
 Be specific, constructive, and encouraging. Base feedback on the actual words used.`;
 
     try {
-      const res = await fetch('/api/groq', {
+      const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer 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'
         },
         body: JSON.stringify({
           model: 'llama-3.1-8b-instant',
