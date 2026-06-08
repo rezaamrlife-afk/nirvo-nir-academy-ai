@@ -45,6 +45,11 @@
     .session-scores { gap:10px !important; }
     .nav-user-info { display:none !important; }
   }
+  @media (max-width:375px) {
+    .dash-main { padding:16px 10px !important; }
+    .dash-stats { grid-template-columns:1fr 1fr !important; gap:8px !important; }
+    .session-row { flex-direction:column !important; gap:6px !important; }
+  }
   @media (max-width:480px) {
     .dash-stats { grid-template-columns:1fr 1fr !important; gap:10px !important; }
   }
@@ -391,6 +396,10 @@
   // ── Logout ──
   async function handleLogout() {
     await sb.auth.signOut();
+    localStorage.removeItem('nirvo_user_email');
+    localStorage.removeItem('nirvo_user_name');
+    localStorage.removeItem('nirvo_focus');
+    localStorage.removeItem('nirvo_focus_score');
     window.location.href = 'index.html';
   }
 
