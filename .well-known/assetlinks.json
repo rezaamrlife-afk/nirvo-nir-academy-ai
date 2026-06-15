@@ -3,6 +3,6 @@
   "target": {
     "namespace": "android_app",
     "package_name": "com.niracademy.nirvo",
-    "sha256_cert_fingerprints": ["PLACEHOLDER_SHA256"]
+    "sha256_cert_fingerprints": ["B4:17:B3:66:BC:9E:2B:38:D6:DB:B7:31:F8:50:DA:26:BA:D4:B0:CE:13:3A:D4:57:5C:F0:7C:40:42:78:13:ED"]
   }
 }]
