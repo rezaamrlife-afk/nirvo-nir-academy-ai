@@ -3,6 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Chat with NIRVO — your AI English speaking coach. Practice conversation, get micro-feedback and improve fluency.">
+  <meta property="og:title" content="Chat with NIRVO — AI Speaking Coach">
+  <meta property="og:description" content="Chat with NIRVO — your AI English speaking coach. Practice conversation, get micro-feedback and improve fluency.">
+  <meta property="og:type" content="website">
+  <!-- PWA -->
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#D4AF37">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="NIRVO AI">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
 <title>NIRVO AI — Chat</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -917,5 +929,15 @@ if (window.speechSynthesis.getVoices().length === 0) {
 }
 </script>
 
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+          .then(reg => console.log('SW registered'))
+          .catch(err => console.log('SW error:', err));
+      });
+    }
+  </script>
 </body>
 </html>
