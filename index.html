@@ -282,6 +282,114 @@ input,textarea,select{font-size:16px!important}
 }
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
 </style>
+
+<style id="nirvo-responsive-finish">
+/* Responsive finishing layer — presentation only; existing markup and behavior remain intact. */
+:root { color-scheme: dark; }
+*, *::before, *::after { min-width: 0; }
+html, body { width: 100%; max-width: 100%; }
+body { overflow-x: hidden; }
+img, video, canvas, svg { max-width: 100%; }
+p, h1, h2, h3, h4, h5, a, button, span, label {
+  overflow-wrap: anywhere;
+}
+p { line-height: 1.7; }
+button, .btn-gold, .btn-ghost, input, select, textarea { max-width: 100%; }
+button, .btn-gold, .btn-ghost { min-height: 44px; }
+section, footer { min-width: 0; }
+.feat-card, .card-dark, .feature-row { min-width: 0; }
+.features-grid-1, .features-grid-2, .how-steps, .footer-grid { min-width: 0; }
+.feat-card-wide { min-width: 0; }
+.feat-card-wide > div { min-width: 0; }
+.topic-pill { min-height: 36px; white-space: normal; }
+.feature-row { align-items: flex-start; }
+.feature-row > * { min-width: 0; }
+input, textarea, select { min-height: 44px; }
+
+/* Tablet */
+@media (max-width: 1024px) {
+  section { padding-left: 28px !important; padding-right: 28px !important; }
+  footer { padding-left: 28px !important; padding-right: 28px !important; }
+  .features-grid-1, .features-grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+  .feat-card-wide { grid-column: 1 / -1 !important; }
+  .footer-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 32px !important; }
+}
+
+/* Phones and compact tablets */
+@media (max-width: 768px) {
+  nav { gap: 12px !important; }
+  nav > * { min-width: 0; }
+  .hero-grid {
+    grid-template-columns: minmax(0, 1fr) !important;
+    width: 100% !important;
+    padding: 30px 18px 38px !important;
+    gap: 28px !important;
+  }
+  .hero-left, .hero-center, .hero-right { width: 100%; max-width: 100%; }
+  .hero-left { padding: 0 !important; }
+  .hero-right { padding: 0 !important; }
+  .hero-title { font-size: clamp(2.35rem, 10vw, 3.5rem) !important; line-height: 1.04 !important; }
+  .hero-title-ai { font-size: clamp(1.9rem, 8vw, 2.65rem) !important; line-height: 1.08 !important; }
+  .hero-desc { font-size: 15px !important; line-height: 1.75 !important; }
+  .hero-cta { display: flex !important; flex-direction: column !important; align-items: stretch !important; gap: 12px !important; }
+  .hero-cta > * { width: 100% !important; max-width: 100%; }
+  .hero-cta button, .hero-cta a { min-height: 48px; }
+  .avatar-body-wrap { max-width: 100% !important; }
+  .features-grid-1, .features-grid-2 { grid-template-columns: minmax(0, 1fr) !important; }
+  .feat-card-wide { grid-column: auto !important; flex-direction: column !important; align-items: stretch !important; gap: 22px !important; }
+  .feat-card-wide > div { width: 100% !important; min-width: 0 !important; }
+  .how-steps { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+  .how-steps > div:first-child { display: none; }
+  .right-cards { display: grid !important; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .right-cards .card-dark { min-width: 0; padding: 16px !important; }
+  .score-quote { display: block !important; }
+  .footer-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 28px 20px !important; }
+  footer .bottom-row { align-items: flex-start !important; }
+  footer .bottom-row p { max-width: 100%; }
+  .mobile-menu { padding: max(24px, env(safe-area-inset-top)) 24px calc(24px + env(safe-area-inset-bottom)); overflow-y: auto; }
+  .mobile-menu a { max-width: 100%; text-align: center; }
+  #nv-mob-nav .nv-grid { padding-left: 4px; padding-right: 4px; }
+  #nv-mob-nav a { font-size: clamp(9px, 2.5vw, 11px); }
+}
+
+/* Small phones */
+@media (max-width: 480px) {
+  section { padding: 48px 16px !important; }
+  footer { padding: 44px 16px 28px !important; }
+  nav { padding-left: 14px !important; padding-right: 14px !important; }
+  .hero-grid { padding: 26px 16px 34px !important; }
+  .hero-title { font-size: clamp(2.15rem, 10.5vw, 2.8rem) !important; }
+  .hero-title-ai { font-size: clamp(1.75rem, 8.5vw, 2.2rem) !important; }
+  .features-grid { padding: 36px 0 !important; }
+  .feat-card { padding: 20px !important; border-radius: 15px !important; }
+  .how-steps { grid-template-columns: minmax(0, 1fr) !important; gap: 8px !important; }
+  .how-steps > div { padding: 18px 12px !important; }
+  .how-steps > div:first-child { display: none; }
+  .right-cards { grid-template-columns: minmax(0, 1fr) !important; }
+  .footer-grid { grid-template-columns: minmax(0, 1fr) !important; gap: 26px !important; }
+  .footer-grid > div { min-width: 0; }
+  .footer-grid input { width: 100%; min-width: 0; }
+  .footer-grid > div:last-child > div:last-child > div { flex-wrap: nowrap; }
+  footer .bottom-row { flex-direction: column !important; gap: 10px !important; text-align: left !important; }
+  footer .bottom-row p { font-size: 11px !important; letter-spacing: .04em !important; }
+  .tagline-bar { white-space: normal !important; line-height: 1.5 !important; text-align: center; }
+  #nv-mob-nav .nv-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+  #nv-mob-nav a { min-height: 52px; }
+}
+
+/* Very narrow devices */
+@media (max-width: 360px) {
+  section { padding-left: 12px !important; padding-right: 12px !important; }
+  footer { padding-left: 12px !important; padding-right: 12px !important; }
+  .hero-grid { padding-left: 12px !important; padding-right: 12px !important; }
+  .hero-title { font-size: 2.05rem !important; }
+  .hero-title-ai { font-size: 1.65rem !important; }
+  .feat-card { padding: 17px !important; }
+  .btn-gold, .btn-ghost { padding-left: 16px !important; padding-right: 16px !important; white-space: normal; }
+  #nv-mob-nav a { font-size: 9px; }
+}
+</style>
+
 </head>
 <body>
 <!-- SPLASH -->
