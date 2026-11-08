@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="description" content="Sign in to NIRVO AI — your personal English speaking coach powered by NIR Academy.">
   <meta property="og:title" content="Sign In — NIRVO AI">
   <meta property="og:description" content="Sign in to NIRVO AI — your personal English speaking coach powered by NIR Academy.">
@@ -163,6 +163,56 @@
     display:inline-block;margin-right:8px;vertical-align:middle;
   }
   @keyframes spin { to{transform:rotate(360deg)} }
+</style>
+<style id="nirvo-premium-auth-v1">
+/* Auth premium design layer. Visual only: no JS, IDs, handlers, API, auth logic or colour-value changes. */
+:root{--ease:cubic-bezier(.22,.8,.24,1);--gline:rgba(212,175,55,.16);--gline2:rgba(212,175,55,.38)}
+html{-webkit-tap-highlight-color:transparent}
+body{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;font-feature-settings:"kern","liga"}
+::selection{background:rgba(212,175,55,.3)}
+a:focus-visible,button:focus-visible,.tab:focus-visible,.pw-toggle:focus-visible{outline:2px solid #D4AF37;outline-offset:3px;border-radius:8px}
+/* card */
+.auth-card{border:1px solid rgba(212,175,55,.18)!important;border-radius:24px!important;background-image:linear-gradient(165deg,rgba(255,255,255,.04),transparent 40%);box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 40px 90px rgba(0,0,0,.65)}
+.auth-card::before{content:"";position:absolute;inset:0 24px auto 24px;height:1px;background:linear-gradient(90deg,transparent,rgba(212,175,55,.6),transparent)}
+.auth-card img[alt="NIR Academy"]{box-shadow:0 0 0 1px rgba(212,175,55,.3),0 0 40px rgba(212,175,55,.18),0 14px 30px rgba(0,0,0,.5)}
+.auth-card h1{letter-spacing:-.015em;text-wrap:balance;margin-top:14px}
+/* tabs */
+.tab-wrap{border:1px solid rgba(255,255,255,.06);box-shadow:0 2px 6px rgba(0,0,0,.35) inset}
+.tab{min-height:44px;display:flex;align-items:center;justify-content:center;transition:all .3s var(--ease)!important}
+.tab:hover:not(.active){color:#fff}
+.tab.active{box-shadow:0 0 0 1px rgba(212,175,55,.1),0 6px 18px rgba(212,175,55,.12)}
+/* inputs */
+.input-label{letter-spacing:.14em}
+.input-field{min-height:48px;border-radius:12px!important;transition:border-color .3s,background .3s,box-shadow .3s!important}
+.input-field:hover{border-color:rgba(212,175,55,.22)}
+.input-field:focus{border-color:var(--gline2)!important;box-shadow:0 0 0 4px rgba(212,175,55,.1)}
+.input-field:-webkit-autofill{-webkit-text-fill-color:#fff;-webkit-box-shadow:0 0 0 1000px #0f0f0f inset;caret-color:#fff}
+.pw-toggle{min-width:32px;min-height:32px;display:flex;align-items:center;justify-content:center;right:8px!important}
+.strength-bar{height:4px;border-radius:999px}
+.alert{border-radius:12px;line-height:1.5}
+/* buttons */
+.btn-submit,.btn-google{min-height:50px;position:relative;overflow:hidden;transition:transform .25s var(--ease),box-shadow .25s var(--ease),background .25s,border-color .25s!important}
+.btn-submit{border-radius:12px;box-shadow:0 1px 0 rgba(255,255,255,.35) inset,0 10px 26px rgba(212,175,55,.18)}
+.btn-submit::after{content:"";position:absolute;inset:0;background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.35) 50%,transparent 65%);transform:translateX(-120%);transition:transform .7s var(--ease);pointer-events:none}
+.btn-submit:hover:not(:disabled)::after{transform:translateX(120%)}
+.btn-submit:hover:not(:disabled){box-shadow:0 1px 0 rgba(255,255,255,.4) inset,0 16px 38px rgba(212,175,55,.35)}
+.btn-submit:active:not(:disabled){transform:scale(.98)}
+.btn-google:hover{transform:translateY(-1px)}
+.forgot a,.bottom-text span{padding:6px 0;display:inline-block}
+.terms-text{line-height:1.7}
+/* back link */
+.back-link{padding:9px 16px;border-radius:999px;border:1px solid rgba(255,255,255,.08);background:rgba(8,8,8,.6);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);top:max(24px,env(safe-area-inset-top))!important;transition:all .3s var(--ease)!important}
+.back-link:hover{border-color:var(--gline2);transform:translateX(-2px)}
+@media(max-width:768px){
+body{overflow-y:auto!important;justify-content:flex-start!important;padding:76px 0 max(24px,env(safe-area-inset-bottom))}
+.auth-card{margin:0 auto}
+.input-field{font-size:16px!important}
+}
+@media(max-width:480px){
+.auth-card{margin:0 16px!important;width:calc(100% - 32px)}
+.back-link{top:max(14px,env(safe-area-inset-top))!important}
+}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
 </style>
 </head>
 <body>
