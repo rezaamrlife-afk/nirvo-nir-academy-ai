@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="description" content="Your NIRVO AI dashboard — track progress, view sessions, and start practicing English.">
   <meta property="og:title" content="Dashboard — NIRVO AI">
   <meta property="og:description" content="Your NIRVO AI dashboard — track progress, view sessions, and start practicing English.">
@@ -122,6 +122,61 @@
     .nav-links-dash { display:none !important; }
     .nav-user-info { display:none !important; }
   }
+</style>
+<style id="nirvo-premium-dash-v1">
+/* Dashboard premium design layer. Visual only: no JS, IDs, links, API, auth or colour-value changes. */
+:root{--ease:cubic-bezier(.22,.8,.24,1);--gline:rgba(212,175,55,.16);--gline2:rgba(212,175,55,.38)}
+html{scroll-behavior:smooth;-webkit-tap-highlight-color:transparent}
+body{overflow-x:clip!important;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;font-feature-settings:"kern","liga"}
+::selection{background:rgba(212,175,55,.3)}
+::-webkit-scrollbar{width:8px}::-webkit-scrollbar-track{background:#080808}::-webkit-scrollbar-thumb{background:rgba(212,175,55,.28);border-radius:8px}
+a:focus-visible,button:focus-visible,.topic-row:focus-visible{outline:2px solid #D4AF37;outline-offset:3px;border-radius:8px}
+h1,h2,h3{text-wrap:balance}
+.dash-welcome h1{font-size:clamp(32px,4.6vw,48px)!important;letter-spacing:-.018em;line-height:1.05!important}
+/* nav */
+nav{position:sticky;top:0;z-index:200;background:rgba(8,8,8,.8);-webkit-backdrop-filter:blur(20px) saturate(1.2);backdrop-filter:blur(20px) saturate(1.2);border-bottom:1px solid var(--gline)!important}
+.nav-link{position:relative;padding:6px 0}
+.nav-link::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:#D4AF37;transform:scaleX(0);transform-origin:left;transition:transform .35s var(--ease)}
+.nav-link:hover::after,.nav-link.active::after{transform:scaleX(1)}
+/* cards */
+.card,#todays-focus-card,.dash-main>div[style*="border-radius:16px"]{background:linear-gradient(165deg,rgba(255,255,255,.045),rgba(255,255,255,.015))!important;border:1px solid rgba(212,175,55,.14)!important;border-radius:18px!important;box-shadow:0 1px 0 rgba(255,255,255,.05) inset,0 18px 44px rgba(0,0,0,.4);transition:transform .35s var(--ease),border-color .35s,box-shadow .35s!important}
+.card:hover{border-color:var(--gline2)!important;transform:translateY(-3px);box-shadow:0 1px 0 rgba(255,255,255,.07) inset,0 24px 56px rgba(0,0,0,.55)}
+.dash-stats .card{position:relative;overflow:hidden}
+.dash-stats .card::before{content:"";position:absolute;inset:0 0 auto 0;height:1px;background:linear-gradient(90deg,transparent,rgba(212,175,55,.5),transparent)}
+svg circle[stroke="#D4AF37"]{filter:drop-shadow(0 0 6px rgba(212,175,55,.45))}
+/* buttons */
+.btn-gold{position:relative;overflow:hidden;box-shadow:0 1px 0 rgba(255,255,255,.35) inset,0 8px 22px rgba(212,175,55,.16);transition:transform .25s var(--ease),box-shadow .25s var(--ease)!important}
+.btn-gold::after{content:"";position:absolute;inset:0;background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.35) 50%,transparent 65%);transform:translateX(-120%);transition:transform .7s var(--ease);pointer-events:none}
+.btn-gold:hover::after{transform:translateX(120%)}
+.btn-gold:hover{box-shadow:0 1px 0 rgba(255,255,255,.4) inset,0 14px 34px rgba(212,175,55,.35)}
+.btn-gold:active{transform:scale(.98)}
+/* rows */
+.topic-row{min-height:46px;border-radius:12px;transition:all .25s var(--ease)}
+.topic-row:hover{transform:translateX(4px)}
+.streak-day{width:36px;height:36px;border-radius:10px}
+.session-row{border:1px solid rgba(255,255,255,.05);border-radius:12px;transition:all .25s var(--ease)}
+.session-row:hover{border-color:var(--gline2);transform:translateX(3px)}
+/* mobile */
+#nv-mob-nav{display:none}
+@media(max-width:768px){
+body{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
+nav{min-height:62px}
+.hamburger{min-width:44px;min-height:44px;align-items:center;justify-content:center}
+.dash-main{padding-top:20px!important}
+.dash-welcome .btn-gold{width:100%;min-height:50px}
+.card{border-radius:16px!important;padding:18px!important}
+.streak-day{width:34px;height:34px}
+input,textarea,select{font-size:16px!important}
+#nv-mob-nav{display:block;position:fixed;left:0;right:0;bottom:0;z-index:300;padding:8px 0 calc(8px + env(safe-area-inset-bottom,0px));background:rgba(8,8,8,.94);border-top:1px solid var(--gline);box-shadow:0 -12px 34px rgba(0,0,0,.45);-webkit-backdrop-filter:blur(22px) saturate(1.2);backdrop-filter:blur(22px) saturate(1.2)}
+#nv-mob-nav .nv-grid{display:grid;grid-template-columns:repeat(5,1fr);max-width:640px;margin:0 auto}
+#nv-mob-nav a{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-height:54px;padding:6px 3px;text-decoration:none;font-family:'Outfit',sans-serif;font-size:10px;font-weight:500;letter-spacing:.02em;color:rgba(255,255,255,.45);transition:color .25s,transform .2s var(--ease)}
+#nv-mob-nav svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+#nv-mob-nav a:active{transform:scale(.93)}
+#nv-mob-nav a.on{color:#D4AF37}
+#nv-mob-nav a.on::before{content:"";position:absolute;top:-9px;width:24px;height:2px;border-radius:2px;background:#D4AF37;box-shadow:0 0 10px rgba(212,175,55,.7)}
+#nv-mob-nav a.on svg{filter:drop-shadow(0 0 6px rgba(212,175,55,.55))}
+}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
 </style>
 </head>
 <body>
@@ -571,5 +626,6 @@
       });
     }
   </script>
+<div id="nv-mob-nav" role="navigation" aria-label="Main"><div class="nv-grid"><a href="index.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .7-1.5l7-6a2 2 0 0 1 2.6 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><span>Home</span></a><a href="practice.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><path d="M12 19v3"/></svg><span>Practice</span></a><a href="dashboard.html" class="on"><svg viewBox="0 0 24 24" aria-hidden="true"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg><span>Dashboard</span></a><a href="progress.html"><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg><span>Progress</span></a><a href="nirvo-chat.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg><span>Chat</span></a></div></div>
 </body>
 </html>
