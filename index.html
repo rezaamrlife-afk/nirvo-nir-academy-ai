@@ -390,6 +390,110 @@ input, textarea, select { min-height: 44px; }
 }
 </style>
 
+
+<style id="nirvo-pro-polish">
+/* NIRVO PRO polish — visual-only enhancement; original content and application behavior are preserved. */
+:root {
+  --nv-gold: #D4AF37;
+  --nv-gold-bright: #F7C948;
+  --nv-line: rgba(212,175,55,.20);
+  --nv-panel: rgba(255,255,255,.035);
+  --nv-ease: cubic-bezier(.2,.75,.25,1);
+}
+body { background-color:#080808; }
+main, header, nav, section, footer { position:relative; }
+section { scroll-margin-top:88px; }
+section:not(:first-of-type) { isolation:isolate; }
+section h2 { max-width:18ch; margin-inline:auto; }
+section p { text-wrap:pretty; }
+.hero-grid { max-width:1440px; margin-inline:auto; }
+.hero-left, .hero-right { min-width:0; }
+.hero-desc { max-width:52ch; }
+.hero-cta { gap:14px; }
+.btn-gold, .btn-ghost {
+  min-height:48px; display:inline-flex; align-items:center; justify-content:center;
+  gap:9px; text-decoration:none; line-height:1.25; font-weight:600;
+  transition:transform .24s var(--nv-ease), box-shadow .24s var(--nv-ease),
+             border-color .24s ease, background .24s ease;
+}
+.btn-gold { box-shadow:0 8px 24px rgba(212,175,55,.15), inset 0 1px rgba(255,255,255,.3); }
+.btn-gold:hover { box-shadow:0 13px 32px rgba(212,175,55,.24), inset 0 1px rgba(255,255,255,.35); }
+.btn-ghost { border-color:rgba(255,255,255,.2); }
+.card-dark, .feat-card {
+  overflow:hidden; isolation:isolate;
+  box-shadow:0 1px 0 rgba(255,255,255,.045) inset, 0 14px 36px rgba(0,0,0,.28);
+}
+.feat-card { position:relative; }
+.feat-card::before {
+  content:""; position:absolute; inset:0 18% auto; height:1px;
+  background:linear-gradient(90deg,transparent,rgba(212,175,55,.32),transparent);
+  pointer-events:none;
+}
+.feat-card:hover, .card-dark:hover {
+  border-color:rgba(212,175,55,.34)!important;
+  box-shadow:0 18px 44px rgba(0,0,0,.38), 0 0 0 1px rgba(212,175,55,.045);
+}
+.topic-pill { min-height:38px; display:inline-flex; align-items:center; justify-content:center; }
+.feature-row { min-height:46px; }
+nav { min-height:70px; }
+nav a, .nav-link, .nav-link-item { text-decoration:none; }
+nav .nav-cta > * { white-space:nowrap; }
+input, textarea, select {
+  border-radius:10px!important; border-color:rgba(255,255,255,.16)!important;
+  background-color:rgba(255,255,255,.045)!important; color:#fff!important;
+}
+input:focus, textarea:focus, select:focus {
+  outline:2px solid rgba(212,175,55,.35); outline-offset:1px;
+  border-color:rgba(212,175,55,.65)!important;
+}
+footer { overflow:hidden; }
+footer a { text-decoration:none; }
+footer .bottom-row { flex-wrap:wrap; }
+img { height:auto; }
+@media (min-width:769px) {
+  .features-grid-1, .features-grid-2 { align-items:stretch; }
+  .feat-card { min-height:100%; }
+}
+@media (max-width:1024px) {
+  nav { padding-inline:24px!important; }
+  .hero-grid { gap:clamp(24px,4vw,52px)!important; }
+}
+@media (max-width:768px) {
+  nav { min-height:62px; }
+  nav .nav-cta { margin-left:auto; }
+  .hero-grid { text-align:center; }
+  .hero-left, .hero-right { align-items:center; }
+  .hero-desc { margin-inline:auto; }
+  .hero-cta { width:100%; max-width:440px; margin-inline:auto; }
+  .features-grid-1, .features-grid-2 { gap:16px!important; }
+  .feat-card { min-height:0; }
+  .how-steps { gap:12px!important; }
+  .how-steps > div { min-width:0; }
+  .right-cards { align-items:stretch; }
+  footer { text-align:left; }
+  footer .bottom-row { text-align:center!important; align-items:center!important; }
+  #nv-mob-nav { padding-left:max(8px,env(safe-area-inset-left)); padding-right:max(8px,env(safe-area-inset-right)); }
+}
+@media (max-width:480px) {
+  nav { min-height:58px; }
+  .hero-grid { text-align:left; }
+  .hero-cta { margin-inline:0; }
+  .feat-card { padding:20px!important; }
+  .feature-row { gap:10px; padding:11px 12px; }
+  .topic-pill { padding:7px 12px; }
+  footer .bottom-row { text-align:center!important; }
+}
+@media (hover:none) {
+  .feat-card:hover, .card-dark:hover, .feature-row:hover, .btn-gold:hover, .btn-ghost:hover {
+    transform:none; box-shadow:inherit;
+  }
+}
+@media (prefers-reduced-motion:reduce) {
+  html { scroll-behavior:auto!important; }
+  *,*::before,*::after { animation-duration:.01ms!important; transition-duration:.01ms!important; }
+}
+</style>
+
 </head>
 <body>
 <!-- SPLASH -->
