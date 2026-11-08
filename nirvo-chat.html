@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="description" content="Chat with NIRVO — your AI English speaking coach. Practice conversation, get micro-feedback and improve fluency.">
   <meta property="og:title" content="Chat with NIRVO — AI Speaking Coach">
   <meta property="og:description" content="Chat with NIRVO — your AI English speaking coach. Practice conversation, get micro-feedback and improve fluency.">
@@ -237,6 +237,60 @@
 
   /* Mode badge */
   .mode-badge { display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:20px;font-size:11px; }
+</style>
+<style id="nirvo-premium-chat-v1">
+/* Chat premium design layer. Visual only: no JS, IDs, links, API, auth or colour-value changes. */
+:root{--ease:cubic-bezier(.22,.8,.24,1);--gline:rgba(212,175,55,.16);--gline2:rgba(212,175,55,.38)}
+html{-webkit-tap-highlight-color:transparent}
+body{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;font-feature-settings:"kern","liga"}
+::selection{background:rgba(212,175,55,.3)}
+a:focus-visible,button:focus-visible,.mode-btn:focus-visible,.cd-trigger:focus-visible{outline:2px solid #D4AF37;outline-offset:3px}
+/* header + mode bar */
+.navbar{-webkit-backdrop-filter:blur(20px) saturate(1.2);backdrop-filter:blur(20px) saturate(1.2)}
+.nav-link{position:relative;padding:6px 0}
+.nav-link::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:#D4AF37;transform:scaleX(0);transform-origin:left;transition:transform .35s var(--ease)}
+.nav-link:hover::after,.nav-link.active::after{transform:scaleX(1)}
+.mode-bar{border-bottom:1px solid rgba(212,175,55,.08)!important}
+.mode-btn{border-radius:999px;letter-spacing:.02em;transition:all .3s var(--ease)}
+.mode-btn:hover{transform:translateY(-1px)}
+.mode-btn.active{box-shadow:0 0 0 1px rgba(212,175,55,.12),0 6px 18px rgba(212,175,55,.12)}
+.cd-trigger{border-radius:10px;transition:border-color .25s,box-shadow .25s}
+.cd-trigger.open{box-shadow:0 0 0 3px rgba(212,175,55,.12)}
+.cd-menu{border-radius:12px;box-shadow:0 18px 48px rgba(0,0,0,.7),0 0 0 1px rgba(212,175,55,.06);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+.cd-option{border-radius:8px;min-height:36px}
+/* coach panel */
+.avatar-panel{border-right:1px solid rgba(212,175,55,.1)!important;background-image:radial-gradient(ellipse 80% 50% at 50% 38%,rgba(212,175,55,.07),transparent 70%)}
+.avatar-body{box-shadow:0 0 0 1px rgba(212,175,55,.12),0 24px 50px rgba(0,0,0,.55),0 0 50px rgba(212,175,55,.08)}
+.avatar-body.speaking{box-shadow:0 0 0 1px rgba(212,175,55,.4),0 24px 50px rgba(0,0,0,.55)}
+.nirvo-name{font-size:24px;letter-spacing:.02em}
+.nirvo-status{display:flex;align-items:center;justify-content:center;gap:6px}
+/* messages */
+.messages{scroll-behavior:smooth;scrollbar-width:thin;scrollbar-color:rgba(212,175,55,.25) transparent}
+.messages::-webkit-scrollbar-thumb{background:rgba(212,175,55,.25)!important}
+.msg-bubble{line-height:1.75;box-shadow:0 1px 0 rgba(255,255,255,.04) inset,0 8px 24px rgba(0,0,0,.28);text-wrap:pretty}
+.msg.nirvo .msg-bubble{background:linear-gradient(165deg,rgba(232,160,160,.09),rgba(232,160,160,.03))}
+.msg.user .msg-bubble{background:linear-gradient(165deg,rgba(255,255,255,.08),rgba(255,255,255,.04))}
+.msg.nirvo .msg-avatar{box-shadow:0 0 0 1px rgba(212,175,55,.35),0 0 14px rgba(212,175,55,.25)}
+.feedback-tag{border-radius:999px;padding:4px 11px}
+.typing-indicator{box-shadow:0 8px 24px rgba(0,0,0,.28)}
+/* composer */
+.input-bar{border-top:1px solid rgba(212,175,55,.1)!important;-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px)}
+.input-wrap{border-radius:18px;padding:8px 10px 8px 18px;box-shadow:0 12px 32px rgba(0,0,0,.35);transition:border-color .3s,box-shadow .3s,background .3s}
+.input-wrap:focus-within{border-color:var(--gline2)!important;background:rgba(255,255,255,.055);box-shadow:0 0 0 4px rgba(212,175,55,.1),0 12px 32px rgba(0,0,0,.4)}
+.mic-btn,.send-btn{width:44px;height:44px;transition:transform .25s var(--ease),box-shadow .25s,background .25s}
+.mic-btn.idle:hover{border-color:var(--gline2);background:rgba(212,175,55,.1);transform:scale(1.06)}
+.send-btn{box-shadow:0 1px 0 rgba(255,255,255,.35) inset,0 8px 20px rgba(212,175,55,.2)}
+.send-btn:active,.mic-btn:active{transform:scale(.94)}
+@media(max-width:768px){
+.navbar{min-height:60px}
+.hamburger{min-width:44px;min-height:44px;align-items:center;justify-content:center}
+.input-bar{padding:10px 12px max(12px,env(safe-area-inset-bottom))!important}
+.msg-bubble{border-radius:16px}
+.msg.nirvo .msg-bubble{border-radius:4px 16px 16px 16px}
+.msg.user .msg-bubble{border-radius:16px 4px 16px 16px}
+.mode-btn{min-height:36px}
+}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
 </style>
 </head>
 <body>
