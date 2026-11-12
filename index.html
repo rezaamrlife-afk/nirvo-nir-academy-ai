@@ -560,10 +560,85 @@ body.light-mode :focus-visible{outline:2px solid #A9233A;outline-offset:2px}
 .nv-theme:hover{background:rgba(var(--gold-rgb),.1);border-color:var(--gold)}
 @media(max-width:768px){.nv-theme{display:none}}
 </style>
+
+<style id="nirvo-niron-shell">
+/* NIRVO shell — NIRON-style header, glass menu drawer, floating bottom bar, footer. NIRVO's own black + gold kept. */
+.nav-link-item{position:relative}
+.nav-link-item::after{content:"";position:absolute;left:0;right:0;bottom:-7px;height:2px;border-radius:2px;background:linear-gradient(90deg,var(--gold),var(--gold-light));transform:scaleX(0);transform-origin:left;transition:transform .3s var(--ease)}
+.nav-link-item:hover{color:var(--white)!important}
+.nav-link-item:hover::after{transform:scaleX(1)}
+nav{-webkit-backdrop-filter:blur(22px) saturate(1.4)!important;backdrop-filter:blur(22px) saturate(1.4)!important}
+.hamburger{width:44px;height:44px;border-radius:14px;background:var(--f0_04);border:1px solid rgba(var(--gold-rgb),.28);padding:0;align-items:center;justify-content:center;transition:background .2s,border-color .2s}
+.hamburger:hover{background:rgba(var(--gold-rgb),.1);border-color:var(--gold)}
+.hamburger span{width:20px}
+
+/* ── Menu drawer ── */
+.mobile-menu{z-index:400!important;align-items:center!important;justify-content:center!important;gap:0!important;overflow:hidden!important;
+  padding:max(16px,env(safe-area-inset-top)) 16px calc(16px + env(safe-area-inset-bottom))!important;
+  background:rgba(var(--sh),.55)!important;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.mobile-menu.open .nvd{animation:nvdIn .38s var(--ease) both}
+@keyframes nvdIn{from{opacity:0;transform:translateY(18px) scale(.97)}to{opacity:1;transform:none}}
+.nvd{width:min(390px,100%);max-height:100%;display:flex;flex-direction:column;border-radius:32px;overflow:hidden;position:relative;
+  background:linear-gradient(160deg,rgba(var(--gold-rgb),.12),rgba(var(--black-rgb),.94) 46%);
+  border:1px solid rgba(var(--gold-rgb),.3);
+  box-shadow:0 30px 80px rgba(var(--sh),calc(.6 * var(--shk))),0 0 70px rgba(var(--gold-rgb),.12);
+  -webkit-backdrop-filter:blur(30px) saturate(1.4);backdrop-filter:blur(30px) saturate(1.4)}
+.nvd [hidden]{display:none!important}
+.nvd-head{display:flex;align-items:center;justify-content:space-between;padding:16px 18px 14px 20px;border-bottom:1px solid var(--b0_07)}
+.nvd-brand{display:flex;align-items:center;gap:14px}
+.nvd-brand img{width:46px;height:46px;border-radius:14px;object-fit:cover;box-shadow:0 6px 20px rgba(var(--gold-rgb),.28);background:#000}
+.nvd-word{font-family:'Outfit',sans-serif;font-size:19px;font-weight:600;letter-spacing:.3em;color:var(--gold)}
+.nvd-word b{font-weight:600;color:var(--rose)}
+.nvd-close{width:42px;height:42px;border-radius:50%;border:1px solid var(--b0_1);background:var(--f0_04);color:var(--white);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s,transform .2s}
+.nvd-close:hover{background:rgba(var(--gold-rgb),.12)}.nvd-close:active{transform:scale(.92)}
+.nvd-close svg,.nvd-ic svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.nvd-body{overflow-y:auto;overscroll-behavior:contain;padding:6px 14px 10px;-webkit-overflow-scrolling:touch}
+.nvd-label{display:flex;align-items:center;gap:12px;margin:14px 6px 8px;font-family:'Outfit',sans-serif;font-size:11px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:var(--t0_4)}
+.nvd-label::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--b0_1),transparent)}
+.mobile-menu .nvd .nvd-row{display:flex;align-items:center;gap:14px;width:100%;margin-bottom:4px;padding:6px 10px;border-radius:16px;border:1px solid transparent;background:transparent;
+  font-family:'Outfit',sans-serif;font-size:15.5px;font-weight:500;letter-spacing:0;text-align:left;max-width:none;color:var(--white);text-decoration:none;cursor:pointer;transition:background .2s,border-color .2s,transform .15s}
+.mobile-menu .nvd .nvd-row:hover{background:var(--f0_04);color:var(--white)}
+.mobile-menu .nvd .nvd-row:active{transform:scale(.985)}
+.nvd-row>span:nth-child(2){flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mobile-menu .nvd .nvd-primary,.mobile-menu .nvd .nvd-toggle{background:rgba(var(--gold-rgb),.09);border-color:rgba(var(--gold-rgb),.24)}
+.nvd-ic{width:36px;height:36px;flex-shrink:0;border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--gold);background:rgba(var(--gold-rgb),.12);border:1px solid rgba(var(--gold-rgb),.28)}
+.nvd-chev{width:16px;height:16px;fill:none;stroke:var(--t0_4);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+.mobile-menu .nvd .nvd-danger{color:var(--pink)}
+.nvd-danger .nvd-ic{color:var(--pink);background:rgba(var(--pink-rgb),.1);border-color:rgba(var(--pink-rgb),.3)}
+.nvd-dot{width:7px;height:7px;border-radius:50%;background:var(--rose);animation:alivePulse 2s ease infinite;flex-shrink:0}
+.nvd-switch{width:52px;height:30px;flex-shrink:0;border-radius:999px;background:var(--b0_14);position:relative;transition:background .25s}
+.nvd-switch::after{content:"";position:absolute;top:4px;left:4px;width:22px;height:22px;border-radius:50%;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.3);transition:transform .25s var(--ease)}
+.nvd-switch.on{background:linear-gradient(135deg,var(--gold),var(--gold-light))}
+.nvd-switch.on::after{transform:translateX(22px)}
+.nvd-foot{padding:12px 20px calc(16px + env(safe-area-inset-bottom,0px)*0);border-top:1px solid var(--b0_07);text-align:center;font-family:'Outfit',sans-serif;font-size:11px;font-weight:500;letter-spacing:.22em;line-height:1.9;font-size:10.5px;text-transform:uppercase;color:var(--t0_5);background:rgba(var(--gold-rgb),.04)}
+@media(max-height:620px){.nvd-brand img{width:38px;height:38px}.nvd-label{margin-top:14px}}
+
+/* ── Floating bottom bar (mobile) ── */
+@media(max-width:768px){
+body{padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))}
+#nv-mob-nav{left:12px!important;right:12px!important;bottom:calc(10px + env(safe-area-inset-bottom,0px))!important;padding:6px!important;border-radius:26px;
+  border:1px solid rgba(var(--gold-rgb),.28)!important;background:rgba(var(--black-rgb),.78)!important;
+  box-shadow:0 18px 44px rgba(var(--sh),calc(.55 * var(--shk))),0 0 0 1px rgba(var(--gold-rgb),.04) inset!important;
+  -webkit-backdrop-filter:blur(26px) saturate(1.5)!important;backdrop-filter:blur(26px) saturate(1.5)!important}
+#nv-mob-nav .nv-grid{padding:0!important;gap:2px}
+#nv-mob-nav a{border-radius:20px;min-height:52px}
+#nv-mob-nav a.on{background:rgba(var(--gold-rgb),.14)}
+#nv-mob-nav a.on::before{display:none}
+}
+
+/* ── Footer ── */
+footer{background:linear-gradient(180deg,transparent,rgba(var(--gold-rgb),.05))}
+a.footer-link{text-decoration:none;color:inherit}
+.nvf-sig{display:flex;align-items:center;gap:18px;margin:0 0 26px;font-family:'Outfit',sans-serif;font-size:11px;font-weight:500;letter-spacing:.26em;text-transform:uppercase;color:var(--t0_5);text-align:center}
+.nvf-sig::before,.nvf-sig::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(var(--gold-rgb),.35))}
+.nvf-sig::after{background:linear-gradient(270deg,transparent,rgba(var(--gold-rgb),.35))}
+.nvf-sig b{color:var(--gold);font-weight:600}
+@media(max-width:560px){.nvf-sig{letter-spacing:.16em;font-size:10px;gap:10px}}
+</style>
 </head>
 <body>
 <script>
-function nvTheme(l){var b=document.body,h=document.documentElement;b.classList.toggle('light-mode',l);h.classList.toggle('light-mode',l);var m=document.querySelector('meta[name="theme-color"]');if(m)m.content=l?'#F6F7FB':'#D4AF37';document.querySelectorAll('.nv-theme').forEach(function(x){x.textContent=l?'☾':'☀';x.setAttribute('aria-label',l?'Switch to dark mode':'Switch to light mode')})}
+function nvTheme(l){var b=document.body,h=document.documentElement;b.classList.toggle('light-mode',l);h.classList.toggle('light-mode',l);var m=document.querySelector('meta[name="theme-color"]');if(m)m.content=l?'#F6F7FB':'#D4AF37';document.querySelectorAll('.nvd-switch').forEach(function(s){s.classList.toggle('on',l);var p=s.closest('[role=switch]');if(p)p.setAttribute('aria-checked',l)});document.querySelectorAll('.nv-theme').forEach(function(x){x.textContent=l?'☾':'☀';x.setAttribute('aria-label',l?'Switch to dark mode':'Switch to light mode')})}
 function toggleTheme(){var l=!document.body.classList.contains('light-mode');try{localStorage.setItem('nirvo-theme',l?'light':'dark')}catch(e){}nvTheme(l)}
 try{if(localStorage.getItem('nirvo-theme')==='light')nvTheme(true)}catch(e){}
 document.addEventListener('DOMContentLoaded',function(){nvTheme(document.body.classList.contains('light-mode'))});
@@ -660,17 +735,32 @@ window.addEventListener('load',function(){
 
 </nav>
 
-<!-- Mobile Menu Overlay -->
-<div class="mobile-menu" id="mobile-menu">
-  <div onclick="toggleMenu()" style="position:absolute;top:20px;right:20px;cursor:pointer;font-size:24px;color:var(--t0_5)">✕</div>
-  <a href="#features" onclick="toggleMenu()">Features</a>
-  <a href="#" onclick="toggleMenu()">Practice</a>
-  <a href="#" onclick="toggleMenu()">Pricing</a>
-  <a href="#" onclick="toggleMenu()">About</a>
-  <div style="height:1px;width:60px;background:rgba(var(--gold-rgb),0.3)"></div>
-  <a href="#" onclick="toggleTheme();return false" class="nv-theme-link">Light / Dark</a>
-  <a href="auth.html" id="mobile-login" style="color:var(--t0_5);font-size:18px">Log in</a>
-  <a href="auth.html" class="mobile-cta"><button class="btn-gold" style="font-size:15px;padding:14px 36px">Get Started Free</button></a>
+<!-- Mobile Menu Drawer (NIRON-style) -->
+<div class="mobile-menu" id="mobile-menu" role="dialog" aria-modal="true" aria-label="Menu">
+  <div class="nvd">
+    <div class="nvd-head">
+      <div class="nvd-brand"><img id="nvd-logo" alt="NIRVO" width="46" height="46"><span class="nvd-word">NIR<b>VO</b></span></div>
+      <button type="button" class="nvd-close" onclick="toggleMenu()" aria-label="Close menu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+    </div>
+    <div class="nvd-body">
+      <div class="nvd-label">Account</div>
+      <a href="auth.html" id="nvd-account" class="nvd-row nvd-primary"><span class="nvd-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span><span id="nvd-account-name">Log in / Sign up</span><svg class="nvd-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a>
+      <a href="dashboard.html" id="nvd-dashboard" class="nvd-row" hidden><span class="nvd-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3v18h18"/><path d="M8 17V9"/><path d="M13 17V5"/><path d="M18 17v-6"/></svg></span><span>Dashboard</span><svg class="nvd-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a>
+
+      <div class="nvd-label">Explore</div>
+      <a href="#features" class="nvd-row" onclick="toggleMenu()"><span class="nvd-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></svg></span><span>Features</span><svg class="nvd-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a>
+      <a href="practice.html" class="nvd-row"><span class="nvd-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><path d="M12 19v3"/></svg></span><span>Practice</span><svg class="nvd-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a>
+      <a href="nirvo-chat.html" class="nvd-row"><span class="nvd-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg></span><span>Chat with NIRVO</span><i class="nvd-dot"></i><svg class="nvd-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a>
+      <a href="auth.html" class="nvd-row"><span class="nvd-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3 7 7 .6-5.3 4.7 1.7 7.2L12 17.8 5.6 21.5l1.7-7.2L2 9.6 9 9z"/></svg></span><span>Pricing</span><svg class="nvd-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a>
+      <a href="https://niracademy.com" class="nvd-row" rel="noopener"><span class="nvd-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></span><span>About NIR Academy</span><svg class="nvd-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a>
+
+      <div class="nvd-label">Settings</div>
+      <button type="button" class="nvd-row nvd-toggle" role="switch" aria-checked="false" onclick="toggleTheme()"><span class="nvd-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg></span><span>Light Mode</span><span class="nvd-switch" aria-hidden="true"></span></button>
+
+      <button type="button" id="nvd-signout" class="nvd-row nvd-danger" style="margin-top:8px" hidden><span class="nvd-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></svg></span><span>Sign Out</span></button>
+    </div>
+    <div class="nvd-foot">NIRVO · NIR Academy<br>Dr. Niki Majidi · Speaking Intelligence</div>
+  </div>
 </div>
 
 <!-- ═══ HERO ═══ -->
@@ -1008,11 +1098,11 @@ window.addEventListener('load',function(){
       <div>
         <h5 style="font-size:11px;color:var(--t0_35);letter-spacing:0.16em;text-transform:uppercase;margin-bottom:18px">Product</h5>
         <div style="display:flex;flex-direction:column;gap:11px">
-          <span class="footer-link">Speaking Practice</span>
-          <span class="footer-link">Pronunciation AI</span>
-          <span class="footer-link">Fluency Tracker</span>
-          <span class="footer-link">Public Speaking</span>
-          <span class="footer-link">Progress Dashboard</span>
+          <a class="footer-link" href="practice.html">Speaking Practice</a>
+          <a class="footer-link" href="practice.html">Pronunciation AI</a>
+          <a class="footer-link" href="dashboard.html">Fluency Tracker</a>
+          <a class="footer-link" href="practice.html">Public Speaking</a>
+          <a class="footer-link" href="dashboard.html">Progress Dashboard</a>
         </div>
       </div>
 
@@ -1020,7 +1110,7 @@ window.addEventListener('load',function(){
       <div>
         <h5 style="font-size:11px;color:var(--t0_35);letter-spacing:0.16em;text-transform:uppercase;margin-bottom:18px">Learn</h5>
         <div style="display:flex;flex-direction:column;gap:11px">
-          <span class="footer-link">NIR Academy</span>
+          <a class="footer-link" href="https://niracademy.com">NIR Academy</a>
           <span class="footer-link">IELTS Prep</span>
           <span class="footer-link">TESOL Resources</span>
           <span class="footer-link">Blog</span>
@@ -1051,9 +1141,11 @@ window.addEventListener('load',function(){
     <!-- Divider -->
     <div style="height:0.5px;background:var(--k0_07);margin-bottom:28px"></div>
 
+    <div class="nvf-sig"><span><b>NIRVO</b> · NIR Academy · Dr. Niki Majidi · Speaking Intelligence</span></div>
+
     <!-- Bottom row -->
     <div style="display:flex;justify-content:space-between;align-items:center" class="bottom-row">
-      <p style="font-size:12px;color:var(--t0_2)">© 2025 NIRVO AI · NIR Academy · Dr. Niki Majidi. All rights reserved.</p>
+      <p style="font-size:12px;color:var(--t0_2)">© 2026 NIRVO AI · NIR Academy. All rights reserved.</p>
       <p style="font-size:11px;letter-spacing:0.2em;color:var(--t0_15);text-transform:uppercase">Better Speaking · Better Confidence · Better You</p>
     </div>
 
@@ -1063,23 +1155,35 @@ window.addEventListener('load',function(){
 <!-- ═══════════════════════════════ JAVASCRIPT ═══════════════════════════════ -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-  // ── Check if user is logged in ──
+  // ── Auth state → header, drawer, bottom bar ──
+  const nvSetAuth = (session) => {
+    const u = session && session.user;
+    const meta = (u && u.user_metadata) || {};
+    const name = u ? (meta.full_name || meta.name || (u.email || '').split('@')[0] || 'Account') : '';
+    const show = (id, on, d) => { const el = document.getElementById(id); if (el) el.style.display = on ? (d || 'inline') : 'none'; };
+    show('nav-dashboard', !!u); show('nav-login', !u);
+    const acc = document.getElementById('nvd-account'), nm = document.getElementById('nvd-account-name');
+    if (acc && nm) { acc.setAttribute('href', u ? 'dashboard.html' : 'auth.html'); nm.textContent = u ? name : 'Log in / Sign up'; }
+    const dash = document.getElementById('nvd-dashboard'), out = document.getElementById('nvd-signout');
+    if (dash) dash.hidden = !u; if (out) out.hidden = !u;
+    const mob = document.getElementById('nv-mob-account'); if (mob) mob.setAttribute('href', u ? 'dashboard.html' : 'auth.html');
+  };
   (async () => {
     try {
       const { createClient } = supabase;
       const sb = createClient('https://liixgxwpcxusocpixadt.supabase.co', 'sb_publishable_XCepI_R9piNQUZSlIcyDiw_ZFaxqzvd');
+      window.__nvSb = sb;
       const { data: { session } } = await sb.auth.getSession();
-      if (session) {
-        document.getElementById('nav-dashboard').style.display = 'inline';
-        document.getElementById('nav-login').style.display = 'none';
-      } else {
-        document.getElementById('nav-login').style.display = 'inline';
-        document.getElementById('nav-dashboard').style.display = 'none';
-      }
-    } catch(e) {
-      document.getElementById('nav-login').style.display = 'inline';
+      nvSetAuth(session);
+      sb.auth.onAuthStateChange((_e, s) => nvSetAuth(s));
+    } catch (e) {
+      nvSetAuth(null);
     }
   })();
+  document.getElementById('nvd-signout')?.addEventListener('click', async () => {
+    try { if (window.__nvSb) await window.__nvSb.auth.signOut(); } catch (e) {}
+    location.reload();
+  });
   // Newsletter subscribe
   function subscribeNewsletter() {
     const input = document.getElementById('newsletter-input');
@@ -1105,16 +1209,20 @@ window.addEventListener('load',function(){
     el.classList.add('active');
   }
 
-  // Hamburger menu toggle
+  // Menu drawer toggle
   function toggleMenu() {
     const h = document.getElementById('hamburger');
     const m = document.getElementById('mobile-menu');
     if (!h || !m) return;
-    h.classList.toggle('open');
-    m.classList.toggle('open');
-    document.body.style.overflow = m.classList.contains('open') ? 'hidden' : '';
+    const open = m.classList.toggle('open');
+    h.classList.toggle('open', open);
+    h.setAttribute('aria-expanded', open);
+    document.body.style.overflow = open ? 'hidden' : '';
   }
-</script>
+  document.getElementById('mobile-menu')?.addEventListener('click', e => { if (e.target.id === 'mobile-menu') toggleMenu(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && document.getElementById('mobile-menu')?.classList.contains('open')) toggleMenu(); });
+  (function () { const s = document.querySelector('nav img'), t = document.getElementById('nvd-logo'); if (s && t) t.src = s.src; })();
+  </script>
 
 
   <script>
@@ -1126,7 +1234,7 @@ window.addEventListener('load',function(){
       });
     }
   </script>
-<div id="nv-mob-nav" role="navigation" aria-label="Main"><div class="nv-grid"><a href="/" class="on"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .7-1.5l7-6a2 2 0 0 1 2.6 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><span>Home</span></a><a href="#features"><svg viewBox="0 0 24 24" aria-hidden="true"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></svg><span>Features</span></a><a href="practice.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><path d="M12 19v3"/></svg><span>Practice</span></a><a href="nirvo-chat.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg><span>Chat</span></a><a href="auth.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span>Account</span></a></div></div>
+<div id="nv-mob-nav" role="navigation" aria-label="Main"><div class="nv-grid"><a href="/" class="on"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .7-1.5l7-6a2 2 0 0 1 2.6 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><span>Home</span></a><a href="#features"><svg viewBox="0 0 24 24" aria-hidden="true"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></svg><span>Features</span></a><a href="practice.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><path d="M12 19v3"/></svg><span>Practice</span></a><a href="nirvo-chat.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg><span>Chat</span></a><a href="auth.html" id="nv-mob-account"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span>Account</span></a></div></div>
 <button type="button" class="nv-theme" onclick="toggleTheme()" aria-label="Switch to light mode">☀</button>
 </body>
 </html>
