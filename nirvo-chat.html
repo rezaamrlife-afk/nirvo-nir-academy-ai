@@ -15,6 +15,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="NIRVO AI">
   <link rel="apple-touch-icon" href="/icons/icon-192.png">
+<script>try{if(localStorage.getItem('nirvo-theme')==='light')document.documentElement.classList.add('light-mode')}catch(e){}</script>
 <title>NIRVO AI — Chat</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -176,6 +177,30 @@
   .send-btn:hover { transform:scale(1.05);box-shadow:0 4px 16px rgba(212,175,55,0.3); }
   .send-btn:disabled { opacity:0.4;cursor:not-allowed;transform:none; }
 
+  /* ── LIVE VOICE ── */
+  #live-status { display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:10px;min-height:18px;font-size:12px;letter-spacing:0.04em;color:rgba(255,255,255,0.6);text-align:center; }
+  #live-status[hidden] { display:none !important; }
+  #live-status .live-dot { width:8px;height:8px;border-radius:50%;background:#D4AF37;flex-shrink:0;animation:nvLiveBlink 1.2s ease infinite; }
+  #live-status[data-kind="speaking"] .live-dot { background:#E8A0A0; }
+  #live-status[data-kind="error"] { color:#E8A0A0; }
+  #live-status[data-kind="error"] .live-dot { background:#E8A0A0;animation:none; }
+  .live-btn { height:40px;min-width:40px;padding:0 12px;border-radius:20px;border:1px solid rgba(212,175,55,0.2);background:rgba(255,255,255,0.06);color:#D4AF37;font-family:'Outfit',sans-serif;font-size:13px;font-weight:500;display:flex;align-items:center;justify-content:center;gap:6px;cursor:pointer;transition:all 0.3s;flex-shrink:0;position:relative; }
+  .live-btn svg { width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0; }
+  .live-btn .ic-stop { display:none; }
+  .live-btn.on .ic-wave { display:none; }
+  .live-btn.on .ic-stop { display:block; }
+  .live-btn:hover { border-color:rgba(212,175,55,0.45); }
+  .live-btn:disabled { opacity:0.5;cursor:wait; }
+  .live-btn.on[data-state="listening"] { background:linear-gradient(135deg,#D4AF37,#F7C948);color:#000;border-color:transparent; }
+  .live-btn.on[data-state="listening"]::after { content:'';position:absolute;inset:-6px;border-radius:26px;border:2px solid rgba(212,175,55,0.35);animation:nvLivePulse 1.5s ease infinite; }
+  .live-btn.on[data-state="thinking"],.live-btn.on[data-state="idle"] { background:rgba(212,175,55,0.14);animation:nvLiveBlink 1.2s ease infinite; }
+  .live-btn.on[data-state="speaking"] { background:rgba(232,160,160,0.18);border-color:rgba(232,160,160,0.5);color:#E8A0A0; }
+  @keyframes nvLivePulse { 0%{transform:scale(0.96);opacity:0.9} 100%{transform:scale(1.12);opacity:0} }
+  @keyframes nvLiveBlink { 0%,100%{opacity:1} 50%{opacity:0.55} }
+  .input-wrap #chat-input { min-width:0; }
+  @media (max-width:480px) { .live-btn { padding:0;width:40px; } .live-btn .live-label { display:none; } }
+  @media (prefers-reduced-motion:reduce) { .live-btn,.live-btn::after,#live-status .live-dot { animation:none !important; } }
+
   /* ── Hamburger & Mobile Menu ── */
   .hamburger { display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;z-index:1001;flex-shrink:0; }
   .hamburger span { display:block;width:24px;height:2px;background:#D4AF37;border-radius:2px;transition:all 0.3s; }
@@ -238,6 +263,122 @@
   /* Mode badge */
   .mode-badge { display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:20px;font-size:11px; }
 </style>
+<style id="nirvo-theme">
+:root{--black:#080808;--black-rgb:8,8,8;--white:#fff;--on-gold:#000;--gold:#D4AF37;--gold-light:#F7C948;--gold-rgb:212,175,55;--rose:#E8A0A0;--rose-rgb:232,160,160;--pink:#D4547E;--pink-rgb:212,84,126;--pk:#D4547E;--pk2:#e87a9e;--mint:#5DCAA5;--mint-rgb:93,202,165;--mint2:#7ddfc0;--sh:0,0,0;--shk:1;--b0_05:rgba(255,255,255,0.05);--b0_06:rgba(255,255,255,0.06);--b0_07:rgba(255,255,255,0.07);--b0_09:rgba(255,255,255,0.09);--b0_1:rgba(255,255,255,0.1);--b0_12:rgba(255,255,255,0.12);--b0_14:rgba(255,255,255,0.14);--b0_35:rgba(255,255,255,0.35);--b0_4:rgba(255,255,255,0.4);--f0_015:rgba(255,255,255,0.015);--f0_02:rgba(255,255,255,0.02);--f0_03:rgba(255,255,255,0.03);--f0_04:rgba(255,255,255,0.04);--f0_045:rgba(255,255,255,0.045);--k0_05:rgba(255,255,255,0.05);--k0_06:rgba(255,255,255,0.06);--k0_07:rgba(255,255,255,0.07);--k0_1:rgba(255,255,255,0.1);--k0_35:rgba(255,255,255,0.35);--t0_2:rgba(255,255,255,0.52);--t0_25:rgba(255,255,255,0.55);--t0_28:rgba(255,255,255,0.57);--t0_3:rgba(255,255,255,0.58);--t0_35:rgba(255,255,255,0.61);--t0_38:rgba(255,255,255,0.63);--t0_4:rgba(255,255,255,0.64);--t0_45:rgba(255,255,255,0.67);--t0_5:rgba(255,255,255,0.70);--t0_55:rgba(255,255,255,0.73);--t0_75:rgba(255,255,255,0.85)}
+html.light-mode,body.light-mode{--black:#F6F7FB;--black-rgb:246,247,251;--white:#14172B;--on-gold:#fff;--gold:#A9233A;--gold-light:#8E1C30;--gold-rgb:96,30,44;--rose:#6F1D2B;--rose-rgb:111,29,43;--pink:#7A1B2C;--pink-rgb:122,27,44;--pk:#4F46B8;--pk2:#7C6AD6;--mint:#1F7A63;--mint-rgb:31,122,99;--mint2:#3FA98A;--sh:30,27,75;--shk:.3;--b0_05:rgba(20,23,43,0.11);--b0_06:rgba(20,23,43,0.11);--b0_07:rgba(20,23,43,0.12);--b0_09:rgba(20,23,43,0.13);--b0_1:rgba(20,23,43,0.14);--b0_12:rgba(20,23,43,0.15);--b0_14:rgba(20,23,43,0.16);--b0_35:rgba(20,23,43,0.22);--b0_4:rgba(20,23,43,0.22);--f0_015:rgba(255,255,255,0.61);--f0_02:rgba(255,255,255,0.63);--f0_03:rgba(255,255,255,0.67);--f0_04:rgba(255,255,255,0.71);--f0_045:rgba(255,255,255,0.73);--k0_05:rgba(20,23,43,0.07);--k0_06:rgba(20,23,43,0.08);--k0_07:rgba(20,23,43,0.09);--k0_1:rgba(20,23,43,0.12);--k0_35:rgba(20,23,43,0.20);--t0_2:rgba(20,23,43,0.76);--t0_25:rgba(20,23,43,0.77);--t0_28:rgba(20,23,43,0.78);--t0_3:rgba(20,23,43,0.79);--t0_35:rgba(20,23,43,0.81);--t0_38:rgba(20,23,43,0.81);--t0_4:rgba(20,23,43,0.82);--t0_45:rgba(20,23,43,0.83);--t0_5:rgba(20,23,43,0.85);--t0_55:rgba(20,23,43,0.87);--t0_75:rgba(20,23,43,0.93)}
+body.light-mode{background:var(--black);color:var(--white)}
+
+.nv-theme{position:fixed;right:20px;bottom:20px;z-index:250;width:44px;height:44px;padding:0;border-radius:999px;border:1px solid rgba(var(--gold-rgb),.35);background:rgba(var(--black-rgb),.85);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);box-shadow:0 8px 24px rgba(var(--sh),calc(.4 * var(--shk)));color:var(--gold);font-size:16.5px;cursor:pointer;transition:background .2s,border-color .2s}
+.nv-theme:hover{background:rgba(var(--gold-rgb),.1);border-color:var(--gold)}
+@media(max-width:768px){.nv-theme{display:none}}
+html.light-mode,body.light-mode{color-scheme:light}
+body.light-mode ::selection{background:rgba(169,35,58,.18);color:#14172B}
+body.light-mode :focus-visible{outline:2px solid #A9233A;outline-offset:2px}
+</style>
+<style id="nirvo-chat-premium">
+/* NIRVO chat — modern layer shared with the landing page (theme variables + glass/gold look). Visual only. */
+:root{--ease:cubic-bezier(.22,.8,.24,1)}
+html{-webkit-tap-highlight-color:transparent}
+body{background:var(--black);color:var(--white);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+.blob-1{background:radial-gradient(circle,rgba(var(--gold-rgb),.08) 0%,transparent 70%)!important}
+.blob-2{background:radial-gradient(circle,rgba(var(--pink-rgb),.07) 0%,transparent 70%)!important}
+::selection{background:rgba(var(--gold-rgb),.25)}
+a:focus-visible,button:focus-visible,input:focus-visible,.cd-trigger:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+
+/* navbar */
+.navbar{background:rgba(var(--black-rgb),.82)!important;border-bottom:1px solid rgba(var(--gold-rgb),.14)!important;-webkit-backdrop-filter:blur(22px) saturate(1.4);backdrop-filter:blur(22px) saturate(1.4)}
+.navbar::after{display:none}
+.navbar div[style*="Cormorant"]{color:var(--gold)!important}
+.navbar div[style*="text-transform:uppercase"]{color:var(--t0_2)!important}
+.nav-link{position:relative;color:var(--t0_4)}
+.nav-link:hover,.nav-link.active{color:var(--gold)}
+.nav-link::after{content:"";position:absolute;left:0;right:0;bottom:-7px;height:2px;border-radius:2px;background:linear-gradient(90deg,var(--gold),var(--gold-light));transform:scaleX(0);transform-origin:left;transition:transform .3s var(--ease)}
+.nav-link:hover::after,.nav-link.active::after{transform:scaleX(1)}
+#user-avatar{background:linear-gradient(135deg,var(--gold),var(--gold-light))!important;color:var(--on-gold)!important;box-shadow:0 4px 14px rgba(var(--gold-rgb),.25)}
+.nv-signout{background:var(--f0_04);border:1px solid var(--b0_1);border-radius:999px;color:var(--t0_4);font-family:'Outfit',sans-serif;font-size:12px;padding:7px 16px;cursor:pointer;transition:all .2s}
+.nv-signout:hover{color:var(--gold);border-color:rgba(var(--gold-rgb),.4)}
+.nv-theme-btn{height:34px;min-width:34px;padding:0 10px;border-radius:999px;border:1px solid rgba(var(--gold-rgb),.3);background:var(--f0_03);color:var(--gold);font-size:15px;line-height:1;cursor:pointer;transition:all .2s}
+.nv-theme-btn:hover{background:rgba(var(--gold-rgb),.1);border-color:var(--gold)}
+@media(min-width:769px){
+  .navbar{top:12px;width:min(1280px,calc(100% - 48px));margin:12px auto 0;padding:10px 28px!important;border:1px solid rgba(var(--gold-rgb),.2)!important;border-radius:999px;background:rgba(var(--black-rgb),.72)!important;box-shadow:0 12px 40px rgba(var(--sh),calc(.4 * var(--shk)))}
+}
+@media(max-width:768px){.nv-theme-btn{display:none}}
+
+/* mode bar + dropdown */
+.mode-bar{background:transparent!important;border-bottom:none!important;padding-top:14px}
+.mode-bar>span[style]{color:var(--t0_3)!important}
+.mode-btn{border-radius:999px;border:1px solid var(--b0_09);color:var(--t0_4);background:var(--f0_03)}
+.mode-btn:hover{border-color:rgba(var(--gold-rgb),.4);color:var(--gold)}
+.mode-btn.active{background:linear-gradient(135deg,rgba(var(--gold-rgb),.2),rgba(var(--gold-rgb),.08));border-color:rgba(var(--gold-rgb),.5);color:var(--gold);box-shadow:0 4px 16px rgba(var(--gold-rgb),.12)}
+.cd-trigger{background:var(--black);border-color:rgba(var(--gold-rgb),.3);color:var(--gold);border-radius:999px;padding:7px 14px}
+.cd-trigger:hover{border-color:rgba(var(--gold-rgb),.6)}
+.cd-trigger.open{border-color:var(--gold)}
+.cd-arrow{color:var(--gold)}
+.cd-menu{background:var(--black);border:1px solid rgba(var(--gold-rgb),.25);border-radius:16px;box-shadow:0 16px 48px rgba(var(--sh),calc(.55 * var(--shk)))}
+.cd-option{color:var(--t0_5);border-radius:10px}
+.cd-option:hover,.cd-option.selected{background:rgba(var(--gold-rgb),.12);color:var(--gold)}
+.mode-bar button[onclick="clearChat()"]{background:transparent!important;border-color:rgba(var(--pink-rgb),.35)!important;color:var(--pink)!important;border-radius:999px!important}
+.mode-bar button[onclick="clearChat()"]:hover{background:rgba(var(--pink-rgb),.08)!important}
+
+/* coach panel */
+.avatar-panel{margin:8px 0 16px 24px;border:1px solid var(--b0_07)!important;border-radius:28px;background:linear-gradient(165deg,var(--f0_045),var(--f0_015))!important;box-shadow:0 18px 50px rgba(var(--sh),calc(.3 * var(--shk)))}
+.avatar-panel div[style*="uppercase"]{color:var(--t0_25)!important}
+.nirvo-name{color:var(--gold);letter-spacing:.08em}
+.nirvo-status{color:var(--t0_3)}
+.avatar-wave-bar{background:linear-gradient(180deg,var(--gold),var(--gold-light))}
+.avatar-panel span[style*="255,255,255"]{color:var(--t0_3)!important}
+.avatar-panel .mode-badge{color:var(--gold)!important;background:rgba(var(--gold-rgb),.1)!important;border-color:rgba(var(--gold-rgb),.3)!important}
+#mode-indicator{color:var(--gold)!important;background:rgba(var(--gold-rgb),.1)!important;border-color:rgba(var(--gold-rgb),.3)!important}
+#tts-label{color:var(--gold)!important}
+#tts-label[style*="255, 255, 255"]{color:var(--t0_3)!important}
+@media(min-width:769px){.mode-bar{padding-top:20px}}
+
+/* conversation */
+.messages{padding-left:max(32px,calc((100% - 860px) / 2));padding-right:max(32px,calc((100% - 860px) / 2))}
+.messages::-webkit-scrollbar-thumb{background:var(--b0_12)}
+.msg-bubble{font-weight:400;box-shadow:0 6px 24px rgba(var(--sh),calc(.16 * var(--shk)))}
+.msg.nirvo .msg-bubble{background:linear-gradient(165deg,rgba(var(--rose-rgb),.11),rgba(var(--rose-rgb),.04));border:1px solid rgba(var(--rose-rgb),.24);color:var(--t0_75);border-radius:6px 20px 20px 20px}
+.msg.user .msg-bubble{background:linear-gradient(135deg,rgba(var(--gold-rgb),.2),rgba(var(--gold-rgb),.09));border:1px solid rgba(var(--gold-rgb),.3);color:var(--white);border-radius:20px 6px 20px 20px}
+.msg.nirvo .msg-avatar{background:linear-gradient(135deg,var(--gold),var(--gold-light));color:var(--on-gold)}
+.msg.user .msg-avatar{background:var(--f0_04);border:1px solid var(--b0_1);color:var(--t0_4)}
+.msg-bubble strong{color:var(--gold)!important}
+.msg-bubble div[style*="border-left"]{background:rgba(var(--rose-rgb),.1)!important;border-left-color:rgba(var(--rose-rgb),.55)!important;color:var(--rose)!important;border-radius:0 12px 12px 0!important}
+.msg-bubble div[style*="italic"]{color:var(--gold)!important}
+.typing-indicator{background:rgba(var(--rose-rgb),.07);border-color:rgba(var(--rose-rgb),.2);border-radius:6px 20px 20px 20px}
+.typing-dot{background:var(--rose)}
+
+/* composer */
+.input-bar{background:transparent!important;border-top:none!important;padding-top:8px;padding-left:max(32px,calc((100% - 860px) / 2));padding-right:max(32px,calc((100% - 860px) / 2))}
+.input-wrap{background:rgba(var(--black-rgb),.72);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border:1px solid var(--b0_12);border-radius:24px;padding:8px 10px 8px 12px;box-shadow:0 14px 40px rgba(var(--sh),calc(.3 * var(--shk)))}
+.input-wrap:focus-within{border-color:rgba(var(--gold-rgb),.5);box-shadow:0 14px 40px rgba(var(--sh),calc(.3 * var(--shk))),0 0 0 4px rgba(var(--gold-rgb),.08)}
+#chat-input{color:var(--white)}
+#chat-input::placeholder{color:var(--t0_2);opacity:.75}
+.mic-btn.idle{background:var(--f0_04);border:1px solid rgba(var(--gold-rgb),.28)}
+.mic-btn.listening{background:linear-gradient(135deg,var(--gold),var(--gold-light))}
+.send-btn{background:linear-gradient(135deg,var(--gold),var(--gold-light));color:var(--on-gold);box-shadow:0 6px 18px rgba(var(--gold-rgb),.25)}
+.input-bar>div[style*="text-align:center"]{color:var(--t0_2)!important;opacity:.7}
+#live-status{color:var(--t0_5)}
+#live-status .live-dot{background:var(--gold)}
+#live-status[data-kind="speaking"] .live-dot,#live-status[data-kind="error"] .live-dot{background:var(--rose)}
+#live-status[data-kind="error"]{color:var(--rose)}
+.live-btn{color:var(--gold);border-color:rgba(var(--gold-rgb),.28);background:var(--f0_04)}
+.live-btn.on[data-state="listening"]{background:linear-gradient(135deg,var(--gold),var(--gold-light));color:var(--on-gold)}
+.live-btn.on[data-state="listening"]::after{border-color:rgba(var(--gold-rgb),.35)}
+.live-btn.on[data-state="thinking"],.live-btn.on[data-state="idle"]{background:rgba(var(--gold-rgb),.14)}
+.live-btn.on[data-state="speaking"]{background:rgba(var(--rose-rgb),.16);border-color:rgba(var(--rose-rgb),.5);color:var(--rose)}
+
+/* mobile menu */
+.hamburger span{background:var(--gold)}
+.mobile-menu{background:rgba(var(--black-rgb),.98)}
+.mobile-menu a{color:var(--t0_5)}
+.mobile-menu a:hover{color:var(--gold)}
+.mobile-menu a[onclick*="handleLogout"]{color:var(--t0_3)!important}
+.mobile-menu .nv-theme-row{font-size:16px;font-family:'Outfit',sans-serif;font-weight:500;color:var(--gold)}
+.mobile-close{background:var(--f0_04);color:var(--t0_4)}
+.mobile-close:hover{background:var(--f0_04);color:var(--white)}
+html.light-mode,body.light-mode{color-scheme:light}
+body.light-mode ::selection{background:rgba(169,35,58,.18);color:#14172B}
+</style>
 </head>
 <body>
 <div class="blob-1"></div>
@@ -270,8 +411,9 @@
 
   <!-- User -->
   <div style="display:flex;align-items:center;gap:12px">
+    <button type="button" class="nv-theme-btn" onclick="toggleTheme()" aria-label="Switch to light mode">☀</button>
     <div id="user-avatar" style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#D4AF37,#F7C948);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#000"></div>
-    <button onclick="handleLogout()" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:7px;color:rgba(255,255,255,0.4);font-size:12px;padding:6px 14px;cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.2s" onmouseover="this.style.color='#D4AF37';this.style.borderColor='rgba(212,175,55,0.3)'" onmouseout="this.style.color='rgba(255,255,255,0.4)';this.style.borderColor='rgba(255,255,255,0.08)'">Sign Out</button>
+    <button onclick="handleLogout()" class="nv-signout">Sign Out</button>
   </div>
 
   <!-- Hamburger -->
@@ -287,6 +429,7 @@
   <a href="practice.html" onclick="toggleMenu()">Practice</a>
   <a href="progress.html" onclick="toggleMenu()">Progress</a>
   <a href="nirvo-chat.html" onclick="toggleMenu()">Chat</a>
+  <a href="#" class="nv-theme-row" onclick="toggleTheme();return false"><span class="nv-theme-ico">☀</span> <span class="nv-theme-lbl">Light mode</span></a>
   <div style="width:50px;height:1px;background:rgba(212,175,55,0.2)"></div>
   <a href="#" onclick="handleLogout()" style="font-size:16px;color:rgba(255,255,255,0.4)">Sign Out</a>
 </div>
@@ -371,8 +514,10 @@
 
     <!-- INPUT BAR -->
     <div class="input-bar">
+      <div id="live-status" role="status" aria-live="polite" hidden><span class="live-dot"></span><span id="live-status-text"></span></div>
       <div class="input-wrap">
         <button class="mic-btn idle" id="mic-btn" onclick="toggleMic()" title="Hold to speak">🎤</button>
+        <button type="button" class="live-btn" id="live-btn" onclick="toggleLive()" aria-pressed="false" aria-label="Start live voice conversation" title="Live voice conversation"><svg class="ic-wave" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10v4M7 6v12M12 3v18M17 7v10M21 10v4"/></svg><svg class="ic-stop" viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2"/></svg><span class="live-label" id="live-label">Live</span></button>
         <input type="text" id="chat-input" placeholder="Type your message or press the mic to speak..." onkeydown="if(event.key==='Enter')sendMessage()">
         <button class="send-btn" id="send-btn" onclick="sendMessage()">➤</button>
       </div>
@@ -930,6 +1075,176 @@ if (window.speechSynthesis.getVoices().length === 0) {
 }
 </script>
 
+
+
+  <script>
+  // ── Live Voice Conversation (hands-free loop on top of the existing chat engine) ──
+  (function () {
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const $ = (id) => document.getElementById(id);
+    const btn = $('live-btn'), bar = $('live-status'), txt = $('live-status-text');
+    if (!btn || !bar || !txt) return;
+
+    let live = false, busy = false, rec = null, timer = null, flashT = null, quiet = 0, state = 'off';
+    const LABEL = { listening: 'Listening… speak naturally', thinking: 'NIRVO is thinking…', speaking: 'NIRVO is speaking…', idle: 'Getting ready…' };
+
+    function ui(s) {
+      state = s;
+      btn.dataset.state = s;
+      btn.classList.toggle('on', live);
+      btn.setAttribute('aria-pressed', live ? 'true' : 'false');
+      btn.setAttribute('aria-label', live ? 'Stop live voice conversation' : 'Start live voice conversation');
+      $('live-label').textContent = live ? 'End' : 'Live';
+      if (live) { clearTimeout(flashT); bar.hidden = false; bar.dataset.kind = s; txt.textContent = LABEL[s] || ''; }
+    }
+
+    function flash(msg) {
+      clearTimeout(flashT);
+      bar.hidden = false; bar.dataset.kind = 'error'; txt.textContent = msg;
+      flashT = setTimeout(() => { if (!live) bar.hidden = true; }, 7000);
+    }
+
+    function killRec() {
+      const r = rec; rec = null;
+      if (r) { try { r.abort(); } catch (e) {} }
+    }
+
+    function exitLive() {
+      const wasSpeaking = state === 'speaking';
+      live = false; clearTimeout(timer); killRec();
+      if (wasSpeaking) { try { window.speechSynthesis.cancel(); } catch (e) {} }
+      btn.classList.remove('on'); btn.dataset.state = 'off'; btn.setAttribute('aria-pressed', 'false');
+      btn.setAttribute('aria-label', 'Start live voice conversation');
+      $('live-label').textContent = 'Live';
+      const m = $('mic-btn'); if (m) m.disabled = false;
+      state = 'off';
+      if (!bar.dataset.kind || bar.dataset.kind !== 'error') bar.hidden = true;
+    }
+
+    function micMessage(e) {
+      const n = e && e.name;
+      if (n === 'NotAllowedError' || n === 'SecurityError') return 'Microphone access is blocked. Allow it in your browser or app settings, then tap Live again.';
+      if (n === 'NotFoundError' || n === 'OverconstrainedError') return 'No microphone was found on this device.';
+      if (n === 'NotReadableError') return 'Your microphone is being used by another app.';
+      return 'Could not access the microphone. You can still type your message.';
+    }
+
+    function fatal(msg) { exitLive(); flash(msg); }
+
+    function listen() {
+      if (!live || rec) return;
+      if (state === 'thinking' || state === 'speaking') return;
+      if (window.speechSynthesis && window.speechSynthesis.speaking) { timer = setTimeout(listen, 300); return; }
+      const me = new SR();
+      rec = me;
+      me.lang = 'en-US'; me.continuous = false; me.interimResults = true; me.maxAlternatives = 1;
+      let gotFinal = false, failed = false;
+
+      me.onstart = () => { if (rec === me) ui('listening'); };
+      me.onresult = (e) => {
+        if (rec !== me) return;
+        let interim = '', final = '';
+        for (let i = e.resultIndex; i < e.results.length; i++) {
+          const r = e.results[i];
+          if (r.isFinal) final += r[0].transcript; else interim += r[0].transcript;
+        }
+        final = final.trim(); interim = interim.trim();
+        if (final) {
+          gotFinal = true; quiet = 0;
+          txt.textContent = '“' + final + '”';
+          rec = null; try { me.stop(); } catch (er) {}
+          submit(final);
+        } else if (interim) {
+          txt.textContent = '“' + interim + '…”';
+        }
+      };
+      me.onerror = (e) => {
+        if (rec !== me) return;
+        const err = e && e.error;
+        if (err === 'no-speech' || err === 'aborted') return;      // handled in onend
+        failed = true;
+        if (err === 'not-allowed' || err === 'service-not-allowed') fatal('Microphone access is blocked. Allow it in your browser or app settings, then tap Live again.');
+        else if (err === 'audio-capture') fatal('No microphone was found on this device.');
+        else if (err === 'network') fatal('Speech recognition needs an internet connection. Please check it and try again.');
+        else fatal('Voice input stopped unexpectedly. You can still type your message.');
+      };
+      me.onend = () => {
+        if (rec !== me) return;
+        rec = null;
+        if (!live || gotFinal || failed) return;
+        quiet++;
+        if (quiet >= 3) { fatal('Live mode paused — no speech heard. Tap Live to continue.'); return; }
+        timer = setTimeout(listen, 300);
+      };
+
+      try { me.start(); }
+      catch (e) { rec = null; fatal('Could not start the microphone. You can still type your message.'); }
+    }
+
+    function submit(text) {
+      ui('thinking');
+      const input = $('chat-input');
+      input.value = text;
+      sendMessage();
+    }
+
+    async function startLive() {
+      if (busy) return;
+      if (!SR) { flash('Live voice works in Chrome, Edge or Samsung Internet. You can still type your message.'); return; }
+      busy = true; btn.disabled = true;
+      try {
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+          stream.getTracks().forEach(t => t.stop());
+        }
+      } catch (e) { busy = false; btn.disabled = false; flash(micMessage(e)); return; }
+      busy = false; btn.disabled = false;
+
+      if (typeof isListening !== 'undefined' && isListening) stopListening();
+      const m = $('mic-btn'); if (m) m.disabled = true;
+      if (typeof ttsEnabled !== 'undefined' && !ttsEnabled) toggleTTS();   // replies must be heard
+      try { window.speechSynthesis.cancel(); } catch (e) {}
+      live = true; quiet = 0;
+      ui('idle');
+      listen();
+    }
+
+    window.toggleLive = function () { if (live) exitLive(); else startLive(); };
+
+    // Follow the existing avatar states: thinking → speaking → idle (= turn finished, listen again)
+    const baseSetState = setNirvoState;
+    setNirvoState = function (s) {
+      baseSetState.apply(this, arguments);
+      if (!live) return;
+      clearTimeout(timer);
+      if (s === 'thinking') { killRec(); ui('thinking'); }
+      else if (s === 'speaking') { ui('speaking'); }
+      else { ui('idle'); timer = setTimeout(listen, 600); }
+    };
+
+    document.addEventListener('visibilitychange', () => { if (document.hidden && live) exitLive(); });
+    window.addEventListener('pagehide', () => { if (live) exitLive(); });
+  })();
+  </script>
+
+
+  <script>
+  // ── Theme (same storage key and behaviour as the landing page) ──
+  function nvTheme(l){
+    document.body.classList.toggle('light-mode',l);
+    document.documentElement.classList.toggle('light-mode',l);
+    var m=document.querySelector('meta[name="theme-color"]'); if(m) m.content=l?'#F6F7FB':'#D4AF37';
+    document.querySelectorAll('.nv-theme-btn').forEach(function(x){x.textContent=l?'\u263E':'\u2600';x.setAttribute('aria-label',l?'Switch to dark mode':'Switch to light mode');});
+    document.querySelectorAll('.nv-theme-ico').forEach(function(x){x.textContent=l?'\u263E':'\u2600';});
+    document.querySelectorAll('.nv-theme-lbl').forEach(function(x){x.textContent=l?'Dark mode':'Light mode';});
+  }
+  function toggleTheme(){
+    var l=!document.body.classList.contains('light-mode');
+    try{localStorage.setItem('nirvo-theme',l?'light':'dark');}catch(e){}
+    nvTheme(l);
+  }
+  (function(){var l=false;try{l=localStorage.getItem('nirvo-theme')==='light';}catch(e){} nvTheme(l);})();
+  </script>
 
   <script>
     if ('serviceWorker' in navigator) {
