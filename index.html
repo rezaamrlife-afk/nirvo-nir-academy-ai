@@ -763,6 +763,7 @@ window.addEventListener('load',function(){
     <button type="button" class="nvn-chip nvn-theme" onclick="toggleTheme()" aria-label="Switch to light mode">☀ Light</button>
     <a class="nvn-chip" href="auth.html" id="nav-login" style="color:var(--t0_45);text-decoration:none;font-size:14px;letter-spacing:0.04em;display:none;transition:color 0.2s" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--t0_45)'">Log in</a>
     <a class="nvn-chip" href="dashboard.html" id="nav-dashboard" style="color:var(--gold);text-decoration:none;font-size:14px;letter-spacing:0.04em;display:none;transition:opacity 0.2s" onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity='1'">Dashboard →</a>
+    <a class="nvn-chip" href="profile.html" id="nav-profile" style="color:var(--gold);text-decoration:none;font-size:14px;letter-spacing:0.04em;display:none;transition:opacity 0.2s" onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity='1'">Profile</a>
     <a href="auth.html" style="text-decoration:none">
       <button style="background:linear-gradient(135deg,var(--gold),var(--gold-light));border:none;border-radius:8px;color:var(--on-gold);font-size:14px;font-weight:600;padding:10px 22px;cursor:pointer;font-family:'Outfit',sans-serif;letter-spacing:0.05em;transition:all 0.25s;position:relative;overflow:hidden" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 24px rgba(var(--gold-rgb),0.4)'" onmouseout="this.style.transform='none';this.style.boxShadow='none'">
         Get Started Free
@@ -788,6 +789,7 @@ window.addEventListener('load',function(){
       <div class="nvd-label">Account</div>
       <a href="auth.html" id="nvd-account" class="nvd-row nvd-primary"><span class="nvd-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span><span id="nvd-account-name">Log in / Sign up</span><svg class="nvd-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a>
       <a href="dashboard.html" id="nvd-dashboard" class="nvd-row" hidden><span class="nvd-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3v18h18"/><path d="M8 17V9"/><path d="M13 17V5"/><path d="M18 17v-6"/></svg></span><span>Dashboard</span><svg class="nvd-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a>
+      <a href="profile.html" id="nvd-profile" class="nvd-row" hidden><span class="nvd-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span><span>My Profile</span><svg class="nvd-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a>
 
       <div class="nvd-label">Explore</div>
       <a href="#features" class="nvd-row" onclick="toggleMenu()"><span class="nvd-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></svg></span><span>Features</span><svg class="nvd-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a>
@@ -1203,10 +1205,11 @@ window.addEventListener('load',function(){
     const meta = (u && u.user_metadata) || {};
     const name = u ? (meta.full_name || meta.name || (u.email || '').split('@')[0] || 'Account') : '';
     const show = (id, on, d) => { const el = document.getElementById(id); if (el) el.style.display = on ? (d || 'inline') : 'none'; };
-    show('nav-dashboard', !!u); show('nav-login', !u);
+    show('nav-dashboard', !!u); show('nav-profile', !!u); show('nav-login', !u);
     const acc = document.getElementById('nvd-account'), nm = document.getElementById('nvd-account-name');
     if (acc && nm) { acc.setAttribute('href', u ? 'dashboard.html' : 'auth.html'); nm.textContent = u ? name : 'Log in / Sign up'; }
     const dash = document.getElementById('nvd-dashboard'), out = document.getElementById('nvd-signout');
+    const prof = document.getElementById('nvd-profile'); if (prof) prof.hidden = !u;
     if (dash) dash.hidden = !u; if (out) out.hidden = !u;
     const mob = document.getElementById('nv-mob-account'); if (mob) mob.setAttribute('href', u ? 'dashboard.html' : 'auth.html');
   };
