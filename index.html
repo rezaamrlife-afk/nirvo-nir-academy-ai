@@ -685,6 +685,22 @@ nav .hamburger{width:40px!important;height:40px!important;min-width:40px!importa
 nav{padding-left:16px!important;padding-right:16px!important}
 }
 </style>
+<style id="nirvo-nav-nowrap-fix">
+/* Fix: nav labels broke mid-word (FEATURE/S, PRACTIC/E, PRICIN/G) */
+nav .nav-links,nav .nav-link-item,nav .nav-link-item *{white-space:nowrap!important;word-break:keep-all!important;overflow-wrap:normal!important;hyphens:none!important}
+nav .nav-cta,nav .nav-cta>*,nav .nvn-brand-wrap,nav .nvn-brand,nav .nvn-name,nav .nvn-word,nav .nvn-sub{white-space:nowrap!important;word-break:keep-all!important;overflow-wrap:normal!important}
+nav .nav-links,nav .nvn-brand-wrap,nav .nav-cta{flex-shrink:0}
+nav .nvn-brand-wrap{margin-right:12px}
+@media(min-width:769px) and (max-width:1500px){
+  nav .nav-link-item{padding:8px 12px!important;font-size:12.5px!important;letter-spacing:.06em!important}
+  .nvn-sub{display:none!important}
+  nav #nav-login{display:none!important}
+}
+@media(min-width:769px) and (max-width:1100px){
+  nav .nav-link-item{padding:7px 8px!important;font-size:12px!important;letter-spacing:.03em!important}
+  nav .nav-cta .nvn-chip,nav .nav-cta button{padding:8px 10px!important;font-size:12px!important}
+}
+</style>
 </head>
 <body>
 <script>
