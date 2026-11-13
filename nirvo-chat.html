@@ -710,54 +710,64 @@ document.addEventListener('click', unlockTTS, { once: false });
 document.addEventListener('keydown', unlockTTS, { once: false });
 
 // ── TTS ──
+// Picks a clear English voice. Phones often list voices as "en_US" (underscore) and put the device-language
+// voice first, so the old exact-match / voices[0] fallback could read English with a non-English voice.
+function pickEnglishVoice() {
+  const en = window.speechSynthesis.getVoices().filter(v => /^en[-_]/i.test(v.lang || ''));
+  if (!en.length) return null;
+  const BAD = /compact|fred|albert|bad news|bahh|bells|boing|bubbles|cellos|deranged|good news|hysterical|junior|kathy|organ|princess|ralph|trinoids|whisper|zarvox|jester|superstar/i;
+  const NICE = [/google us english/i, /samantha|ava\b|allison|susan|zira|jenny|aria|serena|karen|moira|hazel|google uk english female|female/i];
+  const score = v => {
+    const lang = v.lang.replace('_', '-').toLowerCase();
+    let sc = lang === 'en-us' ? 3 : lang === 'en-gb' ? 2 : 0;
+    NICE.forEach((re, i) => { if (re.test(v.name)) sc += 6 - i * 2; });
+    if (/premium|enhanced|natural|neural/i.test(v.name)) sc += 4;
+    if (BAD.test(v.name)) sc -= 20;
+    return sc;
+  };
+  return en.slice().sort((x, y) => score(y) - score(x))[0];
+}
+function speechChunks(text) {
+  const clean = String(text).replace(/https?:\/\/\S+/g, '').replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/gu, '').replace(/[*_`#~>]+/g, '').replace(/\s+/g, ' ').trim();
+  const parts = clean.match(/[^.!?\n]+[.!?]*\s*/g) || [clean];
+  const out = []; let cur = '';
+  parts.forEach(sn => { if ((cur + sn).length > 180 && cur) { out.push(cur.trim()); cur = sn; } else cur += sn; });
+  if (cur.trim()) out.push(cur.trim());
+  return out; // short pieces: Android/Chrome stops reading long utterances part-way
+}
 function speak(text) {
   if (!ttsEnabled) { setNirvoState('idle'); return; }
-  window.speechSynthesis.cancel();
+  const synth = window.speechSynthesis;
+  synth.cancel();
   isSpeaking = true;
   setNirvoWave(true);
+  let started = false;
+  const finish = () => { isSpeaking = false; setNirvoState('idle'); setNirvoWave(false); };
 
   function doSpeak() {
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.rate = 0.9;
-    utterance.pitch = 1.15;
-    utterance.volume = 1;
-
-    const voices = window.speechSynthesis.getVoices();
-    const femaleVoice =
-      voices.find(v => v.name === 'Microsoft Zira - English (United States)') ||
-      voices.find(v => v.name === 'Google UK English Female') ||
-      voices.find(v => v.name === 'Microsoft Susan - English (United Kingdom)') ||
-      voices.find(v => v.name === 'Microsoft Hazel - English (United Kingdom)') ||
-      voices.find(v => v.name.includes('Zira')) ||
-      voices.find(v => v.name.includes('Female')) ||
-      voices.find(v => v.name.includes('Susan')) ||
-      voices.find(v => v.lang === 'en-US') ||
-      voices[0];
-
-    if (femaleVoice) utterance.voice = femaleVoice;
-
-    utterance.onend = () => {
-      isSpeaking = false;
-      setNirvoState('idle');
-      setNirvoWave(false);
-    };
-    utterance.onerror = () => {
-      isSpeaking = false;
-      setNirvoState('idle');
-      setNirvoWave(false);
-    };
-    window.speechSynthesis.speak(utterance);
+    if (started) return; started = true;
+    const chunks = speechChunks(text);
+    if (!chunks.length) { finish(); return; }
+    const voice = pickEnglishVoice();
+    const phone = window.matchMedia && matchMedia('(pointer:coarse)').matches;
+    chunks.forEach((c, i) => {
+      const u = new SpeechSynthesisUtterance(c);
+      u.lang = voice ? voice.lang : 'en-US';      // always tell the engine the text is English
+      if (voice) u.voice = voice;
+      u.rate = phone ? 0.95 : 0.9;
+      u.pitch = 1;                                 // 1.15 sounded distorted on phone voices
+      u.volume = 1;
+      if (i === chunks.length - 1) u.onend = finish;
+      u.onerror = finish;
+      synth.speak(u);
+    });
   }
 
-  const voices = window.speechSynthesis.getVoices();
-  if (voices.length > 0) {
-    doSpeak();
-  } else {
-    window.speechSynthesis.onvoiceschanged = () => {
-      window.speechSynthesis.onvoiceschanged = null;
-      doSpeak();
-    };
-    setTimeout(() => { if (isSpeaking) doSpeak(); }, 500);
+  const go = () => setTimeout(doSpeak, 60); // Android drops speak() issued in the same tick as cancel()
+  if (synth.getVoices().length > 0) go();
+  else {
+    synth.onvoiceschanged = () => { synth.onvoiceschanged = null; go(); };
+    setTimeout(() => { if (isSpeaking && !started) go(); }, 500);
   }
 }
 
