@@ -321,6 +321,20 @@ nav a svg{width:18px!important;height:18px!important}
 @media(max-width:768px){.card,.feedback-box{padding:20px!important;border-radius:22px!important}.practice-main{padding-top:28px!important}.mic-btn{width:96px!important;height:96px!important}}
 @media(prefers-reduced-motion:reduce){.card:hover,.btn-gold:hover,.topic-pill:hover{transform:none!important}}
 </style>
+<style id="nirvo-topic-grid">
+/* Topic chips: even grid (3x2 desktop, 2x3 mobile), equal size, nothing orphaned */
+#topic-pills{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:12px!important}
+#topic-pills .topic-pill{width:100%;min-width:0;justify-content:flex-start;border-radius:18px!important;padding:10px 16px 10px 10px!important;min-height:54px!important;line-height:1.2;white-space:normal;text-align:left}
+#topic-pills .topic-pill .tp-ic{flex:0 0 auto;width:34px!important;height:34px!important;padding:8px}
+@media(max-width:768px){#topic-pills{gap:10px!important}}
+@media(max-width:560px){
+#topic-pills{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important}
+#topic-pills .topic-pill{gap:8px;padding:8px 10px 8px 8px!important;min-height:50px!important;border-radius:16px!important;font-size:13.5px!important}
+#topic-pills .topic-pill .tp-ic{width:30px!important;height:30px!important;padding:7px}
+.card{padding:18px!important}
+}
+@media(max-width:340px){#topic-pills .topic-pill{font-size:12.5px!important;padding-right:6px!important}#topic-pills .topic-pill .tp-ic{width:26px!important;height:26px!important;padding:6px}}
+</style>
 </head>
 <body>
 <script>
