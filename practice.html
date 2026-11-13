@@ -236,6 +236,34 @@ body{padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))}
 
 .mobile-menu .nvd .nvd-row.nvd-cur{background:rgba(var(--gold-rgb),.09);border-color:rgba(var(--gold-rgb),.24);color:var(--gold)}
 </style>
+<style id="nirvo-type-v1">
+/* Typography layer: larger, heavier and more vivid text. Sizes/colours only. */
+:root{--t0_2:rgba(255,255,255,.76);--t0_25:rgba(255,255,255,.80);--t0_3:rgba(255,255,255,.83);--t0_35:rgba(255,255,255,.85);--t0_4:rgba(255,255,255,.88);--t0_45:rgba(255,255,255,.90);--t0_5:rgba(255,255,255,.92);--t0_7:rgba(255,255,255,.96);--t0_75:rgba(255,255,255,.98)}
+html.light-mode,body.light-mode{--t0_2:rgba(20,23,43,.86);--t0_25:rgba(20,23,43,.87);--t0_3:rgba(20,23,43,.89);--t0_35:rgba(20,23,43,.90);--t0_4:rgba(20,23,43,.92);--t0_45:rgba(20,23,43,.93);--t0_5:rgba(20,23,43,.94);--t0_7:rgba(20,23,43,.97);--t0_75:rgba(20,23,43,.98)}
+body{font-weight:450}
+[style*="font-size:9.5px"]{font-size:11.5px!important;color:var(--gold)!important;font-weight:600!important}
+[style*="font-size:11.5px"]{font-size:13px!important;font-weight:600!important}
+[style*="font-size:12px"]{font-size:13.5px!important}
+[style*="font-size:13px"]{font-size:14.5px!important}
+[style*="font-size:14px"]{font-size:15.5px!important}
+[style*="font-size:14.8px"]{font-size:16.3px!important}
+[style*="text-transform:uppercase"][style*="var(--t0_"]{color:var(--gold)!important;font-weight:600!important}
+#status-text{color:var(--gold)!important;font-weight:600!important}
+.practice-main p,.transcript-box{font-weight:500!important}
+.practice-main p{color:var(--t0_5)!important}
+.transcript-box{font-size:16.3px!important;color:var(--white)!important}
+.topic-pill{font-size:14.5px!important;font-weight:500!important;color:var(--t0_5)!important}
+.topic-pill.active{color:var(--gold)!important;font-weight:600!important}
+.score-badge{font-size:14px!important}
+.btn-gold{font-weight:700!important}
+.nvd-label{font-size:13px!important;color:var(--gold)!important}
+.mobile-menu .nvd .nvd-row{font-size:17px!important;font-weight:600!important}
+.nvd-foot{font-size:12.5px!important;color:var(--t0_5)!important;font-weight:600!important}
+.nvd-word{font-weight:700!important}
+nav a{font-weight:500}
+#nv-mob-nav a{font-size:12.5px!important;font-weight:600!important}
+@media(max-width:480px){.topic-pill{font-size:13.5px!important}}
+</style>
 </head>
 <body>
 <script>
@@ -257,7 +285,7 @@ try{if(localStorage.getItem('nirvo-theme')==='light'){document.documentElement.c
     </div>
   </div>
   <div style="display:flex;align-items:center;gap:24px">
-    <a href="profile.html" class="nv-desk-profile" style="display:inline-flex;align-items:center;gap:8px;font-size:14px;color:var(--t0_4);text-decoration:none;transition:color 0.2s" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--t0_4)'"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" style="fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 0 0-16 0"/></svg>Profile</a>
+    <a href="profile.html" class="nv-desk-profile" style="display:inline-flex;align-items:center;gap:8px;font-size:14px;color:var(--t0_4);text-decoration:none;transition:color 0.2s" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--t0_4)'"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" style="fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0"><rect width="20" height="14" x="2" y="5" rx="2"/><circle cx="9" cy="11" r="2"/><path d="M6.2 16a3 3 0 0 1 5.6 0"/><path d="M15 10h3"/><path d="M15 14h3"/></svg>Profile</a>
   <a href="dashboard.html" style="display:inline-flex;align-items:center;gap:8px;font-size:14px;color:var(--t0_4);text-decoration:none;transition:color 0.2s" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--t0_4)'"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" style="fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>Back to Dashboard</a>
   </div>
 
@@ -282,10 +310,10 @@ try{if(localStorage.getItem('nirvo-theme')==='light'){document.documentElement.c
       <a href="index.html" class="nvd-row"><span class="nvd-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .7-1.5l7-6a2 2 0 0 1 2.6 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></span><span>Home</span><svg class="nvd-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a>
       <a href="dashboard.html" class="nvd-row"><span class="nvd-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg></span><span>Dashboard</span><svg class="nvd-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a>
       <a href="practice.html" class="nvd-row nvd-cur" aria-current="page"><span class="nvd-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><path d="M12 19v3"/></svg></span><span>Practice</span><svg class="nvd-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a>
-      <a href="progress.html" class="nvd-row"><span class="nvd-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m22 7-8.5 8.5-5-5L2 17"/><path d="M16 7h6v6"/></svg></span><span>Progress</span><svg class="nvd-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a>
+      <a href="progress.html" class="nvd-row"><span class="nvd-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="m19 9-5 5-4-4-3 3"/></svg></span><span>Progress</span><svg class="nvd-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a>
       <a href="learning-path.html" class="nvd-row"><span class="nvd-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/><path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/></svg></span><span>Learning Path</span><svg class="nvd-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a>
-      <a href="nirvo-chat.html" class="nvd-row"><span class="nvd-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg></span><span>Chat with NIRVO</span><i class="nvd-dot"></i><svg class="nvd-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a>
-      <a href="profile.html" class="nvd-row"><span class="nvd-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 20a6 6 0 0 0-12 0"/><circle cx="12" cy="10" r="4"/><circle cx="12" cy="12" r="10"/></svg></span><span>Profile</span><svg class="nvd-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a>
+      <a href="nirvo-chat.html" class="nvd-row"><span class="nvd-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 17a2 2 0 0 1-2 2H6.8a2 2 0 0 0-1.4.6l-2.2 2.2a.7.7 0 0 1-1.2-.5V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z"/><path d="M7 8h10"/><path d="M7 12h6"/></svg></span><span>Chat with NIRVO</span><i class="nvd-dot"></i><svg class="nvd-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a>
+      <a href="profile.html" class="nvd-row"><span class="nvd-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><rect width="20" height="14" x="2" y="5" rx="2"/><circle cx="9" cy="11" r="2"/><path d="M6.2 16a3 3 0 0 1 5.6 0"/><path d="M15 10h3"/><path d="M15 14h3"/></svg></span><span>Profile</span><svg class="nvd-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a>
 
       <div class="nvd-label">Settings</div>
       <button type="button" class="nvd-row nvd-toggle" role="switch" aria-checked="false" onclick="toggleTheme()"><span class="nvd-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg></span><span>Light Mode</span><span class="nvd-switch" aria-hidden="true"></span></button>
@@ -684,7 +712,7 @@ Be specific, constructive, and encouraging. Base feedback on the actual words us
       });
     }
   </script>
-<div id="nv-mob-nav" role="navigation" aria-label="Main"><div class="nv-grid"><a href="index.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .7-1.5l7-6a2 2 0 0 1 2.6 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><span>Home</span></a><a href="dashboard.html"><svg viewBox="0 0 24 24" aria-hidden="true"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg><span>Dashboard</span></a><a href="practice.html" class="on"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><path d="M12 19v3"/></svg><span>Practice</span></a><a href="progress.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m22 7-8.5 8.5-5-5L2 17"/><path d="M16 7h6v6"/></svg><span>Progress</span></a><a href="nirvo-chat.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg><span>Chat</span></a></div></div>
+<div id="nv-mob-nav" role="navigation" aria-label="Main"><div class="nv-grid"><a href="index.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .7-1.5l7-6a2 2 0 0 1 2.6 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><span>Home</span></a><a href="dashboard.html"><svg viewBox="0 0 24 24" aria-hidden="true"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg><span>Dashboard</span></a><a href="practice.html" class="on"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><path d="M12 19v3"/></svg><span>Practice</span></a><a href="progress.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="m19 9-5 5-4-4-3 3"/></svg><span>Progress</span></a><a href="nirvo-chat.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 17a2 2 0 0 1-2 2H6.8a2 2 0 0 0-1.4.6l-2.2 2.2a.7.7 0 0 1-1.2-.5V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z"/><path d="M7 8h10"/><path d="M7 12h6"/></svg><span>Chat</span></a></div></div>
 <script>
 (function(){
   var m=document.getElementById('mobile-menu');
