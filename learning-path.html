@@ -624,14 +624,13 @@ async function handleLogout() {
   'use strict';
 
   /* ───────── Configuration ─────────
-     Session history is read from the first of these tables that exists AND returns rows for the signed-in user
-     (rows are always filtered by the owner column, never read unfiltered). If you know the exact table, pin it:
-     window.NIRVO_LEARNING_PATH = { table: 'your_table', ownerColumn: 'user_id' }  (set before this script). */
+     Session history comes from the existing `sessions` table (written by practice.html, read by progress.html),
+     always filtered to the signed-in user via user_id. No other tables are queried. */
   const CFG = Object.assign({
-    table: null,
-    ownerColumn: null,
-    tables: ['practice_sessions', 'sessions', 'speaking_sessions', 'nirvo_sessions', 'user_sessions', 'session_history'],
-    ownerColumns: ['user_id', 'user_email', 'email'],
+    table: 'sessions',
+    ownerColumn: 'user_id',
+    tables: ['sessions'],
+    ownerColumns: ['user_id'],
     limit: 1000
   }, window.NIRVO_LEARNING_PATH || {});
 
@@ -662,8 +661,7 @@ async function handleLogout() {
     { key: 'grammar', label: 'Grammar', icon: 'pen-line' },
     { key: 'vocabulary', label: 'Vocabulary', icon: 'book-open' }
   ];
-  const SKILL_RE = { fluency: /fluen/i, pronunciation: /pronun/i, grammar: /gramm/i, vocabulary: /vocab/i };
-  const NOT_SCORE_RE = /error|count|mistake|feedback|note|comment|tip|suggest|text|summary|_id$|level|target|goal/i;
+  const SKILL_RE = { fluency: /fluen/i, pronunciation: /pronun/i, grammar: /gramm/i, vocabulary: /vocab/i }; // matches profile.html focus labels
 
   const WARM = {
     A: ['Read a short paragraph aloud', 'Slow and clear. Re-read the lines you stumbled over.'],
@@ -797,39 +795,22 @@ async function handleLogout() {
     return found[0].rows;
   }
 
-  function num(v) {
-    if (v == null || v === '' || typeof v === 'boolean') return null;
-    if (typeof v === 'object') { for (const k of ['score', 'value', 'overall', 'avg']) if (k in v) return num(v[k]); return null; }
-    const n = typeof v === 'number' ? v : parseFloat(v);
-    return isFinite(n) ? n : null;
-  }
-  function scanScores(obj, out, depth) {
-    for (const [k, v] of Object.entries(obj)) {
-      for (const s of SKILLS) if (out[s.key] == null && SKILL_RE[s.key].test(k) && !NOT_SCORE_RE.test(k)) { const n = num(v); if (n != null && n >= 0) out[s.key] = n; }
-      if (depth < 2 && v && typeof v === 'object' && !Array.isArray(v)) scanScores(v, out, depth + 1);
-    }
-  }
+  /* Exact columns of the existing `sessions` table (see practice.html saveSession / progress.html):
+     created_at, duration_sec, pronunciation_score, fluency_score, grammar_score, vocabulary_score, overall_score (0–100) */
+  const SCORE_COL = { fluency: 'fluency_score', pronunciation: 'pronunciation_score', grammar: 'grammar_score', vocabulary: 'vocabulary_score' };
   function normalise(rows) {
     const sessions = [];
     for (const r of rows) {
-      let date = null;
-      for (const k of ['created_at', 'started_at', 'session_date', 'completed_at', 'date', 'timestamp']) { if (r[k]) { const d = new Date(r[k]); if (!isNaN(d)) { date = d; break; } } }
-      if (!date) continue;
-      let mins = null;
-      for (const k of Object.keys(r)) {
-        if (!/^(duration|minutes|seconds|length)|(_duration|_minutes|_seconds|_min|_sec)$/i.test(k)) continue;
-        const n = num(r[k]); if (n == null || n < 0) continue;
-        mins = /sec/i.test(k) ? n / 60 : /min/i.test(k) ? n : (n > 180 ? n / 60 : n); break;
+      const date = r.created_at ? new Date(r.created_at) : null;
+      if (!date || isNaN(date)) continue;
+      const sec = Number(r.duration_sec);
+      const mins = isFinite(sec) && sec >= 0 && r.duration_sec != null ? sec / 60 : null;
+      const scores = {};
+      for (const s of SKILLS) {
+        const v = Number(r[SCORE_COL[s.key]]);
+        if (isFinite(v) && v > 0) scores[s.key] = clamp(v, 0, 100); // empty/0 means "not scored", same as progress.html
       }
-      const scores = {}; scanScores(r, scores, 0);
       sessions.push({ date, mins, scores });
-    }
-    // bring every skill onto a 0–100 scale (0–1 and 0–10 scales are detected from the data itself)
-    for (const s of SKILLS) {
-      const vals = sessions.map((x) => x.scores[s.key]).filter((v) => v != null);
-      if (!vals.length) continue;
-      const max = Math.max.apply(null, vals), f = max <= 1 ? 100 : max <= 10 ? 10 : 1;
-      sessions.forEach((x) => { if (x.scores[s.key] != null) x.scores[s.key] = clamp(x.scores[s.key] * f, 0, 100); });
     }
     return sessions.sort((a, b) => a.date - b.date);
   }
