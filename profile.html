@@ -481,6 +481,9 @@ try{if(localStorage.getItem('nirvo-theme')==='light'){document.documentElement.c
         <div class="pf-group"><span class="pf-label" id="l-purpose">Main purpose</span><div class="pf-chips" role="group" aria-labelledby="l-purpose" data-name="goal_purpose"><button type="button" class="pf-chip" data-v="General fluency" aria-pressed="false">General fluency</button><button type="button" class="pf-chip" data-v="IELTS / TOEFL" aria-pressed="false">IELTS / TOEFL</button><button type="button" class="pf-chip" data-v="Academic" aria-pressed="false">Academic</button><button type="button" class="pf-chip" data-v="Business" aria-pressed="false">Business</button><button type="button" class="pf-chip" data-v="Travel" aria-pressed="false">Travel</button><button type="button" class="pf-chip" data-v="Job interviews" aria-pressed="false">Job interviews</button></div></div>
         <div class="pf-group"><span class="pf-label" id="l-daily">Daily practice goal</span><div class="pf-chips" role="group" aria-labelledby="l-daily" data-name="goal_daily_min"><button type="button" class="pf-chip" data-v="10" aria-pressed="false">10 min</button><button type="button" class="pf-chip" data-v="15" aria-pressed="false">15 min</button><button type="button" class="pf-chip" data-v="20" aria-pressed="false">20 min</button><button type="button" class="pf-chip" data-v="30" aria-pressed="false">30 min</button><button type="button" class="pf-chip" data-v="45" aria-pressed="false">45 min</button></div></div>
         <div class="pf-group"><span class="pf-label" id="l-week">Practice days per week</span><div class="pf-chips" role="group" aria-labelledby="l-week" data-name="goal_weekly_days"><button type="button" class="pf-chip" data-v="2" aria-pressed="false">2</button><button type="button" class="pf-chip" data-v="3" aria-pressed="false">3</button><button type="button" class="pf-chip" data-v="4" aria-pressed="false">4</button><button type="button" class="pf-chip" data-v="5" aria-pressed="false">5</button><button type="button" class="pf-chip" data-v="6" aria-pressed="false">6</button><button type="button" class="pf-chip" data-v="7" aria-pressed="false">7</button></div></div>
+        <div class="pf-group"><span class="pf-label" id="l-accent">Preferred English accent</span><div class="pf-chips" role="group" aria-labelledby="l-accent" data-name="pref_accent"><button type="button" class="pf-chip" data-v="American" aria-pressed="false">American</button><button type="button" class="pf-chip" data-v="British" aria-pressed="false">British</button></div></div>
+        <div class="pf-group"><span class="pf-label" id="l-fb">Feedback style</span><div class="pf-chips" role="group" aria-labelledby="l-fb" data-name="pref_feedback"><button type="button" class="pf-chip" data-v="Brief" aria-pressed="false">Brief</button><button type="button" class="pf-chip" data-v="Balanced" aria-pressed="false">Balanced</button><button type="button" class="pf-chip" data-v="Detailed" aria-pressed="false">Detailed</button></div></div>
+        <div class="pf-group"><span class="pf-label" id="l-ws">Weekly learning target</span><div class="pf-chips" role="group" aria-labelledby="l-ws" data-name="goal_weekly_sessions"><button type="button" class="pf-chip" data-v="3" aria-pressed="false">3 sessions</button><button type="button" class="pf-chip" data-v="5" aria-pressed="false">5 sessions</button><button type="button" class="pf-chip" data-v="7" aria-pressed="false">7 sessions</button></div></div>
         <div class="pf-group" style="margin-bottom:0"><span class="pf-label" id="l-focus">Focus areas <span style="text-transform:none;letter-spacing:0;font-weight:400;color:var(--t0_4)">· pick any</span></span><div class="pf-chips" role="group" aria-labelledby="l-focus" data-name="goal_focus" data-multi="1"><button type="button" class="pf-chip" data-v="Pronunciation" aria-pressed="false">Pronunciation</button><button type="button" class="pf-chip" data-v="Fluency" aria-pressed="false">Fluency</button><button type="button" class="pf-chip" data-v="Grammar" aria-pressed="false">Grammar</button><button type="button" class="pf-chip" data-v="Vocabulary" aria-pressed="false">Vocabulary</button></div></div>
         <div class="pf-actions"><button class="pf-btn gold" id="save-goals" type="button" disabled>Save goals</button><span class="pf-msg" id="msg-goals" role="status" aria-live="polite"></span></div>
       </section>
@@ -501,7 +504,7 @@ try{if(localStorage.getItem('nirvo-theme')==='light'){document.documentElement.c
   const sb = createClient('https://liixgxwpcxusocpixadt.supabase.co', 'sb_publishable_XCepI_R9piNQUZSlIcyDiw_ZFaxqzvd');
   const $ = (id) => document.getElementById(id);
   let USER = null;
-  const state = { goals: { level_current: '', level_target: '', goal_purpose: '', goal_daily_min: '', goal_weekly_days: '', goal_focus: [] } };
+  const state = { goals: { level_current: '', level_target: '', goal_purpose: '', goal_daily_min: '', goal_weekly_days: '', goal_focus: [], pref_accent: '', pref_feedback: '', goal_weekly_sessions: '' } };
 
   function setMsg(id, text, type) { const el = $(id); if (!el) return; el.textContent = text || ''; el.className = 'pf-msg' + (type ? ' ' + type : ''); }
 
@@ -541,7 +544,8 @@ try{if(localStorage.getItem('nirvo-theme')==='light'){document.documentElement.c
     state.goals = {
       level_current: m.level_current || '', level_target: m.level_target || '', goal_purpose: m.goal_purpose || '',
       goal_daily_min: m.goal_daily_min ? String(m.goal_daily_min) : '', goal_weekly_days: m.goal_weekly_days ? String(m.goal_weekly_days) : '',
-      goal_focus: Array.isArray(m.goal_focus) ? m.goal_focus : []
+      goal_focus: Array.isArray(m.goal_focus) ? m.goal_focus : [],
+      pref_accent: m.pref_accent || '', pref_feedback: m.pref_feedback || '', goal_weekly_sessions: m.goal_weekly_sessions ? String(m.goal_weekly_sessions) : ''
     };
     paintChips();
     $('save-personal').disabled = true; $('save-goals').disabled = true;
@@ -588,7 +592,8 @@ try{if(localStorage.getItem('nirvo-theme')==='light'){document.documentElement.c
   $('save-goals').addEventListener('click', async () => {
     const g = state.goals;
     const data = { level_current: g.level_current, level_target: g.level_target, goal_purpose: g.goal_purpose,
-      goal_daily_min: g.goal_daily_min ? Number(g.goal_daily_min) : null, goal_weekly_days: g.goal_weekly_days ? Number(g.goal_weekly_days) : null, goal_focus: g.goal_focus };
+      goal_daily_min: g.goal_daily_min ? Number(g.goal_daily_min) : null, goal_weekly_days: g.goal_weekly_days ? Number(g.goal_weekly_days) : null, goal_focus: g.goal_focus,
+      pref_accent: g.pref_accent, pref_feedback: g.pref_feedback, goal_weekly_sessions: g.goal_weekly_sessions ? Number(g.goal_weekly_sessions) : null };
     const u = await saveMeta(data, $('save-goals'), 'msg-goals', 'Learning goals saved.');
     if (u) { try { localStorage.setItem('nirvo_goals', JSON.stringify(data)); } catch (e) {} setMsg('msg-goals', 'Learning goals saved.', 'ok'); }
   });
