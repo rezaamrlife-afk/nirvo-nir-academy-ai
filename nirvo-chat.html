@@ -17,7 +17,7 @@
   <link rel="apple-touch-icon" href="/icons/icon-192.png">
 <script>try{if(localStorage.getItem('nirvo-theme')==='light')document.documentElement.classList.add('light-mode')}catch(e){}</script>
 <title>NIRVO AI — Chat</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
   function toggleMenu() {
@@ -379,6 +379,83 @@ a:focus-visible,button:focus-visible,input:focus-visible,.cd-trigger:focus-visib
 html.light-mode,body.light-mode{color-scheme:light}
 body.light-mode ::selection{background:rgba(169,35,58,.18);color:#14172B}
 </style>
+<style id="nirvo-chat-type">
+/* Typography + spacing + composer polish. Visual only: colours, themes, layout structure and all behaviour unchanged. */
+:root{--nv-font:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,system-ui,sans-serif}
+html{text-size-adjust:100%;-webkit-text-size-adjust:100%}
+body,button,input,select,textarea,.mode-btn,.cd-trigger,.cd-option,#chat-input,.live-btn,.nv-signout,.nv-theme-btn,.mobile-menu .nv-theme-row,[style*="Outfit"]{font-family:var(--nv-font)!important}
+body{font-size:15px;line-height:1.6;font-weight:400;letter-spacing:-.003em;font-optical-sizing:auto;font-feature-settings:"cv05","ss03","calt"}
+
+/* header */
+.nav-link{font-size:14px;font-weight:500;letter-spacing:0;color:var(--t0_5)}
+.nav-link:hover,.nav-link.active{color:var(--gold)}
+.navbar div[style*="Cormorant"]{font-size:18px!important;letter-spacing:.07em!important}
+.navbar div[style*="text-transform:uppercase"]{font-size:9.5px!important;letter-spacing:.14em!important;font-weight:500}
+.nv-signout{font-size:13px;font-weight:500;padding:8px 16px}
+
+/* mode bar */
+.mode-bar{gap:8px}
+.mode-bar>span[style]{font-size:12.5px!important;font-weight:500;letter-spacing:.01em!important}
+.mode-btn{font-size:13px;font-weight:500;letter-spacing:0;padding:8px 16px;min-height:36px}
+.cd-trigger{font-size:13px;font-weight:500;min-height:36px}
+.cd-option{font-size:13px;font-weight:500;padding:9px 12px}
+.mode-bar button[onclick="clearChat()"]{font-size:12px!important;font-weight:500;min-height:36px}
+
+/* coach panel */
+.avatar-panel div[style*="uppercase"]{font-size:10.5px!important;font-weight:600;letter-spacing:.16em!important}
+.nirvo-name{font-size:22px;letter-spacing:.1em}
+.nirvo-status{font-size:12.5px;font-weight:500;letter-spacing:.01em;color:var(--t0_4)}
+#mode-indicator{font-size:12px!important;font-weight:500}
+.avatar-panel span[style]{font-size:12.5px!important}
+
+/* conversation */
+.messages{gap:20px;padding-top:28px;padding-bottom:20px;scroll-behavior:smooth}
+.msg{gap:12px}
+.msg-avatar{width:34px;height:34px;font-size:13px;font-weight:600}
+.msg-bubble{max-width:min(72%,640px);padding:14px 18px;font-size:15px;line-height:1.65;font-weight:400;letter-spacing:-.005em;text-wrap:pretty;overflow-wrap:anywhere}
+.msg.nirvo .msg-bubble{color:var(--t0_75)}
+.msg.user .msg-bubble{color:var(--white);font-weight:450}
+.msg-bubble strong{font-weight:600}
+.msg-bubble div[style*="border-left"]{font-size:14px!important;line-height:1.55;padding:10px 14px!important;margin-top:12px!important}
+.msg-bubble div[style*="italic"]{font-style:normal!important;font-size:12.5px!important}
+.typing-indicator{padding:14px 18px}
+
+/* composer */
+.input-bar{padding-top:10px;padding-bottom:max(18px,env(safe-area-inset-bottom))}
+.input-wrap{gap:10px;min-height:60px;padding:8px 10px 8px 12px;border-radius:26px}
+#chat-input{font-size:16px;font-weight:400;line-height:1.4;letter-spacing:-.005em;padding:8px 4px;min-width:0}
+#chat-input::placeholder{color:var(--t0_3);opacity:1;font-weight:400}
+.mic-btn,.send-btn{width:42px;height:42px;transition:transform .2s var(--ease),box-shadow .25s,background .25s,border-color .25s}
+.mic-btn:hover{border-color:rgba(var(--gold-rgb),.55)}
+.mic-btn:active,.send-btn:active,.live-btn:active{transform:scale(.94)}
+.live-btn{height:42px;font-size:13px;font-weight:500;letter-spacing:0}
+.input-bar>div[style*="text-align:center"]{font-size:12px!important;font-weight:400;color:var(--t0_25)!important;opacity:1;margin-top:10px!important}
+#live-status{font-size:13px;font-weight:500;letter-spacing:0}
+
+/* mobile menu */
+.mobile-menu{gap:26px}
+.mobile-menu a{font-family:var(--nv-font)!important;font-size:22px;font-weight:600;letter-spacing:-.01em}
+.mobile-menu a[onclick*="handleLogout"]{font-size:16px!important;font-weight:500}
+
+/* responsive */
+@media(max-width:768px){
+  body{font-size:15px}
+  .messages{gap:16px}
+  .msg-bubble{max-width:86%!important;font-size:15px!important;padding:12px 16px}
+  .mode-btn{font-size:12.5px!important;padding:7px 13px!important;min-height:34px}
+  .input-wrap{min-height:56px;border-radius:24px}
+  .input-bar{padding-bottom:max(14px,env(safe-area-inset-bottom))!important}
+}
+@media(max-width:480px){
+  .msg-bubble{font-size:15px!important}
+  .mode-btn{font-size:12px!important;padding:6px 11px!important}
+}
+@media(max-width:375px){
+  .msg-bubble{font-size:14.5px!important;max-width:90%!important}
+  .mode-btn{font-size:11.5px!important;padding:6px 9px!important}
+}
+@media(prefers-reduced-motion:reduce){.msg{animation:none!important;opacity:1!important}.messages{scroll-behavior:auto}}
+</style>
 </head>
 <body>
 <div class="blob-1"></div>
@@ -400,6 +477,7 @@ body.light-mode ::selection{background:rgba(169,35,58,.18);color:#14172B}
 
   <!-- Nav links -->
   <div style="display:flex;gap:28px" class="nav-links-chat">
+    <a href="index.html" class="nav-link">Home</a>
     <a href="dashboard.html" class="nav-link">Dashboard</a>
     <a href="practice.html" class="nav-link">Practice</a>
     <a href="progress.html" class="nav-link">Progress</a>
@@ -407,6 +485,7 @@ body.light-mode ::selection{background:rgba(169,35,58,.18);color:#14172B}
       <span style="width:5px;height:5px;border-radius:50%;background:#E8A0A0;display:inline-block;animation:pulseRing 2s ease infinite"></span>
       Chat
     </a>
+    <a href="profile.html" class="nav-link">My Profile</a>
   </div>
 
   <!-- User -->
@@ -425,10 +504,12 @@ body.light-mode ::selection{background:rgba(169,35,58,.18);color:#14172B}
 <!-- Mobile Menu -->
 <div class="mobile-menu" id="mobile-menu">
   <div class="mobile-close" onclick="toggleMenu()">✕</div>
+  <a href="index.html" onclick="toggleMenu()">Home</a>
   <a href="dashboard.html" onclick="toggleMenu()">Dashboard</a>
   <a href="practice.html" onclick="toggleMenu()">Practice</a>
   <a href="progress.html" onclick="toggleMenu()">Progress</a>
   <a href="nirvo-chat.html" onclick="toggleMenu()">Chat</a>
+  <a href="profile.html" onclick="toggleMenu()">My Profile</a>
   <a href="#" class="nv-theme-row" onclick="toggleTheme();return false"><span class="nv-theme-ico">☀</span> <span class="nv-theme-lbl">Light mode</span></a>
   <div style="width:50px;height:1px;background:rgba(212,175,55,0.2)"></div>
   <a href="#" onclick="handleLogout()" style="font-size:16px;color:rgba(255,255,255,0.4)">Sign Out</a>
