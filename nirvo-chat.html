@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, interactive-widget=resizes-content">
   <meta name="description" content="Chat with NIRVO — your AI English speaking coach. Practice conversation, get micro-feedback and improve fluency.">
   <meta property="og:title" content="Chat with NIRVO — AI Speaking Coach">
   <meta property="og:description" content="Chat with NIRVO — your AI English speaking coach. Practice conversation, get micro-feedback and improve fluency.">
@@ -289,6 +289,32 @@ html.light-mode .msg.nirvo .msg-bubble{background:var(--f0_04);border-color:var(
   .messages{scroll-behavior:auto}
 }
 </style>
+<style id="nirvo-chat-mobile">
+/* Mobile/tablet layer for NIRVO Chat. Layout only; no logic, IDs or handlers changed. */
+@media(max-width:900px){
+  .hamburger{display:flex}              /* 769–900px previously had no navigation at all */
+}
+@media(max-width:768px){
+  /* The coach panel was hidden on phones, which removed the voice on/off switch and NIRVO's status.
+     Keep it as a compact strip instead. */
+  .main{flex-direction:column}
+  .avatar-panel{display:flex;flex-direction:row;align-items:center;justify-content:space-between;gap:12px;width:auto;margin:8px 12px 0;padding:8px 14px;border-radius:14px;overflow:visible}
+  #avatar-body,#avatar-wave,#mode-indicator{display:none}
+  .coach-id{text-align:left;min-width:0}
+  .nirvo-name{font-size:15px;letter-spacing:.12em;text-indent:0}
+  .nirvo-status{margin-top:1px;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .voice-row{width:auto;margin:0;padding:0;border:0;flex-shrink:0}
+  .switch{width:44px;height:26px}
+  .switch #tts-knob{top:3px;width:20px;height:20px}
+  .switch[aria-checked="true"] #tts-knob{transform:translateX(18px)}
+  .mic-btn,.send-btn,.live-btn{min-width:44px;height:44px}
+  .btn-clear,.cd-trigger{min-height:44px}
+  .chat-area{min-height:0}
+}
+/* menu: one more link now, so let it scroll on short screens instead of clipping */
+.mobile-menu{overflow-y:auto;justify-content:safe center;padding:max(72px,env(safe-area-inset-top)) 20px max(24px,env(safe-area-inset-bottom))}
+@media(max-height:760px){.mobile-menu{gap:14px}.mobile-menu a{font-size:24px}}
+</style>
 </head>
 <body>
 
@@ -335,6 +361,7 @@ html.light-mode .msg.nirvo .msg-bubble{background:var(--f0_04);border-color:var(
     <a href="dashboard.html" class="nav-link">Dashboard</a>
     <a href="practice.html" class="nav-link">Practice</a>
     <a href="progress.html" class="nav-link">Progress</a>
+    <a href="learning-path.html" class="nav-link">Learning Path</a>
     <a href="nirvo-chat.html" class="nav-link active" aria-current="page">Chat</a>
     <a href="profile.html" class="nav-link">My Profile</a>
   </nav>
@@ -354,6 +381,7 @@ html.light-mode .msg.nirvo .msg-bubble{background:var(--f0_04);border-color:var(
   <a href="dashboard.html" onclick="toggleMenu()">Dashboard</a>
   <a href="practice.html" onclick="toggleMenu()">Practice</a>
   <a href="progress.html" onclick="toggleMenu()">Progress</a>
+  <a href="learning-path.html" onclick="toggleMenu()">Learning Path</a>
   <a href="nirvo-chat.html" onclick="toggleMenu()" aria-current="page">Chat</a>
   <a href="profile.html" onclick="toggleMenu()">My Profile</a>
   <div class="menu-rule"></div>
@@ -433,7 +461,7 @@ html.light-mode .msg.nirvo .msg-bubble{background:var(--f0_04);border-color:var(
       <div class="input-wrap">
         <button type="button" class="mic-btn idle" id="mic-btn" onclick="toggleMic()" title="Voice input" aria-label="Voice input"><svg class="i" aria-hidden="true"><use href="#i-mic"/></svg></button>
         <button type="button" class="live-btn" id="live-btn" onclick="toggleLive()" aria-pressed="false" aria-label="Start live voice conversation" title="Live voice conversation"><svg class="i ic-wave" aria-hidden="true"><use href="#i-audio"/></svg><svg class="i ic-stop" aria-hidden="true"><use href="#i-stop"/></svg><span class="live-label" id="live-label">Live</span></button>
-        <input type="text" id="chat-input" placeholder="Type your message or press the mic to speak..." autocomplete="off" aria-label="Message" onkeydown="if(event.key==='Enter')sendMessage()">
+        <input type="text" id="chat-input" placeholder="Type your message or press the mic to speak..." autocomplete="off" enterkeyhint="send" aria-label="Message" onkeydown="if(event.key==='Enter')sendMessage()">
         <button type="button" class="send-btn" id="send-btn" onclick="sendMessage()" aria-label="Send message"><svg class="i" aria-hidden="true"><use href="#i-send"/></svg></button>
       </div>
       <div class="composer-hint"><svg class="i" aria-hidden="true"><use href="#i-mic"/></svg>Press the mic to speak. NIRVO replies with voice.</div>
@@ -1173,5 +1201,19 @@ if (window.speechSynthesis.getVoices().length === 0) {
       });
     }
   </script>
+<script>
+/* Phones: keep the composer above the on-screen keyboard (iOS ignores dvh for the keyboard). */
+(function(){
+  var v=window.visualViewport; if(!v||!window.matchMedia||!matchMedia('(pointer:coarse)').matches) return;
+  var b=document.body;
+  function fit(){
+    var a=document.activeElement, typing=a&&a.id==='chat-input';
+    if(typing){ b.style.height=v.height+'px'; window.scrollTo(0,0); var m=document.getElementById('messages'); if(m) m.scrollTop=m.scrollHeight; }
+    else b.style.height='';
+  }
+  v.addEventListener('resize',fit); v.addEventListener('scroll',function(){ if(document.activeElement&&document.activeElement.id==='chat-input') window.scrollTo(0,0); });
+  document.addEventListener('focusout',function(){ setTimeout(fit,50); });
+})();
+</script>
 </body>
 </html>
