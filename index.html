@@ -691,10 +691,18 @@ nav .nav-links,nav .nav-link-item,nav .nav-link-item *{white-space:nowrap!import
 nav .nav-cta,nav .nav-cta>*,nav .nvn-brand-wrap,nav .nvn-brand,nav .nvn-name,nav .nvn-word,nav .nvn-sub{white-space:nowrap!important;word-break:keep-all!important;overflow-wrap:normal!important}
 nav .nav-links,nav .nvn-brand-wrap,nav .nav-cta{flex-shrink:0}
 nav .nvn-brand-wrap{margin-right:12px}
-@media(min-width:769px) and (max-width:1500px){
-  nav .nav-link-item{padding:8px 12px!important;font-size:12.5px!important;letter-spacing:.06em!important}
-  .nvn-sub{display:none!important}
+@media(min-width:769px) and (max-width:2100px){
+  nav{gap:14px!important;padding-left:24px!important;padding-right:24px!important}
+  nav .nav-links{gap:0!important;padding:4px!important}
+  nav .nav-link-item{padding:8px 14px!important;font-size:12.5px!important;letter-spacing:.06em!important}
+  nav .nav-cta{gap:8px!important}
+  nav .nav-cta .nvn-chip,nav .nav-cta button{padding:9px 13px!important;font-size:12.5px!important;letter-spacing:.06em!important}
+  .nvn-word{letter-spacing:.24em!important}
+  .nvn-sub{letter-spacing:.16em!important;font-size:10.5px!important}
   nav #nav-login{display:none!important}
+}
+@media(min-width:769px) and (max-width:1500px){
+  .nvn-sub{display:none!important}
 }
 @media(min-width:769px) and (max-width:1100px){
   nav .nav-link-item{padding:7px 8px!important;font-size:12px!important;letter-spacing:.03em!important}
