@@ -264,6 +264,7 @@ nav a{font-weight:500}
 #nv-mob-nav a{font-size:12.5px!important;font-weight:600!important}
 @media(max-width:480px){.topic-pill{font-size:13.5px!important}}
 </style>
+<style id="nirvo-topic-icons">.topic-pill{gap:8px}.topic-pill .tp-ic{width:17px;height:17px;flex-shrink:0;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;color:var(--gold);transition:transform .3s var(--ease)}.topic-pill:hover .tp-ic{transform:scale(1.1)}@media(max-width:480px){.topic-pill .tp-ic{width:15px;height:15px}.topic-pill{gap:6px}}</style>
 </head>
 <body>
 <script>
@@ -345,12 +346,12 @@ try{if(localStorage.getItem('nirvo-theme')==='light'){document.documentElement.c
   <div class="card" style="margin-bottom:20px;animation:fadeUp 0.6s ease 0.1s forwards;opacity:0">
     <div style="font-size:11.5px;color:var(--t0_3);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:14px">Choose Topic</div>
     <div style="display:flex;flex-wrap:wrap;gap:8px" id="topic-pills" class="topic-pills-wrap">
-      <div class="topic-pill active" onclick="setTopic(this,'Daily Life')">🏠 Daily Life</div>
-      <div class="topic-pill" onclick="setTopic(this,'Business')">💼 Business</div>
-      <div class="topic-pill" onclick="setTopic(this,'Education')">📚 Education</div>
-      <div class="topic-pill" onclick="setTopic(this,'Travel')">✈️ Travel</div>
-      <div class="topic-pill" onclick="setTopic(this,'Job Interview')">🤝 Job Interview</div>
-      <div class="topic-pill" onclick="setTopic(this,'Public Speaking')">🎯 Public Speaking</div>
+      <div class="topic-pill active" onclick="setTopic(this,'Daily Life')"><svg class="tp-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .7-1.5l7-6a2 2 0 0 1 2.6 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Daily Life</div>
+      <div class="topic-pill" onclick="setTopic(this,'Business')"><svg class="tp-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/><rect width="20" height="14" x="2" y="6" rx="2"/></svg>Business</div>
+      <div class="topic-pill" onclick="setTopic(this,'Education')"><svg class="tp-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M21.42 10.92a1 1 0 0 0-.02-1.84L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.83l8.57 3.91a2 2 0 0 0 1.66 0z"/><path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/></svg>Education</div>
+      <div class="topic-pill" onclick="setTopic(this,'Travel')"><svg class="tp-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/></svg>Travel</div>
+      <div class="topic-pill" onclick="setTopic(this,'Job Interview')"><svg class="tp-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="m16 11 2 2 4-4"/><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Job Interview</div>
+      <div class="topic-pill" onclick="setTopic(this,'Public Speaking')"><svg class="tp-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 3h20"/><path d="M21 3v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V3"/><path d="m7 21 5-5 5 5"/></svg>Public Speaking</div>
     </div>
   </div>
 
