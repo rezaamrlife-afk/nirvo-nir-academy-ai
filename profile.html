@@ -337,6 +337,119 @@ body{padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))}
 }
 @media(prefers-reduced-motion:reduce){.pf-wrap *{transition:none!important}}
 </style>
+<style id="nirvo-profile-mobile">
+/* ══ Mobile responsiveness layer (CSS only — IDs, JS, auth, themes untouched; >900px desktop unchanged) ══ */
+
+/* ── Top bar (phones + small tablets) ── */
+@media(max-width:768px){
+  /* the name/email block never had .nav-user-info, so it stayed visible and pushed the hamburger off-screen */
+  nav>div>div[style*="text-align:right"]{display:none!important}
+  nav:not(.pf-jump){
+    gap:10px;min-height:60px;
+    padding:max(10px,env(safe-area-inset-top)) max(14px,env(safe-area-inset-right)) 10px max(14px,env(safe-area-inset-left))!important}
+  nav>div[style*="gap:14px"]{gap:10px!important;min-width:0}
+  nav>div:first-child{flex:0 1 auto}
+  nav>div:first-child img{width:36px!important;height:36px!important;flex-shrink:0}
+  nav>div:first-child>div>div:last-child{font-size:10.5px!important;letter-spacing:.12em!important}
+  #user-avatar{width:40px!important;height:40px!important;flex-shrink:0}
+  nav button[onclick*="handleLogout"]{white-space:nowrap}
+  .hamburger{flex-shrink:0}
+}
+@media(max-width:360px){
+  nav>div:first-child img{width:32px!important;height:32px!important}
+  nav>div:first-child div[style*="font-size:21px"]{font-size:17px!important}
+  nav>div:first-child>div{padding-left:9px!important}
+}
+/* small tablets: keep the desktop bar from overflowing */
+@media(min-width:769px) and (max-width:1024px){
+  #user-email-nav{display:none}
+  .nav-links-dash{gap:20px!important}
+  nav:not(.pf-jump){padding-left:24px!important;padding-right:24px!important}
+}
+
+/* ── Page layout ── */
+@media(max-width:900px){
+  .pf-wrap{padding:22px max(16px,env(safe-area-inset-right)) 36px max(16px,env(safe-area-inset-left));width:100%}
+  .pf-head{margin-bottom:22px}
+  .pf-sub{font-size:15px}
+  /* grid track + children may shrink (the horizontal jump-menu was blowing the column out to ~630px) */
+  .pf-grid{grid-template-columns:minmax(0,1fr)}
+  .pf-side,.pf-main{min-width:0;width:100%}
+
+  /* profile summary */
+  .pf-id{padding:16px;gap:14px;border-radius:18px}
+  .pf-id>div:last-child{min-width:0;flex:1}
+  .pf-name{font-size:22px;overflow-wrap:anywhere}
+  .pf-mail{font-size:13.5px}
+
+  /* section jump menu: it is a <nav>, so it inherited the global top-bar rules — reset them here */
+  nav.pf-jump{
+    position:static!important;top:auto!important;z-index:auto;
+    width:auto!important;max-width:100%;min-height:0!important;margin:0!important;
+    padding:6px!important;border:1px solid var(--b0_07)!important;border-radius:18px!important;
+    background:var(--f0_03)!important;box-shadow:none!important;
+    -webkit-backdrop-filter:none!important;backdrop-filter:none!important;
+    scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}
+  .pf-jump a{min-height:44px;scroll-snap-align:start}
+
+  /* cards */
+  .pf-card{padding:20px 16px;border-radius:18px;scroll-margin-top:calc(76px + env(safe-area-inset-top,0px));overflow-wrap:break-word}
+  .pf-main{gap:16px}
+  .pf-h2{font-size:26px}
+  .pf-desc{font-size:15px;margin-bottom:20px}
+  .pf-eyebrow{font-size:12px;letter-spacing:.2em}
+
+  /* forms */
+  .pf-fields{gap:16px}
+  .pf-label{font-size:12.5px}
+  .pf-hint{font-size:13px}
+  .pf-input{max-width:100%;font-size:16.5px}
+  .pf-pw .pf-input{padding-right:70px;text-overflow:ellipsis}
+  .pf-eye{height:40px;top:4px;right:4px;min-width:54px}
+  .pf-group{margin-bottom:20px}
+  .pf-chips{gap:8px}
+  .pf-chip{min-height:44px;padding:10px 15px;font-size:14.5px;max-width:100%}
+
+  /* buttons: allow wrapping instead of clipping inside a fixed 48px height */
+  .pf-btn{height:auto;min-height:48px;padding:12px 18px;white-space:normal;text-align:center;line-height:1.3;letter-spacing:.08em}
+  .pf-actions{gap:10px;margin-top:22px;padding-top:18px}
+  .pf-msg{font-size:14.5px;flex:1 1 100%;min-height:0}
+  .pf-row{gap:14px}
+}
+@media(max-width:600px){
+  .pf-row>div{flex:1 1 100%;min-width:0}
+  .pf-row>.pf-btn{width:100%;flex:1 1 100%}
+  .pf-sep{margin:20px 0}
+}
+@media(max-width:380px){
+  .pf-wrap{padding-top:18px}
+  .pf-title{font-size:34px}
+  .pf-card{padding:18px 14px}
+  .pf-chip{padding:10px 13px;font-size:14px}
+  .pf-id{padding:14px;gap:12px}
+  .pf-avatar{width:56px;height:56px;font-size:24px}
+}
+
+/* ── Floating bottom bar: labels must fit 5 equal columns on 320px ── */
+@media(max-width:768px){
+  #nv-mob-nav .nv-grid{grid-template-columns:repeat(5,minmax(0,1fr))}
+  #nv-mob-nav a{min-width:0}
+  #nv-mob-nav a span{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+}
+@media(max-width:380px){
+  #nv-mob-nav{left:8px!important;right:8px!important}
+  #nv-mob-nav a{padding:6px 1px;font-size:10.5px;letter-spacing:0}
+}
+@media(max-width:340px){#nv-mob-nav a{font-size:10px}}
+
+/* ── Short landscape phones: keep bars from eating the screen ── */
+@media(max-width:900px) and (max-height:480px){
+  nav:not(.pf-jump){min-height:52px}
+  #nv-mob-nav a{min-height:44px;flex-direction:row;gap:6px}
+  #nv-mob-nav a svg{width:18px;height:18px}
+  body{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
+}
+</style>
 </head>
 <body>
 <script>
