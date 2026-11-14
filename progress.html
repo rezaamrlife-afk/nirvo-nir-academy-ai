@@ -241,6 +241,184 @@ body{padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))}
 .mobile-menu .nvd .nvd-row.nvd-cur{background:rgba(var(--gold-rgb),.09);border-color:rgba(var(--gold-rgb),.24);color:var(--gold)}
 @media(max-width:768px){nav>div:nth-child(2),nav>div:nth-child(3){display:none!important}}
 </style>
+<style id="nirvo-progress-dashboard-v2">
+/* NIRVO Progress dashboard v2 — visual layer + session detail. Uses the existing theme variables only (dark/gold and light). */
+.pg-empty[hidden],.pg-alert[hidden],.pg-note[hidden],.pg-detail[hidden]{display:none!important}
+body>div[style*="max-width:1240px"]{padding-bottom:64px!important}
+.pg-si,.pg-sic,.pg-ti{flex:none}
+
+/* ── Hero ── */
+.anim.d1{position:relative;overflow:hidden;gap:20px;padding:30px 34px;border-radius:26px;border:1px solid rgba(var(--gold-rgb),.2);
+  background:radial-gradient(120% 150% at 0% 0%,rgba(var(--gold-rgb),.13),transparent 58%),linear-gradient(165deg,var(--f0_045),var(--f0_015));
+  box-shadow:0 1px 0 var(--b0_05) inset,0 24px 60px rgba(var(--sh),calc(.4 * var(--shk)))}
+.anim.d1::after{content:"";position:absolute;right:-70px;top:-70px;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle,rgba(var(--gold-rgb),.16),transparent 70%);pointer-events:none}
+.anim.d1>*{position:relative;z-index:1}
+.anim.d1 button{border-radius:14px!important;padding:14px 26px!important;min-height:48px;white-space:nowrap}
+
+/* ── Stat cards ── */
+.anim.d2{gap:14px!important}
+.anim.d2>.card,.anim.d2>.card-gold{text-align:left!important;padding:20px!important;display:flex;flex-direction:column;min-width:0;overflow:hidden}
+.anim.d2 .label{display:flex;align-items:center;gap:10px;margin-bottom:12px;letter-spacing:.12em;font-weight:500}
+.anim.d2>.card>div:nth-child(2),.anim.d2>.card-gold>div:nth-child(2){font-size:clamp(30px,3.4vw,42px)!important;line-height:1.05;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.anim.d2>.card>div:nth-child(3),.anim.d2>.card-gold>div:nth-child(3){margin-top:6px!important}
+.pg-si{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;color:var(--gold);background:rgba(var(--gold-rgb),.12);border:1px solid rgba(var(--gold-rgb),.26)}
+.pg-si svg,.pg-sec h4 svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.pg-si.pk{color:var(--pk);background:color-mix(in srgb,var(--pk) 14%,transparent);border-color:color-mix(in srgb,var(--pk) 32%,transparent)}
+.pg-si.mint{color:var(--mint);background:color-mix(in srgb,var(--mint) 14%,transparent);border-color:color-mix(in srgb,var(--mint) 32%,transparent)}
+.pg-si.wh{color:var(--white);background:var(--f0_04);border-color:var(--b0_14)}
+
+/* ── Section scaffolding ── */
+.anim.d3 .label,.anim.d4 .label,.anim.d5 .label{color:var(--t0_5);font-weight:600;letter-spacing:.14em}
+.pg-head{display:flex;justify-content:space-between;align-items:center;gap:12px 16px;flex-wrap:wrap}
+.pg-chips{display:flex;flex-wrap:wrap;gap:6px}
+.pg-hint{font-size:13.5px;color:var(--t0_3);margin:-6px 0 16px}
+.filter-btn{min-height:36px;padding:7px 16px}
+.pg-alert{margin:0 0 20px;padding:14px 18px;border-radius:14px;border:1px solid color-mix(in srgb,var(--pk) 40%,transparent);background:color-mix(in srgb,var(--pk) 10%,transparent);color:var(--white);font-size:14px;line-height:1.5}
+.pg-note{font-size:13.5px;color:var(--t0_3);line-height:1.55;padding:12px 14px;border-radius:12px;border:1px dashed var(--b0_14);background:var(--f0_02);margin-top:4px}
+.pg-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:6px;color:var(--t0_3);font-size:14px;line-height:1.5}
+
+/* ── Score chart ── */
+.pg-chartbox{height:210px!important}
+.pg-chartbox>.pg-empty{position:absolute;inset:0 0 0 32px;z-index:2}
+#chart-bars{padding:0 4px;gap:6px}
+#chart-labels{padding-right:4px}
+.pg-grp{cursor:pointer;border-radius:10px;transition:background .2s}
+.pg-grp:hover,.pg-grp.sel{background:rgba(var(--gold-rgb),.08)}
+.pg-grp:focus-visible{outline:2px solid var(--gold);outline-offset:1px}
+.chart-bar{flex:1;max-width:14px;min-width:4px;border-radius:7px 7px 2px 2px;transform-origin:bottom;animation:pgGrow .8s var(--ease) both}
+.chart-bar.cb-o{background:linear-gradient(180deg,var(--gold-light),var(--gold))!important}
+.chart-bar.cb-f{background:linear-gradient(180deg,var(--pk2),var(--pk))!important}
+.chart-bar.cb-p{background:linear-gradient(180deg,var(--mint2),var(--mint))!important}
+@keyframes pgGrow{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+@media(hover:none){.chart-bar:hover .tooltip{display:none}}
+.pg-readout{min-height:22px;margin-top:10px;font-size:13px;line-height:1.5;color:var(--t0_5);text-align:center;overflow-wrap:anywhere}
+.pg-legend{flex-wrap:wrap}
+.bar-track{height:10px}
+
+/* ── Skills, tip, topics, achievements ── */
+#tip-box{border-radius:14px!important}
+.pg-topic{display:flex;flex-direction:column;gap:10px;padding:14px;background:var(--f0_02);border:1px solid var(--b0_06);border-radius:14px}
+.pg-ti{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;font-size:18.5px;background:rgba(var(--gold-rgb),.1);border:1px solid rgba(var(--gold-rgb),.22)}
+#achievements>div{border-radius:14px!important;padding:16px 12px!important;transition:opacity .3s,border-color .3s,box-shadow .3s,filter .3s;min-width:0}
+#achievements>div:not(.unlocked){filter:grayscale(.7)}
+#achievements>div.unlocked{background:rgba(var(--gold-rgb),.07)!important;box-shadow:0 0 28px rgba(var(--gold-rgb),.12)}
+
+/* ── All Sessions ── */
+#all-sessions{gap:10px!important}
+.pg-sess{border-radius:16px;border:1px solid var(--b0_07);background:var(--f0_02);overflow:hidden;transition:border-color .25s,background .25s,box-shadow .25s}
+.pg-sess:hover{border-color:var(--gline2)}
+.pg-sess.open{border-color:rgba(var(--gold-rgb),.42);background:rgba(var(--gold-rgb),.035);box-shadow:0 18px 44px rgba(var(--sh),calc(.35 * var(--shk)))}
+.pg-sess .session-row{display:grid;grid-template-columns:auto minmax(0,1fr) auto auto auto;grid-template-areas:"ic main metrics ov chev";align-items:center;gap:6px 16px;padding:14px 16px;border-radius:0;background:transparent;border:0;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.pg-sess .session-row:hover{transform:none!important;background:var(--f0_03);border-color:transparent!important}
+.pg-sess .session-row:focus-visible{outline:2px solid var(--gold);outline-offset:-3px}
+.pg-sic{grid-area:ic;width:42px;height:42px;border-radius:13px;display:grid;place-items:center;font-size:20px;background:rgba(var(--gold-rgb),.1);border:1px solid rgba(var(--gold-rgb),.22)}
+.pg-main{grid-area:main;min-width:0}
+.pg-t{font-size:15px;font-weight:500;overflow-wrap:anywhere}
+.pg-d{font-size:12.5px;color:var(--t0_3);margin-top:2px}
+.pg-metrics{grid-area:metrics;display:grid;grid-template-columns:repeat(3,minmax(76px,auto));gap:16px;text-align:center}
+.pg-m small{display:block;font-size:11.5px;color:var(--t0_3);margin-bottom:2px}
+.pg-m b{font-size:14.5px;font-weight:500}
+.pg-ov{grid-area:ov;text-align:center;min-width:58px;font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:700;line-height:1}
+.pg-ov small{display:block;margin-top:4px;font-family:'Outfit',sans-serif;font-size:11.5px;font-weight:400;color:var(--t0_25)}
+.pg-chev{grid-area:chev;width:20px;height:20px;fill:none;stroke:var(--t0_4);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:transform .3s var(--ease)}
+.pg-sess.open .pg-chev{transform:rotate(180deg);stroke:var(--gold)}
+
+/* Session detail */
+.pg-detail{padding:0 16px 18px;animation:fadeUp .35s var(--ease) both}
+.pg-dhead{display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px 22px;align-items:center;padding:18px 0;border-top:1px solid var(--b0_07)}
+.pg-ringw{position:relative;width:96px;height:96px}
+.pg-ring{position:absolute;inset:0;border-radius:50%;background:conic-gradient(var(--c,var(--gold)) calc(var(--p,0) * 1%),var(--k0_07) 0);-webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 9px),#000 calc(100% - 8px));mask:radial-gradient(farthest-side,transparent calc(100% - 9px),#000 calc(100% - 8px))}
+.pg-ringn{position:absolute;inset:0;display:grid;place-content:center;text-align:center;font-family:'Cormorant Garamond',serif;font-size:27px;font-weight:700;line-height:1}
+.pg-ringn small{display:block;margin-top:3px;font-family:'Outfit',sans-serif;font-size:11.5px;font-weight:400;color:var(--t0_3)}
+.pg-dtitle{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:700;line-height:1.15;overflow-wrap:anywhere}
+.pg-meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.pg-chip{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:999px;font-size:12.5px;line-height:1.3;background:rgba(var(--gold-rgb),.1);border:1px solid rgba(var(--gold-rgb),.24);color:var(--gold)}
+.pg-chip.mu{background:var(--f0_04);border-color:var(--b0_1);color:var(--t0_5)}
+.pg-sum{grid-column:1/-1;font-size:14.5px;line-height:1.65;color:var(--t0_65);overflow-wrap:anywhere}
+.pg-dgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.pg-sec{min-width:0;padding:16px;background:var(--f0_03);border:1px solid var(--b0_07);border-radius:16px}
+.pg-sec.wide{grid-column:1/-1}
+.pg-sec h4{display:flex;align-items:center;gap:8px;margin-bottom:12px;font-family:'Outfit',sans-serif;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--t0_5)}
+.pg-sec h4 svg{color:var(--gold)}
+.pg-none{font-size:13.5px;line-height:1.55;color:var(--t0_3)}
+.pg-cap{font-size:12.5px;color:var(--t0_3);margin-top:10px;line-height:1.5}
+.pg-li{display:flex;gap:10px;padding:5px 0;font-size:14px;line-height:1.55;color:var(--t0_65);overflow-wrap:anywhere}
+.pg-li::before{content:"";flex:none;width:7px;height:7px;margin-top:8px;border-radius:50%;background:var(--gold)}
+.pg-li.g::before{background:var(--mint)}.pg-li.w::before{background:var(--pk)}
+.pg-sk{margin-bottom:14px}.pg-sk:last-child{margin-bottom:0}
+.pg-sk-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:6px;font-size:14px;color:var(--t0_65)}
+.pg-sk-top b{font-size:14.8px;font-weight:600;color:var(--white)}
+.pg-sk-top em{font-style:normal;font-size:12px;margin-left:8px;color:var(--t0_3)}
+.pg-sk-top em.up{color:var(--mint)}.pg-sk-top em.dn{color:var(--pk)}
+.pg-fix{display:grid;gap:6px;padding:12px 14px;margin-bottom:8px;border-radius:12px;background:var(--f0_02);border:1px solid var(--b0_06)}
+.pg-fix:last-child{margin-bottom:0}
+.pg-fix-r{display:grid;grid-template-columns:72px minmax(0,1fr);gap:10px;font-size:14px;line-height:1.5;overflow-wrap:anywhere}
+.pg-fix-r>span:first-child{font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--t0_3);padding-top:2px}
+.pg-fix .was{color:var(--pk)}.pg-fix .now{color:var(--mint)}
+.pg-why{font-size:13px;line-height:1.55;color:var(--t0_4);overflow-wrap:anywhere}
+.pg-tags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:6px}
+.pg-cta{display:inline-flex;align-items:center;justify-content:center;gap:8px;margin-top:12px;min-height:44px;padding:11px 20px;border-radius:12px;text-decoration:none;font-size:14px;font-weight:600;color:var(--on-gold);background:linear-gradient(135deg,var(--gold),var(--gold-light));box-shadow:0 8px 22px rgba(var(--gold-rgb),.18)}
+.pg-tx{white-space:pre-wrap;overflow-wrap:anywhere;font-size:14px;line-height:1.7;color:var(--t0_65);margin-top:12px;max-height:320px;overflow:auto}
+.pg-sec summary{cursor:pointer;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--t0_5);min-height:24px}
+.pg-line{text-align:center;padding:32px 12px;color:var(--t0_2);font-size:14px}
+
+/* ── Tablet ── */
+@media(max-width:900px){
+  .hamburger{display:flex!important}
+  nav>div:nth-child(2),nav>div:nth-child(3){display:none!important}
+}
+@media(min-width:769px) and (max-width:1100px){
+  body>div[style*="max-width:1240px"]{padding:32px 28px 56px!important}
+  nav{padding:12px 22px!important}
+  nav>div:nth-child(2){gap:18px!important}
+  nav>div:nth-child(2) .nav-link{font-size:13.5px}
+  .anim.d2{grid-template-columns:repeat(6,minmax(0,1fr))!important}
+  .anim.d2>*{grid-column:span 2}
+  .anim.d2>*:nth-child(n+4){grid-column:span 3}
+}
+@media(max-width:1100px){
+  .anim.d3{grid-template-columns:minmax(0,1fr)!important}
+}
+@media(min-width:1101px){
+  .anim.d3{grid-template-columns:minmax(0,1.6fr) minmax(0,1fr)!important}
+  .anim.d4{grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important}
+}
+
+/* ── Mobile ── */
+@media(max-width:768px){
+  .anim.d1{padding:22px 18px;border-radius:22px}
+  .anim.d2{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .anim.d3,.anim.d4{grid-template-columns:minmax(0,1fr)!important}
+  .anim.d1 button{width:100%}
+  .pg-chartbox{height:190px!important}
+}
+@media(max-width:760px){
+  .pg-dgrid{grid-template-columns:minmax(0,1fr)}
+}
+@media(max-width:640px){
+  .pg-sess .session-row{grid-template-columns:auto minmax(0,1fr) auto auto;grid-template-areas:"ic main ov chev" "metrics metrics metrics metrics";padding:14px}
+  .pg-metrics{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding-top:12px;border-top:1px solid var(--b0_06)}
+  .pg-ov{font-size:24px;min-width:48px}
+  .pg-detail{padding:0 12px 14px}
+  .pg-dhead{grid-template-columns:minmax(0,1fr);justify-items:start}
+  .pg-ringw{width:84px;height:84px}
+  .pg-sec{padding:14px}
+  .pg-fix-r{grid-template-columns:minmax(0,1fr);gap:2px}
+  .pg-cta{width:100%}
+}
+@media(max-width:560px){
+  .anim.d2>.card,.anim.d2>.card-gold{padding:14px!important}
+  .anim.d2 .label{gap:8px;font-size:11px;letter-spacing:.08em}
+  .pg-si{width:26px;height:26px;border-radius:8px}
+  .pg-hint{margin-top:0}
+  .pg-chips .filter-btn{flex:1 1 auto;text-align:center}
+}
+@media(max-width:380px){
+  .anim.d1{padding:18px 14px}
+  .pg-metrics{gap:4px}
+  .pg-m b{font-size:13.5px}
+}
+</style>
 </head>
 <body>
 <script>
@@ -326,35 +504,37 @@ try{if(localStorage.getItem('nirvo-theme')==='light'){document.documentElement.c
     </a>
   </div>
 
+  <div id="pg-error" class="pg-alert" role="alert" hidden>We couldn’t load your sessions. Check your connection and refresh the page.</div>
+
   <!-- ── ROW 1: Summary Stats ── -->
   <div class="anim d2" style="display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:20px">
 
     <div class="card" style="text-align:center">
-      <div class="label">Total Sessions</div>
+      <div class="label"><span class="pg-si" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><path d="M12 19v3"/></svg></span>Total Sessions</div>
       <div id="s-total" style="font-size:40px;font-family:'Cormorant Garamond',serif;font-weight:700;color:var(--gold)">0</div>
       <div style="font-size:12px;color:var(--t0_25);margin-top:4px">All time</div>
     </div>
 
     <div class="card" style="text-align:center">
-      <div class="label">Total Minutes</div>
+      <div class="label"><span class="pg-si pk" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>Total Minutes</div>
       <div id="s-minutes" style="font-size:40px;font-family:'Cormorant Garamond',serif;font-weight:700;color:var(--pk)">0</div>
       <div style="font-size:12px;color:var(--t0_25);margin-top:4px">Speaking time</div>
     </div>
 
     <div class="card" style="text-align:center">
-      <div class="label">Best Score</div>
+      <div class="label"><span class="pg-si mint" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/></svg></span>Best Score</div>
       <div id="s-best" style="font-size:40px;font-family:'Cormorant Garamond',serif;font-weight:700;color:var(--mint)">—</div>
       <div style="font-size:12px;color:var(--t0_25);margin-top:4px">Overall</div>
     </div>
 
     <div class="card" style="text-align:center">
-      <div class="label">Avg Score</div>
+      <div class="label"><span class="pg-si wh" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="m7 15 4-4 3 3 5-6"/></svg></span>Avg Score</div>
       <div id="s-avg" style="font-size:40px;font-family:'Cormorant Garamond',serif;font-weight:700;color:var(--white)">—</div>
       <div style="font-size:12px;color:var(--t0_25);margin-top:4px">All sessions</div>
     </div>
 
     <div class="card-gold" style="text-align:center">
-      <div class="label" style="color:rgba(var(--gold-rgb),0.5)">Current Streak</div>
+      <div class="label" style="color:rgba(var(--gold-rgb),0.5)"><span class="pg-si" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3c1 4 5 5.5 5 10a5 5 0 0 1-10 0c0-2 1-3 2-4 .3 1.5 1 2 2 2 0-3-1-5 1-8z"/></svg></span>Current Streak</div>
       <div style="font-size:40px;font-family:'Cormorant Garamond',serif;font-weight:700;color:var(--gold)">🔥 <span id="s-streak">0</span></div>
       <div style="font-size:12px;color:rgba(var(--gold-rgb),0.4);margin-top:4px">Days in a row</div>
     </div>
@@ -366,9 +546,9 @@ try{if(localStorage.getItem('nirvo-theme')==='light'){document.documentElement.c
 
     <!-- Score History Chart -->
     <div class="card">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+      <div class="pg-head" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
         <div class="label" style="margin-bottom:0">Score History</div>
-        <div style="display:flex;gap:6px">
+        <div class="pg-chips" style="display:flex;gap:6px">
           <button class="filter-btn active" onclick="filterChart(this,'all')">All</button>
           <button class="filter-btn" onclick="filterChart(this,'week')">Week</button>
           <button class="filter-btn" onclick="filterChart(this,'month')">Month</button>
@@ -376,7 +556,8 @@ try{if(localStorage.getItem('nirvo-theme')==='light'){document.documentElement.c
       </div>
 
       <!-- Chart -->
-      <div style="position:relative;height:160px;margin-bottom:8px">
+      <div class="pg-chartbox" style="position:relative;height:160px;margin-bottom:8px">
+        <div id="chart-empty" class="pg-empty"><strong style="color:var(--t0_5);font-weight:500">No sessions to chart</strong><span>Complete a speaking session (or pick a wider range) to see your scores here.</span></div>
         <!-- Y axis labels -->
         <div style="position:absolute;left:0;top:0;bottom:0;display:flex;flex-direction:column;justify-content:space-between;padding:0 8px 0 0">
           <span style="font-size:11.5px;color:var(--t0_2)">100</span>
@@ -396,9 +577,10 @@ try{if(localStorage.getItem('nirvo-theme')==='light'){document.documentElement.c
         </div>
       </div>
       <div id="chart-labels" style="display:flex;gap:6px;padding-left:32px;margin-top:4px"></div>
+      <div id="chart-readout" class="pg-readout" aria-live="polite"></div>
 
       <!-- Legend -->
-      <div style="display:flex;gap:16px;margin-top:14px;padding-top:14px;border-top:0.5px solid var(--b0_06)">
+      <div class="pg-legend" style="display:flex;gap:16px;margin-top:14px;padding-top:14px;border-top:0.5px solid var(--b0_06)">
         <div style="display:flex;align-items:center;gap:6px"><div style="width:10px;height:10px;border-radius:2px;background:var(--gold)"></div><span style="font-size:12px;color:var(--t0_4)">Overall</span></div>
         <div style="display:flex;align-items:center;gap:6px"><div style="width:10px;height:10px;border-radius:2px;background:var(--pk)"></div><span style="font-size:12px;color:var(--t0_4)">Fluency</span></div>
         <div style="display:flex;align-items:center;gap:6px"><div style="width:10px;height:10px;border-radius:2px;background:var(--mint)"></div><span style="font-size:12px;color:var(--t0_4)">Pronunciation</span></div>
@@ -456,6 +638,8 @@ try{if(localStorage.getItem('nirvo-theme')==='light'){document.documentElement.c
         </div>
       </div>
 
+      <div id="skills-empty" class="pg-note">Your skill breakdown appears after your first scored session.</div>
+
       <!-- Improvement tip -->
       <div id="tip-box" style="margin-top:18px;padding:12px 14px;background:rgba(var(--gold-rgb),0.05);border:1px solid rgba(var(--gold-rgb),0.12);border-radius:10px;display:none">
         <div style="font-size:11.5px;color:rgba(var(--gold-rgb),0.6);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:4px">💡 Focus Area</div>
@@ -507,15 +691,19 @@ try{if(localStorage.getItem('nirvo-theme')==='light'){document.documentElement.c
 
   <!-- ── ROW 4: Session History ── -->
   <div class="anim d5" class="card" style="background:var(--f0_03);border:1px solid var(--b0_07);border-radius:16px;padding:24px">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px">
+    <div class="pg-head" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px">
       <div class="label" style="margin-bottom:0">All Sessions</div>
-      <div style="display:flex;gap:6px" id="session-filters">
+      <div class="pg-chips" style="display:flex;gap:6px" id="session-filters">
         <button class="filter-btn active" onclick="filterSessions(this,'all')">All</button>
         <button class="filter-btn" onclick="filterSessions(this,'Daily Life')">Daily Life</button>
         <button class="filter-btn" onclick="filterSessions(this,'Business')">Business</button>
         <button class="filter-btn" onclick="filterSessions(this,'Travel')">Travel</button>
+        <button class="filter-btn" onclick="filterSessions(this,'Job Interview')">Job Interview</button>
+        <button class="filter-btn" onclick="filterSessions(this,'Education')">Education</button>
+        <button class="filter-btn" onclick="filterSessions(this,'Public Speaking')">Public Speaking</button>
       </div>
     </div>
+    <p class="pg-hint">Select a session to see detailed feedback.</p>
     <div id="all-sessions" style="display:flex;flex-direction:column;gap:8px">
       <div style="text-align:center;padding:32px;color:var(--t0_2);font-size:14px">
         No sessions yet — <a href="practice.html" style="color:var(--gold);text-decoration:none">start your first practice!</a>
@@ -570,7 +758,9 @@ try{if(localStorage.getItem('nirvo-theme')==='light'){document.documentElement.c
       .eq('user_id', userId)
       .order('created_at', { ascending: false });
 
-    if (error || !data) return;
+    const pgErr = document.getElementById('pg-error');
+    if (error || !data) { if (pgErr) pgErr.hidden = false; return; }
+    if (pgErr) pgErr.hidden = true;
     allSessions = data;
 
     if (data.length === 0) return;
@@ -627,6 +817,8 @@ try{if(localStorage.getItem('nirvo-theme')==='light'){document.documentElement.c
       if (el) el.textContent = v + '%';
       if (bar) { bar.style.setProperty('--w', v + '%'); bar.style.width = v + '%'; }
     });
+    const skEmpty = document.getElementById('skills-empty');
+    if (skEmpty && Object.values(skills).some(Boolean)) skEmpty.hidden = true;
     // Tip
     const min = Object.entries(skills).filter(([k]) => k !== 'overall').sort((a,b) => a[1]-b[1])[0];
     if (min && min[1] > 0) {
@@ -636,37 +828,54 @@ try{if(localStorage.getItem('nirvo-theme')==='light'){document.documentElement.c
     }
   }
 
+  // ── Display helpers (escaping + safe score parsing) ──
+  function esc(v) {
+    return String(v == null ? '' : v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+  function nvScore(v) { const n = Number(v); return (isFinite(n) && n > 0 && n <= 100) ? Math.round(n) : null; }
+
   // ── Chart ──
   function updateChart(data) {
     const last8 = [...data].reverse().slice(-8);
     const barsEl = document.getElementById('chart-bars');
     const labelsEl = document.getElementById('chart-labels');
+    const emptyEl = document.getElementById('chart-empty');
+    const readEl = document.getElementById('chart-readout');
     barsEl.innerHTML = '';
     labelsEl.innerHTML = '';
+    if (emptyEl) emptyEl.hidden = last8.length > 0;
+    if (readEl) readEl.textContent = last8.length ? 'Tap or focus a session to see its scores.' : '';
+    const pct = v => Math.max(0, Math.min(100, Number(v) || 0));
+    const show = v => v ? v + '%' : 'n/a';
     last8.forEach((s, i) => {
       const overall = s.overall_score || 0;
       const flu = s.fluency_score || 0;
       const pron = s.pronunciation_score || 0;
-      const maxH = 130;
+      const d = new Date(s.created_at);
+      const dayLbl = (d.getMonth()+1) + '/' + d.getDate();
       const group = document.createElement('div');
-      group.style.cssText = 'flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;justify-content:flex-end;height:100%';
+      group.className = 'pg-grp';
+      group.tabIndex = 0;
+      group.setAttribute('role', 'button');
+      group.setAttribute('aria-label', `${dayLbl}: overall ${show(overall)}, fluency ${show(flu)}, pronunciation ${show(pron)}`);
+      group.dataset.readout = `${dayLbl} · Overall ${show(overall)} · Fluency ${show(flu)} · Pronunciation ${show(pron)}`;
+      group.style.cssText = 'flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:2px;justify-content:flex-end;height:100%';
       group.innerHTML = `
-        <div style="display:flex;gap:2px;align-items:flex-end;height:${maxH}px">
-          <div class="chart-bar" style="width:8px;height:${(overall/100)*maxH}px;background:var(--gold);animation-delay:${i*0.08}s">
+        <div style="display:flex;gap:2px;align-items:flex-end;justify-content:center;height:100%;width:100%">
+          <div class="chart-bar cb-o" style="height:${pct(overall)}%;background:var(--gold);animation-delay:${i*0.08}s">
             <div class="tooltip">Overall: ${overall}%</div>
           </div>
-          <div class="chart-bar" style="width:8px;height:${(flu/100)*maxH}px;background:var(--pk);animation-delay:${i*0.08+0.04}s">
+          <div class="chart-bar cb-f" style="height:${pct(flu)}%;background:var(--pk);animation-delay:${i*0.08+0.04}s">
             <div class="tooltip">Fluency: ${flu}%</div>
           </div>
-          <div class="chart-bar" style="width:8px;height:${(pron/100)*maxH}px;background:var(--mint);animation-delay:${i*0.08+0.08}s">
+          <div class="chart-bar cb-p" style="height:${pct(pron)}%;background:var(--mint);animation-delay:${i*0.08+0.08}s">
             <div class="tooltip">Pronunciation: ${pron}%</div>
           </div>
         </div>`;
       barsEl.appendChild(group);
       const lbl = document.createElement('div');
-      lbl.style.cssText = 'flex:1;text-align:center;font-size:10.5px;color:var(--t0_25)';
-      const d = new Date(s.created_at);
-      lbl.textContent = (d.getMonth()+1) + '/' + d.getDate();
+      lbl.style.cssText = 'flex:1;min-width:0;text-align:center;font-size:11.5px;color:var(--t0_25)';
+      lbl.textContent = dayLbl;
       labelsEl.appendChild(lbl);
     });
   }
@@ -685,16 +894,19 @@ try{if(localStorage.getItem('nirvo-theme')==='light'){document.documentElement.c
       const avg = Math.round(v.total / v.count);
       const color = avg >= 85 ? 'var(--gold)' : avg >= 70 ? 'var(--pk)' : 'var(--mint)';
       return `
-        <div style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--f0_02);border-radius:10px">
-          <span style="font-size:18.5px">${icons[t]||'🎤'}</span>
-          <div style="flex:1">
-            <div style="font-size:14px;font-weight:500">${t}</div>
-            <div style="font-size:12px;color:var(--t0_3)">${v.count} session${v.count>1?'s':''}</div>
+        <div class="pg-topic">
+          <div style="display:flex;align-items:center;gap:12px">
+            <span class="pg-ti">${icons[t]||'🎤'}</span>
+            <div style="flex:1;min-width:0">
+              <div style="font-size:14px;font-weight:500;overflow-wrap:anywhere">${esc(t)}</div>
+              <div style="font-size:12px;color:var(--t0_3)">${v.count} session${v.count>1?'s':''}</div>
+            </div>
+            <div style="text-align:right">
+              <div style="font-size:18.5px;font-weight:700;font-family:'Cormorant Garamond',serif;color:${color}">${avg}%</div>
+              <div style="font-size:11.5px;color:var(--t0_25)">avg score</div>
+            </div>
           </div>
-          <div style="text-align:right">
-            <div style="font-size:16.5px;font-weight:700;font-family:'Cormorant Garamond',serif;color:${color}">${avg}%</div>
-            <div style="font-size:11.5px;color:var(--t0_25)">avg score</div>
-          </div>
+          <div class="bar-track"><div class="bar-fill" style="background:${color};--w:${avg}%;width:${avg}%"></div></div>
         </div>`;
     }).join('');
     document.getElementById('topic-stats').innerHTML = html || '<div style="text-align:center;padding:20px;color:var(--t0_2);font-size:14px">No sessions yet</div>';
@@ -706,38 +918,284 @@ try{if(localStorage.getItem('nirvo-theme')==='light'){document.documentElement.c
     const best = Math.max(...data.map(r => r.overall_score || 0));
     const streak = parseInt(document.getElementById('s-streak').textContent) || 0;
     const cards = document.querySelectorAll('#achievements > div');
-    if (total >= 1) { cards[0].style.opacity='1'; cards[0].style.borderColor='rgba(var(--gold-rgb),0.3)'; }
-    if (streak >= 3) { cards[1].style.opacity='1'; cards[1].style.borderColor='rgba(var(--gold-rgb),0.3)'; }
-    if (best >= 90) { cards[2].style.opacity='1'; cards[2].style.borderColor='rgba(var(--gold-rgb),0.3)'; }
-    if (total >= 10) { cards[3].style.opacity='1'; cards[3].style.borderColor='rgba(var(--gold-rgb),0.3)'; }
+    const unlock = i => { if (cards[i]) { cards[i].style.opacity='1'; cards[i].style.borderColor='rgba(var(--gold-rgb),0.3)'; cards[i].classList.add('unlocked'); } };
+    if (total >= 1) unlock(0);
+    if (streak >= 3) unlock(1);
+    if (best >= 90) unlock(2);
+    if (total >= 10) unlock(3);
+  }
+
+  // ── Session detail helpers (display only: reuses fields already stored on the session, never invents feedback) ──
+  const SKILLS = [
+    { k:'pronunciation_score', n:'Pronunciation', c:'var(--gold)',  g:'linear-gradient(90deg,var(--gold),var(--gold-light))' },
+    { k:'fluency_score',       n:'Fluency',       c:'var(--pk)',    g:'linear-gradient(90deg,var(--pk),var(--pk2))' },
+    { k:'grammar_score',       n:'Grammar',       c:'var(--mint)',  g:'linear-gradient(90deg,var(--mint),var(--mint2))' },
+    { k:'vocabulary_score',    n:'Vocabulary',    c:'#a78bfa',      g:'linear-gradient(90deg,#a78bfa,#c4b5fd)' }
+  ];
+  const IC = {
+    ok:'<circle cx="12" cy="12" r="9"/><path d="m8.5 12.5 2.5 2.5 4.5-5"/>',
+    warn:'<path d="M12 3 2 20h20L12 3z"/><path d="M12 10v4"/><path d="M12 17.5v.01"/>',
+    bars:'<path d="M4 20V10"/><path d="M10 20V4"/><path d="M16 20v-8"/><path d="M22 20H2"/>',
+    pen:'<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/>',
+    book:'<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5z"/><path d="M4 19.5V21h16"/>',
+    wave:'<path d="M3 12h3l3-8 4 16 3-8h5"/>',
+    mic:'<path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><path d="M12 19v3"/>',
+    bulb:'<path d="M9 18h6"/><path d="M10 21h4"/><path d="M12 3a6 6 0 0 0-4 10.5c.8.8 1 1.5 1 2.5h6c0-1 .2-1.7 1-2.5A6 6 0 0 0 12 3z"/>',
+    doc:'<path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/><path d="M8 13h8M8 17h6"/>'
+  };
+  const svg = p => `<svg viewBox="0 0 24 24" aria-hidden="true">${p}</svg>`;
+  const K = {
+    summary:['summary','feedback_summary','overall_feedback','feedback_text','feedback','comment','comments'],
+    strengths:['strengths','strength','positives','what_went_well','good_points'],
+    weaknesses:['weaknesses','weakness','areas_for_improvement','areas_to_improve','improvements','needs_improvement'],
+    grammar:['grammar_corrections','corrections','grammar_errors','grammar_mistakes','grammar_feedback','mistakes','errors'],
+    vocab:['vocabulary_feedback','vocabulary_suggestions','vocab_suggestions','better_words','vocabulary_notes','new_words','vocabulary_words','vocabulary'],
+    fluency:['fluency_feedback','fluency_notes','fluency_tips'],
+    pron:['pronunciation_feedback','pronunciation_notes','mispronounced_words','pronunciation_issues'],
+    recs:['recommendations','suggestions','tips','next_steps','action_items','improvement_tips'],
+    transcript:['transcript','user_transcript','speech_text','user_text']
+  };
+  let currentSessions = [];
+  let selectedKey = null;
+
+  function sessKey(s) { return String(s.id != null ? s.id : s.created_at); }
+  function nvParse(v) {
+    if (typeof v === 'string') { const t = v.trim(); if (t[0] === '{' || t[0] === '[') { try { return JSON.parse(t); } catch (e) {} } }
+    return v;
+  }
+  // Merge nested JSON feedback objects (if the row stores them) into one lookup object
+  function nvFlat(s) {
+    const src = Object.assign({}, s);
+    ['feedback','analysis','details','report','result','ai_feedback','assessment'].forEach(k => {
+      const o = nvParse(s[k]);
+      if (o && typeof o === 'object' && !Array.isArray(o)) Object.assign(src, o);
+    });
+    return src;
+  }
+  function nvPick(src, keys) {
+    for (const k of keys) {
+      const v = nvParse(src[k]);
+      if (v == null || v === '') continue;
+      if (Array.isArray(v) && !v.length) continue;
+      if (typeof v === 'object' && !Array.isArray(v) && !Object.keys(v).length) continue;
+      return v;
+    }
+    return null;
+  }
+  function nvFirst(o, keys) { for (const k of keys) { if (o && o[k] != null && o[k] !== '') return o[k]; } return ''; }
+  function nvText(it) {
+    if (it == null) return '';
+    if (typeof it === 'string' || typeof it === 'number') return String(it);
+    if (typeof it === 'object') { const t = nvFirst(it, ['text','message','point','description','title','tip','suggestion','recommendation','feedback','comment','word']); return typeof t === 'string' ? t : ''; }
+    return '';
+  }
+  function nvList(v) {
+    if (v == null) return [];
+    if (Array.isArray(v)) return v;
+    if (typeof v === 'string') return v.split(/\n+/).map(x => x.replace(/^[\s\-•*\d.)]+/, '').trim()).filter(Boolean);
+    return [v];
+  }
+  const nvTexts = v => nvList(v).map(nvText).filter(Boolean);
+  function nvAvg(key) {
+    const vals = allSessions.map(r => nvScore(r[key])).filter(v => v !== null);
+    return vals.length >= 2 ? Math.round(vals.reduce((a, b) => a + b, 0) / vals.length) : null;
+  }
+  function fmtDur(sec) {
+    const t = Math.round(Number(sec)); const m = Math.floor(t / 60), r = t % 60;
+    return m + ':' + String(r).padStart(2, '0') + ' min';
+  }
+  const scoreColor = n => n >= 85 ? 'var(--gold)' : n >= 70 ? 'var(--pk)' : 'var(--mint)';
+  const sec = (title, icon, body, wide) => `<section class="pg-sec${wide ? ' wide' : ''}"><h4>${svg(IC[icon])}${title}</h4>${body}</section>`;
+  const none = msg => `<div class="pg-none">${esc(msg)}</div>`;
+  const items = (arr, cls) => arr.map(t => `<div class="pg-li ${cls || ''}">${esc(t)}</div>`).join('');
+
+  function fixCard(it) {
+    if (typeof it === 'string' || typeof it === 'number') return `<div class="pg-fix"><div class="pg-fix-r"><span>Note</span><span>${esc(it)}</span></div></div>`;
+    if (!it || typeof it !== 'object') return '';
+    const was = nvFirst(it, ['original','incorrect','wrong','said','error','mistake','before']);
+    const now = nvFirst(it, ['corrected','correction','correct','better','suggestion','fix','after','improved']);
+    const why = nvFirst(it, ['explanation','reason','rule','note','comment','tip']);
+    if (!was && !now && !why) return '';
+    return `<div class="pg-fix">${was ? `<div class="pg-fix-r"><span>You said</span><s class="was">${esc(was)}</s></div>` : ''}${now ? `<div class="pg-fix-r"><span>Better</span><span class="now">${esc(now)}</span></div>` : ''}${why ? `<div class="pg-why">${esc(why)}</div>` : ''}</div>`;
+  }
+  function vocabCard(it) {
+    if (typeof it === 'string' || typeof it === 'number') return `<div class="pg-li">${esc(it)}</div>`;
+    if (!it || typeof it !== 'object') return '';
+    const w = nvFirst(it, ['word','term','phrase','original','used']);
+    const alt = nvFirst(it, ['better','suggestion','alternative','replacement','synonym','improved','upgrade']);
+    const note = nvFirst(it, ['meaning','definition','explanation','note','reason','example']);
+    if (!w && !alt && !note) { const t = nvText(it); return t ? `<div class="pg-li">${esc(t)}</div>` : ''; }
+    return `<div class="pg-fix">${w ? `<div class="pg-fix-r"><span>Word</span><span>${esc(w)}</span></div>` : ''}${alt ? `<div class="pg-fix-r"><span>Try</span><span class="now">${esc(alt)}</span></div>` : ''}${note ? `<div class="pg-why">${esc(note)}</div>` : ''}</div>`;
+  }
+  function wordLine(it) {
+    if (typeof it === 'string' || typeof it === 'number') return String(it);
+    if (it && typeof it === 'object') {
+      const w = nvFirst(it, ['word','term','text']); const h = nvFirst(it, ['correct','correct_pronunciation','ipa','phonetic','tip','note']);
+      return w ? (h ? w + ' — ' + h : String(w)) : nvText(it);
+    }
+    return '';
+  }
+
+  function renderDetail(s) {
+    const src = nvFlat(s);
+    const ov = nvScore(s.overall_score);
+    const date = new Date(s.created_at);
+    const validDate = !isNaN(date);
+    const dateLong = validDate ? date.toLocaleDateString('en-US', {weekday:'long', month:'long', day:'numeric', year:'numeric'}) : '';
+    const timeStr = validDate ? date.toLocaleTimeString('en-US', {hour:'numeric', minute:'2-digit'}) : '';
+    const dur = Number(s.duration_sec) > 0 ? fmtDur(s.duration_sec) : null;
+    const skills = SKILLS.map(sk => ({ ...sk, v: nvScore(s[sk.k]), avg: nvAvg(sk.k) }));
+    const have = skills.filter(x => x.v !== null);
+    const multi = allSessions.length >= 2;
+    const sm = nvPick(src, K.summary);
+    const summary = typeof sm === 'string' ? sm : '';
+
+    // Header
+    const head = `
+      <div class="pg-dhead">
+        <div class="pg-ringw"><div class="pg-ring" style="--p:${ov || 0};--c:${scoreColor(ov || 0)}"></div><div class="pg-ringn" style="color:${scoreColor(ov || 0)}">${ov !== null ? ov + '%' : '—'}<small>Overall</small></div></div>
+        <div style="min-width:0">
+          <div class="pg-dtitle">${esc(s.topic || 'Speaking Session')}</div>
+          <div class="pg-meta">
+            ${dateLong ? `<span class="pg-chip mu">${esc(dateLong)}${timeStr ? ' · ' + esc(timeStr) : ''}</span>` : ''}
+            ${dur ? `<span class="pg-chip mu">${esc(dur)}</span>` : ''}
+          </div>
+        </div>
+        ${summary ? `<div class="pg-sum">${esc(summary)}</div>` : ''}
+      </div>`;
+
+    // Score breakdown (this session vs. the user's own average)
+    const scoreBody = have.length ? skills.map(x => {
+      let delta = '';
+      if (x.v !== null && x.avg !== null && multi) {
+        const d = x.v - x.avg;
+        delta = `<em class="${d > 0 ? 'up' : d < 0 ? 'dn' : ''}">${d === 0 ? 'at your average' : (d > 0 ? '▲ ' : '▼ ') + Math.abs(d) + ' vs your average'}</em>`;
+      }
+      return `<div class="pg-sk"><div class="pg-sk-top"><span>${x.n}</span><span><b>${x.v !== null ? x.v + '%' : 'Not recorded'}</b>${delta}</span></div><div class="bar-track"><div class="bar-fill" style="background:${x.g};--w:${x.v || 0}%;width:${x.v || 0}%"></div></div></div>`;
+    }).join('') : none('No skill scores were saved for this session.');
+
+    // Strengths / weaknesses: stored lists first, otherwise derived from this session's own scores
+    let strengths = nvTexts(nvPick(src, K.strengths)), weaknesses = nvTexts(nvPick(src, K.weaknesses));
+    let sDerived = false, wDerived = false;
+    if (!strengths.length && have.length) {
+      const hi = have.filter(x => x.v >= 85);
+      const top = have.length > 1 ? [have.slice().sort((a, b) => b.v - a.v)[0]].filter(x => x.v >= 70) : [];
+      strengths = (hi.length ? hi : top).map(x => `${x.n}: ${x.v}%`);
+      sDerived = strengths.length > 0;
+    }
+    if (!weaknesses.length && have.length) {
+      let lo = have.filter(x => x.v < 70);
+      if (!lo.length && have.length > 1) {
+        const so = have.slice().sort((a, b) => a.v - b.v);
+        if (so[0].v < 85 && so[so.length - 1].v - so[0].v >= 5) lo = [so[0]];
+      }
+      weaknesses = lo.map(x => `${x.n}: ${x.v}%`);
+      wDerived = weaknesses.length > 0;
+    }
+    const derivedCap = '<div class="pg-cap">Based on this session’s scores.</div>';
+
+    // Grammar
+    const gScore = nvScore(s.grammar_score);
+    const gList = nvList(nvPick(src, K.grammar)).map(fixCard).filter(Boolean);
+    const grammarBody = (gScore !== null ? `<div class="pg-tags"><span class="pg-chip">Grammar score ${gScore}%</span></div>` : '') +
+      (gList.length ? gList.join('') : none('No grammar corrections were saved for this session.'));
+
+    // Vocabulary
+    const vScore = nvScore(s.vocabulary_score);
+    const vList = nvList(nvPick(src, K.vocab)).map(vocabCard).filter(Boolean);
+    const vocabBody = (vScore !== null ? `<div class="pg-tags"><span class="pg-chip">Vocabulary score ${vScore}%</span></div>` : '') +
+      (vList.length ? vList.join('') : none('No vocabulary feedback was saved for this session.'));
+
+    // Fluency
+    const fScore = nvScore(s.fluency_score);
+    const wpm = nvFirst(src, ['words_per_minute','wpm']);
+    const fill = nvFirst(src, ['filler_words','filler_count','fillers']);
+    const wc = nvFirst(src, ['word_count','words']);
+    const pauses = nvFirst(src, ['pause_count','pauses']);
+    const chips = [];
+    if (fScore !== null) chips.push(`<span class="pg-chip">Fluency score ${fScore}%</span>`);
+    if (Number(wpm) > 0) chips.push(`<span class="pg-chip mu">${Math.round(Number(wpm))} words/min</span>`);
+    const fillN = Array.isArray(fill) ? fill.length : (isFinite(Number(fill)) && fill !== '' ? Number(fill) : null);
+    if (fillN !== null) chips.push(`<span class="pg-chip mu">${fillN} filler word${fillN === 1 ? '' : 's'}</span>`);
+    if (Number(wc) > 0) chips.push(`<span class="pg-chip mu">${Number(wc)} words</span>`);
+    if (isFinite(Number(pauses)) && pauses !== '' && Number(pauses) >= 0) chips.push(`<span class="pg-chip mu">${Number(pauses)} pause${Number(pauses) === 1 ? '' : 's'}</span>`);
+    if (dur) chips.push(`<span class="pg-chip mu">${esc(dur)} speaking</span>`);
+    const fNotes = nvTexts(nvPick(src, K.fluency));
+    const fluencyBody = (chips.length ? `<div class="pg-tags">${chips.join('')}</div>` : '') + items(fNotes) + (!chips.length && !fNotes.length ? none('No fluency details were saved for this session.') : '');
+
+    // Pronunciation — only when this session saved a usable score or notes
+    const pScore = nvScore(s.pronunciation_score);
+    const pNotes = nvList(nvPick(src, K.pron)).map(wordLine).filter(Boolean);
+    const pronBody = (pScore !== null || pNotes.length)
+      ? (pScore !== null ? `<div class="pg-tags"><span class="pg-chip">Pronunciation score ${pScore}%</span></div>` : '') + items(pNotes)
+      : none('No reliable pronunciation data was saved for this session.');
+
+    // Recommendations: stored list first, otherwise factual pointers from this session's scores
+    let recs = nvTexts(nvPick(src, K.recs)), rDerived = false;
+    if (!recs.length && have.length) {
+      const low = have.slice().sort((a, b) => a.v - b.v)[0];
+      if (have.length > 1 || low.v < 85) { recs.push(`Focus your next ${s.topic ? s.topic + ' ' : ''}session on ${low.n} (${low.v}%), your lowest score here.`); }
+      have.forEach(x => { if (x.avg !== null && multi && x.avg - x.v >= 3 && x !== low) recs.push(`${x.n} was ${x.avg - x.v} points below your average — worth revisiting.`); });
+      rDerived = recs.length > 0;
+    }
+    const recBody = (recs.length ? items(recs, 'g') + (rDerived ? derivedCap : '') : none('No recommendations were saved for this session.')) +
+      '<a class="pg-cta" href="practice.html">Practice again</a>';
+
+    // Transcript (only if stored)
+    const tr = nvPick(src, K.transcript);
+    const transcript = typeof tr === 'string' ? `<details class="pg-sec wide"><summary>Transcript</summary><div class="pg-tx">${esc(tr)}</div></details>` : '';
+
+    return head + `<div class="pg-dgrid">` +
+      sec('Score breakdown', 'bars', scoreBody, true) +
+      sec('Strengths', 'ok', (strengths.length ? items(strengths, 'g') + (sDerived ? derivedCap : '') : none('No strengths were saved for this session.'))) +
+      sec('Needs work', 'warn', (weaknesses.length ? items(weaknesses, 'w') + (wDerived ? derivedCap : '') : none(have.length ? 'No clear weak area in this session’s scores.' : 'No weaknesses were saved for this session.'))) +
+      sec('Grammar corrections', 'pen', grammarBody, true) +
+      sec('Vocabulary', 'book', vocabBody) +
+      sec('Fluency', 'wave', fluencyBody) +
+      sec('Pronunciation', 'mic', pronBody) +
+      sec('Recommendations', 'bulb', recBody) +
+      transcript + `</div>`;
   }
 
   // ── Render sessions list ──
   function renderSessions(data) {
     const icons = {'Daily Life':'🏠','Business':'💼','Travel':'✈️','Job Interview':'🤝','Education':'📚','Public Speaking':'🎯'};
-    document.getElementById('all-sessions').innerHTML = data.length === 0
-      ? '<div style="text-align:center;padding:32px;color:var(--t0_2);font-size:14px">No sessions yet — <a href="practice.html" style="color:var(--gold);text-decoration:none">start your first practice!</a></div>'
-      : data.map(s => {
-          const score = s.overall_score || 0;
-          const color = score >= 85 ? 'var(--gold)' : score >= 70 ? 'var(--pk)' : 'var(--mint)';
-          const icon = icons[s.topic] || '🎤';
-          const date = new Date(s.created_at);
-          const dateStr = date.toLocaleDateString('en-US', {month:'short',day:'numeric',year:'numeric'});
-          return `
-            <div class="session-row">
-              <span style="font-size:20px">${icon}</span>
-              <div style="flex:1">
-                <div style="font-size:14px;font-weight:500">${s.topic || 'Speaking Session'}</div>
-                <div style="font-size:12px;color:var(--t0_28);margin-top:2px">${dateStr}</div>
-              </div>
-              <div style="display:flex;gap:20px;align-items:center">
-                <div style="text-align:center"><div style="font-size:11.5px;color:var(--t0_28)">Pronunciation</div><div style="font-size:14px;color:var(--gold);font-weight:500">${s.pronunciation_score||'—'}%</div></div>
-                <div style="text-align:center"><div style="font-size:11.5px;color:var(--t0_28)">Fluency</div><div style="font-size:14px;color:var(--pk);font-weight:500">${s.fluency_score||'—'}%</div></div>
-                <div style="text-align:center"><div style="font-size:11.5px;color:var(--t0_28)">Grammar</div><div style="font-size:14px;color:var(--mint);font-weight:500">${s.grammar_score||'—'}%</div></div>
-                <div style="text-align:center;min-width:52px"><div style="font-size:20px;font-weight:700;font-family:'Cormorant Garamond',serif;color:${color}">${score}%</div><div style="font-size:11.5px;color:var(--t0_25)">Overall</div></div>
-              </div>
-            </div>`;
-        }).join('');
+    currentSessions = data;
+    const box = document.getElementById('all-sessions');
+    if (data.length === 0) {
+      box.innerHTML = allSessions.length > 0
+        ? '<div class="pg-line">No sessions for this topic yet — <a href="practice.html" style="color:var(--gold);text-decoration:none">start a practice!</a></div>'
+        : '<div style="text-align:center;padding:32px;color:var(--t0_2);font-size:14px">No sessions yet — <a href="practice.html" style="color:var(--gold);text-decoration:none">start your first practice!</a></div>';
+      return;
+    }
+    const pc = v => v ? v + '%' : '—';
+    box.innerHTML = data.map((s, i) => {
+      const score = s.overall_score || 0;
+      const color = score >= 85 ? 'var(--gold)' : score >= 70 ? 'var(--pk)' : 'var(--mint)';
+      const icon = icons[s.topic] || '🎤';
+      const date = new Date(s.created_at);
+      const dateStr = date.toLocaleDateString('en-US', {month:'short',day:'numeric',year:'numeric'});
+      const dur = Number(s.duration_sec) > 0 ? ' · ' + fmtDur(s.duration_sec) : '';
+      const open = sessKey(s) === selectedKey;
+      return `
+        <div class="pg-sess${open ? ' open' : ''}" data-i="${i}">
+          <div class="session-row" role="button" tabindex="0" aria-expanded="${open}" aria-controls="pg-d-${i}" aria-label="${esc(s.topic || 'Speaking Session')}, ${esc(dateStr)}, overall ${pc(score)}. Show detailed feedback">
+            <span class="pg-sic">${icon}</span>
+            <div class="pg-main">
+              <div class="pg-t">${esc(s.topic || 'Speaking Session')}</div>
+              <div class="pg-d">${dateStr}${dur}</div>
+            </div>
+            <div class="pg-metrics">
+              <div class="pg-m"><small>Pronunciation</small><b style="color:var(--gold)">${pc(s.pronunciation_score)}</b></div>
+              <div class="pg-m"><small>Fluency</small><b style="color:var(--pk)">${pc(s.fluency_score)}</b></div>
+              <div class="pg-m"><small>Grammar</small><b style="color:var(--mint)">${pc(s.grammar_score)}</b></div>
+            </div>
+            <div class="pg-ov" style="color:${color}">${pc(score)}<small>Overall</small></div>
+            <svg class="pg-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+          </div>
+          <div class="pg-detail" id="pg-d-${i}"${open ? '' : ' hidden'}>${open ? renderDetail(s) : ''}</div>
+        </div>`;
+    }).join('');
   }
 
   // ── Filters ──
@@ -762,6 +1220,42 @@ try{if(localStorage.getItem('nirvo-theme')==='light'){document.documentElement.c
     const filtered = topic === 'all' ? allSessions : allSessions.filter(s => s.topic === topic);
     renderSessions(filtered);
   }
+
+  // ── Session detail toggle + chart readout (event delegation; keyboard accessible) ──
+  (function () {
+    const list = document.getElementById('all-sessions');
+    function toggle(row) {
+      const wrap = row.closest('.pg-sess'); if (!wrap) return;
+      const s = currentSessions[Number(wrap.dataset.i)]; if (!s) return;
+      const wasOpen = wrap.classList.contains('open');
+      list.querySelectorAll('.pg-sess.open').forEach(w => {
+        w.classList.remove('open');
+        const r = w.querySelector('.session-row'); if (r) r.setAttribute('aria-expanded', 'false');
+        const d = w.querySelector('.pg-detail'); if (d) { d.hidden = true; d.innerHTML = ''; }
+      });
+      if (wasOpen) { selectedKey = null; return; }
+      selectedKey = sessKey(s);
+      wrap.classList.add('open'); row.setAttribute('aria-expanded', 'true');
+      const d = wrap.querySelector('.pg-detail'); d.innerHTML = renderDetail(s); d.hidden = false;
+      try { wrap.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); } catch (e) {}
+    }
+    list.addEventListener('click', e => { const row = e.target.closest('.session-row'); if (row && list.contains(row)) toggle(row); });
+    list.addEventListener('keydown', e => {
+      if ((e.key === 'Enter' || e.key === ' ') && e.target.classList && e.target.classList.contains('session-row')) { e.preventDefault(); toggle(e.target); }
+    });
+
+    const bars = document.getElementById('chart-bars'), read = document.getElementById('chart-readout');
+    function pick(g) {
+      if (!g || !read) return;
+      bars.querySelectorAll('.pg-grp.sel').forEach(x => x.classList.remove('sel'));
+      g.classList.add('sel'); read.textContent = g.dataset.readout || '';
+    }
+    bars.addEventListener('click', e => pick(e.target.closest('.pg-grp')));
+    bars.addEventListener('focusin', e => pick(e.target.closest('.pg-grp')));
+    bars.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { const g = e.target.closest('.pg-grp'); if (g) { e.preventDefault(); pick(g); } }
+    });
+  })();
 </script>
 
   <script>
