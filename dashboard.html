@@ -259,6 +259,33 @@ body{padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))}
 
 .mobile-menu .nvd .nvd-row.nvd-cur{background:rgba(var(--gold-rgb),.09);border-color:rgba(var(--gold-rgb),.24);color:var(--gold)}
 </style>
+<style id="nirvo-dash-redesign">
+/* Dashboard redesign layer. Visual only; uses existing colour tokens. */
+.dash-welcome{position:relative;overflow:hidden;align-items:center!important;flex-wrap:wrap;gap:14px;padding:32px 36px;margin-bottom:34px!important;border-radius:24px;border:1px solid rgba(var(--gold-rgb),.2);background:radial-gradient(120% 150% at 0% 0%,rgba(var(--gold-rgb),.13),transparent 58%),linear-gradient(165deg,var(--f0_045),var(--f0_015));box-shadow:0 1px 0 var(--b0_05) inset,0 24px 60px -24px rgba(var(--sh),calc(.6 * var(--shk)))}
+.dash-welcome>div:first-child{flex:1 1 320px}
+.dash-sec{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin:0 2px 12px;font-size:11.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--t0_4)}
+.dash-sec span{letter-spacing:0;text-transform:none;font-size:12px;font-weight:400;color:var(--t0_3)}
+.score-ring-wrap svg circle:last-child{transition:stroke-dashoffset 1.1s var(--ease)}
+.score-ring-wrap svg+div{font-size:23px!important}
+.score-ring-wrap>div:last-child{display:inline-block;padding:3px 12px;border-radius:999px;background:var(--f0_04);font-weight:500;letter-spacing:.02em}
+.dash-stats .card:last-child{justify-content:space-between}
+.wk{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}
+.wk-col{display:flex;flex-direction:column;align-items:center;gap:8px;min-width:0}
+.wk-bar{width:100%;max-width:38px;height:58px;border-radius:9px;background:var(--f0_03);border:1px solid var(--b0_07);display:flex;align-items:flex-end;overflow:hidden}
+.wk-bar i{display:block;width:100%;height:0;background:linear-gradient(180deg,var(--gold-light),var(--gold));border-radius:6px 6px 0 0;transition:height .9s var(--ease)}
+.wk-col .streak-day{width:100%;max-width:38px}
+.dash-row2 .card{display:flex;flex-direction:column}
+.dash-row2 .card>p{margin-top:auto!important;padding-top:14px}
+@media(max-width:768px){
+.dash-welcome{padding:22px 20px;border-radius:20px;margin-bottom:24px!important;align-items:stretch!important}
+.dash-welcome>div:first-child{flex:0 0 auto}
+.dash-welcome>a{width:100%}
+.dash-welcome>a button{width:100%;min-height:50px}
+.dash-sec{flex-direction:column;gap:2px;margin-bottom:10px}
+.score-ring-wrap svg+div{font-size:21px!important}
+.wk{gap:5px}.wk-bar{height:46px}
+}
+</style>
 </head>
 <body>
 <script>
@@ -353,14 +380,15 @@ try{if(localStorage.getItem('nirvo-theme')==='light'){document.documentElement.c
       <p style="font-size:14.8px;color:var(--t0_38);margin-top:8px;font-weight:400">Your AI coach is ready. Let's practice today.</p>
     </div>
     <a href="practice.html" style="text-decoration:none">
-      <button class="btn-gold" style="font-size:15.8px;padding:14px 36px">🎤 Start Speaking</button>
+      <button class="btn-gold" style="font-size:15.8px;padding:14px 36px"><svg viewBox="0 0 24 24" aria-hidden="true" style="width:1em;height:1em;vertical-align:-.125em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;margin-right:.4em"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg>Start Speaking</button>
     </a>
     <a href="nirvo-chat.html" style="text-decoration:none">
-      <button style="background:transparent;border:1px solid rgba(var(--rose-rgb),0.35);border-radius:12px;color:var(--rose);font-size:14.8px;font-weight:500;padding:14px 28px;cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.25s;letter-spacing:0.04em" onmouseover="this.style.background='rgba(var(--rose-rgb),0.08)';this.style.borderColor='rgba(var(--rose-rgb),0.6)'" onmouseout="this.style.background='transparent';this.style.borderColor='rgba(var(--rose-rgb),0.35)'">💬 Chat with NIRVO</button>
+      <button style="background:transparent;border:1px solid rgba(var(--rose-rgb),0.35);border-radius:12px;color:var(--rose);font-size:14.8px;font-weight:500;padding:14px 28px;cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.25s;letter-spacing:0.04em" onmouseover="this.style.background='rgba(var(--rose-rgb),0.08)';this.style.borderColor='rgba(var(--rose-rgb),0.6)'" onmouseout="this.style.background='transparent';this.style.borderColor='rgba(var(--rose-rgb),0.35)'"><svg viewBox="0 0 24 24" aria-hidden="true" style="width:1em;height:1em;vertical-align:-.125em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;margin-right:.4em"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>Chat with NIRVO</button>
     </a>
   </div>
 
   <!-- ── ROW 1: Stats ── -->
+  <div class="dash-sec">Skill analytics <span>Average of your last 5 scored sessions</span></div>
   <div class="anim d2 dash-stats" style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:20px">
 
     <!-- Pronunciation -->
@@ -406,14 +434,14 @@ try{if(localStorage.getItem('nirvo-theme')==='light'){document.documentElement.c
     <div class="card" style="display:flex;flex-direction:column;justify-content:space-between">
       <div>
         <div style="font-size:11.5px;color:var(--t0_3);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:10px">Daily Goal</div>
-        <div style="font-size:36px;font-family:'Cormorant Garamond',serif;font-weight:700;color:var(--gold);margin-bottom:4px">66%</div>
-        <div style="font-size:13px;color:var(--t0_35);margin-bottom:12px">20 / 30 minutes</div>
+        <div style="font-size:44px;line-height:1.05;font-family:'Cormorant Garamond',serif;font-weight:700;color:var(--gold);margin-bottom:4px" id="dg-pct">0%</div>
+        <div style="font-size:13px;color:var(--t0_35);margin-bottom:12px" id="dg-detail">0 / 30 minutes</div>
       </div>
       <div>
-        <div style="height:5px;background:var(--k0_07);border-radius:4px">
-          <div style="width:66%;height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-light));border-radius:4px;transition:width 1s ease"></div>
+        <div style="height:8px;background:var(--k0_07);border-radius:6px">
+          <div id="dg-bar" style="width:0%;height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-light));border-radius:6px;transition:width 1s ease"></div>
         </div>
-        <div style="font-size:12px;color:var(--t0_25);margin-top:8px">10 min left today</div>
+        <div style="font-size:12px;color:var(--t0_25);margin-top:8px" id="dg-left">30 min left today</div>
       </div>
     </div>
 
@@ -423,7 +451,7 @@ try{if(localStorage.getItem('nirvo-theme')==='light'){document.documentElement.c
   <div id="todays-focus-card" class="anim d2" style="display:none;margin-bottom:20px;background:rgba(var(--rose-rgb),0.05);border:1px solid rgba(var(--rose-rgb),0.2);border-radius:16px;padding:22px 28px">
     <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap">
       <div style="flex:1;min-width:200px">
-        <div style="font-size:11.5px;color:rgba(var(--rose-rgb),0.55);letter-spacing:0.16em;text-transform:uppercase;margin-bottom:10px">🎯 Today's Focus</div>
+        <div style="font-size:11.5px;color:rgba(var(--rose-rgb),0.55);letter-spacing:0.16em;text-transform:uppercase;margin-bottom:10px"><svg viewBox="0 0 24 24" aria-hidden="true" style="width:1em;height:1em;vertical-align:-.125em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;margin-right:.4em"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>Today's Focus</div>
         <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:14px">
           <span id="focus-label" style="font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:700;color:var(--rose)"></span>
           <span id="focus-score" style="font-size:13px;color:rgba(var(--rose-rgb),0.5);background:rgba(var(--rose-rgb),0.1);padding:3px 10px;border-radius:20px"></span>
@@ -444,6 +472,7 @@ try{if(localStorage.getItem('nirvo-theme')==='light'){document.documentElement.c
   </div>
 
   <!-- ── ROW 2: Streak + Topics + Quick Stats ── -->
+  <div class="dash-sec">Your week <span>Practice minutes per day</span></div>
   <div class="anim d3 dash-row2" style="display:grid;grid-template-columns:1.2fr 1fr 0.8fr;gap:16px;margin-bottom:20px">
 
     <!-- Streak -->
@@ -451,30 +480,22 @@ try{if(localStorage.getItem('nirvo-theme')==='light'){document.documentElement.c
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
         <div style="font-size:11.5px;color:var(--t0_3);letter-spacing:0.14em;text-transform:uppercase">Weekly Streak</div>
         <div style="display:flex;align-items:center;gap:6px">
-          <span style="font-size:18.5px">🔥</span>
-          <span style="font-size:20px;font-family:'Cormorant Garamond',serif;font-weight:700;color:var(--gold)">5 days</span>
+          <span style="font-size:18.5px;color:var(--gold);display:inline-flex"><svg viewBox="0 0 24 24" aria-hidden="true" style="width:1em;height:1em;vertical-align:-.125em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg></span>
+          <span style="font-size:20px;font-family:'Cormorant Garamond',serif;font-weight:700;color:var(--gold)" id="st-count">0 days</span>
         </div>
       </div>
-      <div style="display:flex;gap:8px;justify-content:space-between">
-        <div class="streak-day done">M</div>
-        <div class="streak-day done">T</div>
-        <div class="streak-day done">W</div>
-        <div class="streak-day done">T</div>
-        <div class="streak-day today" style="background:linear-gradient(135deg,var(--rose),#f0bcbc);color:var(--on-gold);animation:float 2s ease-in-out infinite">F</div>
-        <div class="streak-day empty">S</div>
-        <div class="streak-day empty">S</div>
-      </div>
-      <p style="font-size:13px;color:var(--t0_3);margin-top:14px;line-height:1.6">Keep it up! Practice today to extend your streak 🎯</p>
+      <div class="wk" id="st-days"></div>
+      <p style="font-size:13px;color:var(--t0_3);margin-top:14px;line-height:1.6" id="st-note">Start a session to begin your streak</p>
     </div>
 
     <!-- Topics -->
     <div class="card">
       <div style="font-size:11.5px;color:var(--t0_3);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:14px">Quick Practice</div>
       <div style="display:flex;flex-direction:column;gap:6px" id="topic-list">
-        <div class="topic-row selected" onclick="goToTopic(this,'Daily Life')"><span style="font-size:16.5px">🏠</span><span style="font-size:14px;color:var(--gold)">Daily Life</span></div>
-        <div class="topic-row" onclick="goToTopic(this,'Business')"><span style="font-size:16.5px">💼</span><span style="font-size:14px;color:var(--t0_55)">Business</span></div>
-        <div class="topic-row" onclick="goToTopic(this,'Travel')"><span style="font-size:16.5px">✈️</span><span style="font-size:14px;color:var(--t0_55)">Travel</span></div>
-        <div class="topic-row" onclick="goToTopic(this,'Job Interview')"><span style="font-size:16.5px">🤝</span><span style="font-size:14px;color:var(--t0_55)">Job Interview</span></div>
+        <div class="topic-row selected" onclick="goToTopic(this,'Daily Life')"><span style="font-size:16.5px;display:inline-flex"><svg viewBox="0 0 24 24" aria-hidden="true" style="width:1em;height:1em;vertical-align:-.125em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></span><span style="font-size:14px;color:var(--gold)">Daily Life</span></div>
+        <div class="topic-row" onclick="goToTopic(this,'Business')"><span style="font-size:16.5px;display:inline-flex"><svg viewBox="0 0 24 24" aria-hidden="true" style="width:1em;height:1em;vertical-align:-.125em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/><rect width="20" height="14" x="2" y="6" rx="2"/></svg></span><span style="font-size:14px;color:var(--t0_55)">Business</span></div>
+        <div class="topic-row" onclick="goToTopic(this,'Travel')"><span style="font-size:16.5px;display:inline-flex"><svg viewBox="0 0 24 24" aria-hidden="true" style="width:1em;height:1em;vertical-align:-.125em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/></svg></span><span style="font-size:14px;color:var(--t0_55)">Travel</span></div>
+        <div class="topic-row" onclick="goToTopic(this,'Job Interview')"><span style="font-size:16.5px;display:inline-flex"><svg viewBox="0 0 24 24" aria-hidden="true" style="width:1em;height:1em;vertical-align:-.125em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="m11 17 2 2a1 1 0 1 0 3-3"/><path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 1-3-3l2.81-2.81a5.79 5.79 0 0 1 7.06-.87l.47.28a2 2 0 0 0 1.42.25L21 4"/><path d="m21 3 1 11h-2"/><path d="M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3"/><path d="M3 4h8"/></svg></span><span style="font-size:14px;color:var(--t0_55)">Job Interview</span></div>
       </div>
     </div>
 
@@ -515,7 +536,7 @@ try{if(localStorage.getItem('nirvo-theme')==='light'){document.documentElement.c
 
     <!-- Weakness banner -->
     <div id="weakness-banner" style="display:none;margin-bottom:16px;padding:12px 16px;background:rgba(var(--rose-rgb),0.06);border:1px solid rgba(var(--rose-rgb),0.18);border-radius:10px;display:flex;align-items:center;gap:12px">
-      <span style="font-size:18.5px">🎯</span>
+      <span style="font-size:18.5px;display:inline-flex"><svg viewBox="0 0 24 24" aria-hidden="true" style="width:1em;height:1em;vertical-align:-.125em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></span>
       <div>
         <div style="font-size:11.5px;color:rgba(var(--rose-rgb),0.6);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:3px">Your Current Focus</div>
         <div id="weakness-text" style="font-size:14px;color:var(--rose);font-weight:500"></div>
@@ -577,11 +598,15 @@ try{if(localStorage.getItem('nirvo-theme')==='light'){document.documentElement.c
     window.location.href = 'index.html';
   }
 
-  // ── Skill rings: real averages (same recent scored sessions as Today's Focus) ──
-  function renderRings(sessions) {
+  // ── Lucide icons (inline, stroke = currentColor) ──
+  const LI = {"mic": "<path d=\"M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z\"/><path d=\"M19 10v2a7 7 0 0 1-14 0v-2\"/><line x1=\"12\" x2=\"12\" y1=\"19\" y2=\"22\"/>", "chat": "<path d=\"M7.9 20A9 9 0 1 0 4 16.1L2 22Z\"/>", "flame": "<path d=\"M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z\"/>", "target": "<circle cx=\"12\" cy=\"12\" r=\"10\"/><circle cx=\"12\" cy=\"12\" r=\"6\"/><circle cx=\"12\" cy=\"12\" r=\"2\"/>", "check": "<circle cx=\"12\" cy=\"12\" r=\"10\"/><path d=\"m9 12 2 2 4-4\"/>", "home": "<path d=\"M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8\"/><path d=\"M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z\"/>", "briefcase": "<path d=\"M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16\"/><rect width=\"20\" height=\"14\" x=\"2\" y=\"6\" rx=\"2\"/>", "plane": "<path d=\"M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z\"/>", "handshake": "<path d=\"m11 17 2 2a1 1 0 1 0 3-3\"/><path d=\"m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 1-3-3l2.81-2.81a5.79 5.79 0 0 1 7.06-.87l.47.28a2 2 0 0 0 1.42.25L21 4\"/><path d=\"m21 3 1 11h-2\"/><path d=\"M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3\"/><path d=\"M3 4h8\"/>", "cap": "<path d=\"M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z\"/><path d=\"M22 10v6\"/><path d=\"M6 12.5V16a6 3 0 0 0 12 0v-3.5\"/>", "present": "<path d=\"M2 3h20\"/><path d=\"M21 3v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V3\"/><path d=\"m7 21 5-5 5 5\"/>"};
+  const li = n => '<svg viewBox="0 0 24 24" aria-hidden="true" style="width:1em;height:1em;vertical-align:-.125em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round">' + LI[n] + '</svg>';
+
+  // ── Skill rings: real averages of the last 5 scored sessions, trend vs the 5 before ──
+  function renderRings(sessions, prev) {
     const CIRC = 201;
-    const avg = key => {
-      const vals = (sessions || []).map(s => s[key]).filter(v => v > 0);
+    const avg = (list, key) => {
+      const vals = (list || []).map(s => s[key]).filter(v => v > 0);
       return vals.length ? Math.round(vals.reduce((a, b) => a + b, 0) / vals.length) : null;
     };
     const keys = { pronunciation: 'pronunciation_score', fluency: 'fluency_score', grammar: 'grammar_score' };
@@ -589,22 +614,58 @@ try{if(localStorage.getItem('nirvo-theme')==='light'){document.documentElement.c
       const label = wrap.firstElementChild && wrap.firstElementChild.textContent.trim().toLowerCase();
       const key = keys[label];
       if (!key) return;
-      const val = avg(key);
+      const val = avg(sessions, key);
+      const before = avg(prev, key);
       const arc = wrap.querySelector('circle[stroke-dasharray]');
       const num = wrap.querySelector('svg + div');
       const band = wrap.lastElementChild;
       if (arc) arc.setAttribute('stroke-dashoffset', val === null ? CIRC : Math.round(CIRC * (1 - val / 100)));
       if (num) num.textContent = val === null ? '—' : val + '%';
-      if (band) band.textContent = val === null ? 'No data yet' : val >= 85 ? 'Excellent' : val >= 70 ? 'Good' : 'Keep practicing';
+      if (band) {
+        const name = val === null ? 'No data yet' : val >= 85 ? 'Excellent' : val >= 70 ? 'Good' : 'Keep practicing';
+        const d = (val !== null && before !== null) ? val - before : 0;
+        band.textContent = name + (d ? ' · ' + (d > 0 ? '↑' : '↓') + Math.abs(d) : '');
+      }
     });
   }
   renderRings(null); // no placeholder numbers until real data is loaded
+
+  // ── Daily goal, weekly activity and streak: all from real sessions ──
+  const DAILY_GOAL_MIN = 30;
+  function renderActivity(sessions) {
+    const key = d => d.getFullYear() + '-' + d.getMonth() + '-' + d.getDate();
+    const mins = {};
+    (sessions || []).forEach(s => { const dt = new Date(s.created_at); if (isNaN(dt)) return; const k = key(dt); mins[k] = (mins[k] || 0) + (Number(s.duration_sec) || 0); }); // seconds per local day
+    const now = new Date();
+    const todaySec = mins[key(now)] || 0;
+    const todayMin = Math.round(todaySec / 60 * 10) / 10;
+    document.getElementById('dg-pct').textContent = Math.min(100, Math.floor(todaySec / (DAILY_GOAL_MIN * 60) * 100)) + '%';
+    document.getElementById('dg-detail').textContent = todayMin + ' / ' + DAILY_GOAL_MIN + ' minutes';
+    document.getElementById('dg-bar').style.width = Math.min(100, todaySec / (DAILY_GOAL_MIN * 60) * 100) + '%';
+    document.getElementById('dg-left').innerHTML = todaySec >= DAILY_GOAL_MIN * 60 ? 'Daily goal reached ' + li('check') : Math.ceil((DAILY_GOAL_MIN * 60 - todaySec) / 60) + ' min left today';
+    let cur = new Date(now), streak = 0;
+    if (!mins[key(cur)]) cur.setDate(cur.getDate() - 1);
+    while (mins[key(cur)]) { streak++; cur.setDate(cur.getDate() - 1); }
+    document.getElementById('st-count').textContent = streak + (streak === 1 ? ' day' : ' days');
+    document.getElementById('st-note').innerHTML = (todaySec > 0 ? 'You practiced today — nice work'
+      : streak > 0 ? 'Practice today to extend your streak' : 'Start a session to begin your streak') + ' ' + li('target');
+    const monday = new Date(now); monday.setDate(now.getDate() - ((now.getDay() + 6) % 7));
+    const days = [];
+    for (let i = 0; i < 7; i++) { const d = new Date(monday); d.setDate(monday.getDate() + i); days.push({ d, m: Math.round((mins[key(d)] || 0) / 60), t: key(d) === key(now) }); }
+    const max = Math.max(DAILY_GOAL_MIN, ...days.map(x => x.m));
+    document.getElementById('st-days').innerHTML = days.map((x, i) => {
+      const cls = x.t ? 'today' : x.m > 0 ? 'done' : 'empty';
+      const st = x.t ? ' style="background:linear-gradient(135deg,var(--rose),#f0bcbc);color:var(--on-gold);animation:float 2s ease-in-out infinite"' : '';
+      return '<div class="wk-col" title="' + x.m + ' min"><div class="wk-bar"><i style="height:' + Math.round(x.m / max * 100) + '%"></i></div><div class="streak-day ' + cls + '"' + st + '>' + 'MTWTFSS'[i] + '</div></div>';
+    }).join('');
+  }
+  renderActivity(null);
 
   // ── Load sessions from Supabase ──
   async function loadSessions(userId) {
     const { data, error } = await sb
       .from('sessions')
-      .select('id,created_at,topic,duration_sec,pronunciation_score,fluency_score,grammar_score,vocabulary_score,overall_score')
+      .select('id,source,created_at,topic,duration_sec,pronunciation_score,fluency_score,grammar_score,vocabulary_score,overall_score')
       .eq('user_id', userId)
       .order('created_at', { ascending: false })
       .limit(1000);
@@ -615,12 +676,14 @@ try{if(localStorage.getItem('nirvo-theme')==='light'){document.documentElement.c
       return;
     }
     if (!data || data.length === 0) return;
+    // Practice sessions only (valid dates) feed skill analytics, goal and streak
+    const practiceData = data.filter(r => r.source !== 'chat' && !isNaN(new Date(r.created_at)));
 
     // Update stats (all sessions, not only the 5 shown below)
     document.getElementById('stat-sessions').textContent = data.length;
     const totalMin = Math.round(data.reduce((s,r) => s + (r.duration_sec||0), 0) / 60);
     document.getElementById('stat-minutes').textContent = totalMin;
-    const scoredData = data.filter(r => r.overall_score);
+    const scoredData = practiceData.filter(r => r.overall_score);
     if (scoredData.length) {
       const best = Math.max(...scoredData.map(r => r.overall_score));
       document.getElementById('stat-best').textContent = best + '%';
@@ -633,15 +696,16 @@ try{if(localStorage.getItem('nirvo-theme')==='light'){document.documentElement.c
 
     // ── Rings + weakness detection from the last 5 scored sessions ──
     const recent = scoredData.slice(0, 5);
-    renderRings(recent);
+    renderRings(recent, scoredData.slice(5, 10));
+    renderActivity(practiceData);
     detectWeakness(recent);
 
     // Render sessions
-    const icons = { 'Daily Life':'🏠','Business':'💼','Travel':'✈️','Job Interview':'🤝','Education':'📚','Public Speaking':'🎯' };
+    const icons = { 'Daily Life':'home','Business':'briefcase','Travel':'plane','Job Interview':'handshake','Education':'cap','Public Speaking':'present' };
     document.getElementById('sessions-list').innerHTML = data.slice(0, 5).map(s => {
       const score = s.overall_score || 0;
       const color = score >= 85 ? 'var(--gold)' : score >= 70 ? 'var(--pk)' : 'var(--mint)';
-      const icon = icons[s.topic] || '🎤';
+      const icon = li(icons[s.topic] || 'mic');
       const ago = getTimeAgo(new Date(s.created_at));
       return `
         <div class="session-row">
@@ -730,6 +794,7 @@ try{if(localStorage.getItem('nirvo-theme')==='light'){document.documentElement.c
   }
 
   function getTimeAgo(date) {
+    if (isNaN(date)) return '';
     const diff = (new Date() - date) / 1000;
     if (diff < 60) return 'Just now';
     if (diff < 3600) return Math.floor(diff/60) + ' min ago';
