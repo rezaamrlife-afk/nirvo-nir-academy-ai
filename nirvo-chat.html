@@ -743,8 +743,23 @@ function speechChunks(text) {
 }
 // ── NIRVO female voice: Gemini TTS (server proxy /api/tts) with browser-voice fallback ──
 let cloudAudio = null, cloudUrl = null, cloudSeq = 0, cloudFailUntil = 0;
+// iOS Safari only allows audio that was started by a tap: unlock ONE reusable <audio> on the first gesture,
+// then reuse that same element for every Gemini clip (a new Audio() created after an async fetch is blocked).
+const cloudEl = new Audio();
+cloudEl.preload = 'auto';
+cloudEl.setAttribute('playsinline', '');
+const SILENT_WAV = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA=';
+let cloudUnlocked = false;
+function unlockCloudAudio() {
+  if (cloudUnlocked || cloudAudio) return;
+  cloudEl.src = SILENT_WAV;
+  const p = cloudEl.play();
+  if (p && p.then) p.then(() => { cloudEl.pause(); cloudEl.removeAttribute('src'); cloudUnlocked = true; }).catch(() => {});
+  else cloudUnlocked = true;
+}
+['click', 'touchend', 'keydown'].forEach(ev => document.addEventListener(ev, unlockCloudAudio, { passive: true }));
 function releaseCloud() {
-  if (cloudAudio) { cloudAudio.onended = cloudAudio.onerror = null; try { cloudAudio.pause(); } catch (e) {} cloudAudio = null; }
+  if (cloudAudio) { cloudAudio.onended = cloudAudio.onerror = null; try { cloudAudio.pause(); cloudAudio.removeAttribute('src'); } catch (e) {} cloudAudio = null; }
   if (cloudUrl) { try { URL.revokeObjectURL(cloudUrl); } catch (e) {} cloudUrl = null; }
 }
 function stopSpeech() {
@@ -768,7 +783,7 @@ function cloudSpeak(text, done, fallback) {
       if (i + 1 < pieces.length) next = fetchPiece(pieces[i + 1]); // prefetch
       releaseCloud();
       const url = URL.createObjectURL(blob);
-      const a = new Audio(url); cloudAudio = a; cloudUrl = url;
+      const a = cloudEl; a.src = url; cloudAudio = a; cloudUrl = url;
       a.onended = () => { if (seq !== cloudSeq) return; releaseCloud(); if (i + 1 < pieces.length) play(i + 1); else done(); };
       a.onerror = () => { if (seq !== cloudSeq) return; releaseCloud(); if (i === 0) { cloudFailUntil = Date.now() + 120000; fallback(); } else done(); };
       return a.play();
