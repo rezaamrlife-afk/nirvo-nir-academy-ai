@@ -505,12 +505,16 @@ waveHeights.forEach((h,i) => {
 
 // ── Auth ──
 let greetingStarted = false;
+let nvAccent = 'American';
+try { if (localStorage.getItem('nirvo_accent') === 'British') nvAccent = 'British'; } catch (e) {}
 sb.auth.onAuthStateChange((event, session) => {
   if (session) {
     const user = session.user;
     userName = user.user_metadata?.first_name || user.email.split('@')[0];
     localStorage.setItem('nirvo_user_name', userName);
     localStorage.setItem('nirvo_user_email', user.email);
+    nvAccent = user.user_metadata?.pref_accent === 'British' ? 'British' : 'American';
+    try { localStorage.setItem('nirvo_accent', nvAccent); } catch (e) {}
   } else {
     const saved = localStorage.getItem('nirvo_user_name');
     const savedEmail = localStorage.getItem('nirvo_user_email');
@@ -719,7 +723,9 @@ function pickEnglishVoice() {
   const NICE = [/google us english/i, /samantha|ava\b|allison|susan|zira|jenny|aria|serena|karen|moira|hazel|google uk english female|female/i];
   const score = v => {
     const lang = v.lang.replace('_', '-').toLowerCase();
-    let sc = lang === 'en-us' ? 3 : lang === 'en-gb' ? 2 : 0;
+    const gb = nvAccent === 'British';
+    let sc = lang === (gb ? 'en-gb' : 'en-us') ? 5 : (lang === 'en-us' || lang === 'en-gb') ? 2 : 0;
+    if (/\b(david|mark|james|daniel|george|richard|guy|ryan|alex|male)\b/i.test(v.name)) sc -= 6;
     NICE.forEach((re, i) => { if (re.test(v.name)) sc += 6 - i * 2; });
     if (/premium|enhanced|natural|neural/i.test(v.name)) sc += 4;
     if (BAD.test(v.name)) sc -= 20;
@@ -735,10 +741,49 @@ function speechChunks(text) {
   if (cur.trim()) out.push(cur.trim());
   return out; // short pieces: Android/Chrome stops reading long utterances part-way
 }
+// ── NIRVO female voice: Gemini TTS (server proxy /api/tts) with browser-voice fallback ──
+let cloudAudio = null, cloudUrl = null, cloudSeq = 0, cloudFailUntil = 0;
+function releaseCloud() {
+  if (cloudAudio) { cloudAudio.onended = cloudAudio.onerror = null; try { cloudAudio.pause(); } catch (e) {} cloudAudio = null; }
+  if (cloudUrl) { try { URL.revokeObjectURL(cloudUrl); } catch (e) {} cloudUrl = null; }
+}
+function stopSpeech() {
+  cloudSeq++;
+  releaseCloud();
+  try { window.speechSynthesis.cancel(); } catch (e) {}
+}
+function cloudSpeak(text, done, fallback) {
+  if (Date.now() < cloudFailUntil) { fallback(); return; }
+  const pieces = []; let cur = '';
+  speechChunks(text).forEach(c => { if ((cur + ' ' + c).length > 420 && cur) { pieces.push(cur); cur = c; } else cur = (cur + ' ' + c).trim(); });
+  if (cur) pieces.push(cur);
+  if (!pieces.length) { done(); return; }
+  const seq = ++cloudSeq;
+  const fetchPiece = t => fetch('/api/tts', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text: t, accent: nvAccent }) })
+    .then(r => { if (!r.ok) throw new Error('tts'); return r.blob(); });
+  let next = fetchPiece(pieces[0]);
+  const play = i => {
+    next.then(blob => {
+      if (seq !== cloudSeq) return;
+      if (i + 1 < pieces.length) next = fetchPiece(pieces[i + 1]); // prefetch
+      releaseCloud();
+      const url = URL.createObjectURL(blob);
+      const a = new Audio(url); cloudAudio = a; cloudUrl = url;
+      a.onended = () => { if (seq !== cloudSeq) return; releaseCloud(); if (i + 1 < pieces.length) play(i + 1); else done(); };
+      a.onerror = () => { if (seq !== cloudSeq) return; releaseCloud(); if (i === 0) { cloudFailUntil = Date.now() + 120000; fallback(); } else done(); };
+      return a.play();
+    }).catch(() => {
+      if (seq !== cloudSeq) return;
+      releaseCloud();
+      if (i === 0) { cloudFailUntil = Date.now() + 120000; fallback(); } else done();
+    });
+  };
+  play(0);
+}
 function speak(text) {
   if (!ttsEnabled) { setNirvoState('idle'); return; }
   const synth = window.speechSynthesis;
-  synth.cancel();
+  stopSpeech();
   isSpeaking = true;
   setNirvoWave(true);
   let started = false;
@@ -764,11 +809,15 @@ function speak(text) {
   }
 
   const go = () => setTimeout(doSpeak, 60); // Android drops speak() issued in the same tick as cancel()
-  if (synth.getVoices().length > 0) go();
-  else {
-    synth.onvoiceschanged = () => { synth.onvoiceschanged = null; go(); };
-    setTimeout(() => { if (isSpeaking && !started) go(); }, 500);
-  }
+  const browserSpeak = () => {
+    if (!isSpeaking) return;
+    if (synth.getVoices().length > 0) go();
+    else {
+      synth.onvoiceschanged = () => { synth.onvoiceschanged = null; go(); };
+      setTimeout(() => { if (isSpeaking && !started) go(); }, 500);
+    }
+  };
+  cloudSpeak(text, finish, browserSpeak);
 }
 
 function toggleTTS() {
@@ -778,7 +827,7 @@ function toggleTTS() {
   toggle.setAttribute('aria-checked', ttsEnabled ? 'true' : 'false');
   label.textContent = ttsEnabled ? 'ON' : 'OFF';
   label.classList.toggle('off', !ttsEnabled);
-  if (!ttsEnabled) window.speechSynthesis.cancel();
+  if (!ttsEnabled) stopSpeech();
 }
 
 // ── Mic ──
@@ -812,7 +861,7 @@ function startListening() {
     isListening = true;
     document.getElementById('mic-btn').className = 'mic-btn listening';
     document.getElementById('chat-input').placeholder = 'Listening...';
-    if (isSpeaking) window.speechSynthesis.cancel();
+    if (isSpeaking) stopSpeech();
   };
 
   recognition.onresult = (e) => {
@@ -1067,7 +1116,7 @@ if (window.speechSynthesis.getVoices().length === 0) {
     function exitLive() {
       const wasSpeaking = state === 'speaking';
       live = false; clearTimeout(timer); killRec();
-      if (wasSpeaking) { try { window.speechSynthesis.cancel(); } catch (e) {} }
+      if (wasSpeaking) { try { stopSpeech(); } catch (e) {} }
       btn.classList.remove('on'); btn.dataset.state = 'off'; btn.setAttribute('aria-pressed', 'false');
       btn.setAttribute('aria-label', 'Start live voice conversation');
       $('live-label').textContent = 'Live';
@@ -1089,7 +1138,7 @@ if (window.speechSynthesis.getVoices().length === 0) {
     function listen() {
       if (!live || rec) return;
       if (state === 'thinking' || state === 'speaking') return;
-      if (window.speechSynthesis && window.speechSynthesis.speaking) { timer = setTimeout(listen, 300); return; }
+      if ((window.speechSynthesis && window.speechSynthesis.speaking) || cloudAudio) { timer = setTimeout(listen, 300); return; }
       const me = new SR();
       rec = me;
       me.lang = 'en-US'; me.continuous = false; me.interimResults = true; me.maxAlternatives = 1;
@@ -1158,7 +1207,7 @@ if (window.speechSynthesis.getVoices().length === 0) {
       if (typeof isListening !== 'undefined' && isListening) stopListening();
       const m = $('mic-btn'); if (m) m.disabled = true;
       if (typeof ttsEnabled !== 'undefined' && !ttsEnabled) toggleTTS();   // replies must be heard
-      try { window.speechSynthesis.cancel(); } catch (e) {}
+      try { stopSpeech(); } catch (e) {}
       live = true; quiet = 0;
       ui('idle');
       listen();
