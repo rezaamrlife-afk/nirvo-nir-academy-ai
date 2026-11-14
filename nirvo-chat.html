@@ -752,13 +752,44 @@ let cloudAudio = null, cloudUrl = null, cloudSeq = 0, cloudFailUntil = 0;
 const cloudEl = new Audio();
 cloudEl.preload = 'auto';
 cloudEl.setAttribute('playsinline', '');
-const SILENT_WAV = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA=';
+cloudEl.setAttribute('webkit-playsinline', '');
+cloudEl.muted = false; cloudEl.volume = 1;
+// Builds a canonical PCM WAV (correct RIFF/data sizes). Safari rejects WAVs whose header sizes are 0 / 0xFFFFFFFF
+// (streamed output) or wrong, while Chrome tolerates them.
+function buildWav(pcm, rate, ch, bits) {
+  const h = new DataView(new ArrayBuffer(44)), w = (o, t) => { for (let i = 0; i < 4; i++) h.setUint8(o + i, t.charCodeAt(i)); };
+  w(0, 'RIFF'); h.setUint32(4, 36 + pcm.length, true); w(8, 'WAVE'); w(12, 'fmt ');
+  h.setUint32(16, 16, true); h.setUint16(20, 1, true); h.setUint16(22, ch, true); h.setUint32(24, rate, true);
+  h.setUint32(28, rate * ch * bits / 8, true); h.setUint16(32, ch * bits / 8, true); h.setUint16(34, bits, true);
+  w(36, 'data'); h.setUint32(40, pcm.length, true);
+  return new Blob([h, pcm], { type: 'audio/wav' });
+}
+function fixWav(buf) {
+  try {
+    const v = new DataView(buf);
+    if (buf.byteLength < 44 || v.getUint32(0) !== 0x52494646) return new Blob([buf], { type: 'audio/wav' });
+    let off = 12, rate = 24000, ch = 1, bits = 16;
+    while (off + 8 <= buf.byteLength) {
+      const id = v.getUint32(off), size = v.getUint32(off + 4, true);
+      if (id === 0x666d7420) { ch = v.getUint16(off + 10, true); rate = v.getUint32(off + 12, true); bits = v.getUint16(off + 22, true); }
+      else if (id === 0x64617461) {
+        const room = buf.byteLength - off - 8;
+        return buildWav(new Uint8Array(buf, off + 8, (size === 0 || size > room) ? room : size), rate, ch, bits);
+      }
+      off += 8 + size + (size & 1);
+    }
+  } catch (e) {}
+  return new Blob([buf], { type: 'audio/wav' });
+}
+// 0.1 s of real silent samples (a zero-length clip can be rejected by Safari, leaving the element locked)
+const SILENT_URL = URL.createObjectURL(buildWav(new Uint8Array(1600), 8000, 1, 16));
 let cloudUnlocked = false;
 function unlockCloudAudio() {
   if (cloudUnlocked || cloudAudio) return;
-  cloudEl.src = SILENT_WAV;
+  cloudEl.src = SILENT_URL;
   const p = cloudEl.play();
-  if (p && p.then) p.then(() => { cloudEl.pause(); cloudEl.removeAttribute('src'); cloudUnlocked = true; }).catch(() => {});
+  if (p && p.then) p.then(() => { if (!cloudAudio) { cloudEl.pause(); cloudEl.removeAttribute('src'); } cloudUnlocked = true; })
+    .catch(err => console.warn('NIRVO audio unlock failed:', err && err.name));
   else cloudUnlocked = true;
 }
 ['click', 'touchend', 'keydown'].forEach(ev => document.addEventListener(ev, unlockCloudAudio, { passive: true }));
@@ -779,7 +810,7 @@ function cloudSpeak(text, done, fallback) {
   if (!pieces.length) { done(); return; }
   const seq = ++cloudSeq;
   const fetchPiece = t => fetch('/api/tts', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text: t, accent: nvAccent }) })
-    .then(r => { if (!r.ok) throw new Error('tts'); return r.blob(); });
+    .then(r => { if (!r.ok) throw new Error('tts'); return r.arrayBuffer(); }).then(fixWav);
   let next = fetchPiece(pieces[0]);
   const play = i => {
     next.then(blob => {
@@ -790,8 +821,14 @@ function cloudSpeak(text, done, fallback) {
       const a = cloudEl; a.src = url; cloudAudio = a; cloudUrl = url;
       a.onended = () => { if (seq !== cloudSeq) return; releaseCloud(); if (i + 1 < pieces.length) play(i + 1); else done(); };
       a.onerror = () => { if (seq !== cloudSeq) return; releaseCloud(); if (i === 0) { cloudFailUntil = Date.now() + 120000; fallback(); } else done(); };
-      return a.play();
-    }).catch(() => {
+      a.muted = false; a.volume = 1;
+      const pr = a.play();
+      if (pr && pr.then) return pr.then(() => {
+        // a resolved play() is not proof of sound: if the clock never moves, treat it as a failure (no fake success)
+        setTimeout(() => { if (seq === cloudSeq && cloudAudio === a && a.currentTime === 0) { console.warn('NIRVO audio: no playback progress'); if (a.onerror) a.onerror(); } }, 3000);
+      });
+    }).catch(err => {
+      console.warn('NIRVO audio play failed:', err && err.name, err && err.message);
       if (seq !== cloudSeq) return;
       releaseCloud();
       if (i === 0) { cloudFailUntil = Date.now() + 120000; fallback(); } else done();
