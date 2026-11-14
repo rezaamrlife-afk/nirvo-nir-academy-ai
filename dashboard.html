@@ -577,20 +577,48 @@ try{if(localStorage.getItem('nirvo-theme')==='light'){document.documentElement.c
     window.location.href = 'index.html';
   }
 
+  // ── Skill rings: real averages (same recent scored sessions as Today's Focus) ──
+  function renderRings(sessions) {
+    const CIRC = 201;
+    const avg = key => {
+      const vals = (sessions || []).map(s => s[key]).filter(v => v > 0);
+      return vals.length ? Math.round(vals.reduce((a, b) => a + b, 0) / vals.length) : null;
+    };
+    const keys = { pronunciation: 'pronunciation_score', fluency: 'fluency_score', grammar: 'grammar_score' };
+    document.querySelectorAll('.score-ring-wrap').forEach(wrap => {
+      const label = wrap.firstElementChild && wrap.firstElementChild.textContent.trim().toLowerCase();
+      const key = keys[label];
+      if (!key) return;
+      const val = avg(key);
+      const arc = wrap.querySelector('circle[stroke-dasharray]');
+      const num = wrap.querySelector('svg + div');
+      const band = wrap.lastElementChild;
+      if (arc) arc.setAttribute('stroke-dashoffset', val === null ? CIRC : Math.round(CIRC * (1 - val / 100)));
+      if (num) num.textContent = val === null ? '—' : val + '%';
+      if (band) band.textContent = val === null ? 'No data yet' : val >= 85 ? 'Excellent' : val >= 70 ? 'Good' : 'Keep practicing';
+    });
+  }
+  renderRings(null); // no placeholder numbers until real data is loaded
+
   // ── Load sessions from Supabase ──
   async function loadSessions(userId) {
     const { data, error } = await sb
       .from('sessions')
-      .select('*')
+      .select('id,created_at,topic,duration_sec,pronunciation_score,fluency_score,grammar_score,vocabulary_score,overall_score')
       .eq('user_id', userId)
       .order('created_at', { ascending: false })
-      .limit(5);
+      .limit(1000);
 
-    if (error || !data || data.length === 0) return;
+    if (error) {
+      console.error('Dashboard load error:', error);
+      document.getElementById('sessions-list').innerHTML = '<div style="text-align:center;padding:24px;color:var(--t0_2);font-size:14px">Couldn\'t load your sessions. Please refresh the page.</div>';
+      return;
+    }
+    if (!data || data.length === 0) return;
 
-    // Update stats
+    // Update stats (all sessions, not only the 5 shown below)
     document.getElementById('stat-sessions').textContent = data.length;
-    const totalMin = data.reduce((s,r) => s + Math.round((r.duration_sec||0)/60), 0);
+    const totalMin = Math.round(data.reduce((s,r) => s + (r.duration_sec||0), 0) / 60);
     document.getElementById('stat-minutes').textContent = totalMin;
     const scoredData = data.filter(r => r.overall_score);
     if (scoredData.length) {
@@ -603,12 +631,14 @@ try{if(localStorage.getItem('nirvo-theme')==='light'){document.documentElement.c
     }).length;
     document.getElementById('stat-week').textContent = thisWeek;
 
-    // ── Weakness detection from last 5 sessions ──
-    detectWeakness(scoredData);
+    // ── Rings + weakness detection from the last 5 scored sessions ──
+    const recent = scoredData.slice(0, 5);
+    renderRings(recent);
+    detectWeakness(recent);
 
     // Render sessions
     const icons = { 'Daily Life':'🏠','Business':'💼','Travel':'✈️','Job Interview':'🤝','Education':'📚','Public Speaking':'🎯' };
-    document.getElementById('sessions-list').innerHTML = data.map(s => {
+    document.getElementById('sessions-list').innerHTML = data.slice(0, 5).map(s => {
       const score = s.overall_score || 0;
       const color = score >= 85 ? 'var(--gold)' : score >= 70 ? 'var(--pk)' : 'var(--mint)';
       const icon = icons[s.topic] || '🎤';
@@ -703,8 +733,9 @@ try{if(localStorage.getItem('nirvo-theme')==='light'){document.documentElement.c
     const diff = (new Date() - date) / 1000;
     if (diff < 60) return 'Just now';
     if (diff < 3600) return Math.floor(diff/60) + ' min ago';
-    if (diff < 86400) return Math.floor(diff/3600) + ' hrs ago';
-    return Math.floor(diff/86400) + ' days ago';
+    if (diff < 86400) { const h = Math.floor(diff/3600); return h + (h === 1 ? ' hr ago' : ' hrs ago'); }
+    const d = Math.floor(diff/86400);
+    return d + (d === 1 ? ' day ago' : ' days ago');
   }
 
   // ── Topic click → go to practice ──
