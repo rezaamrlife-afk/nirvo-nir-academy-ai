@@ -195,6 +195,11 @@ html.light-mode .msg.nirvo .msg-bubble{background:var(--f0_04);border-color:var(
 .msg-tip{display:flex;align-items:flex-start;gap:10px;margin-top:12px;padding:10px 14px;border-left:2px solid rgba(var(--rose-rgb),.6);border-radius:4px 12px 12px 4px;background:rgba(var(--rose-rgb),.08);color:var(--rose);font-size:14px;line-height:1.55}
 .msg-tip .i{margin-top:2px;font-size:16px}
 .msg-hint{display:flex;align-items:flex-start;gap:8px;margin-top:8px;font-size:13px;line-height:1.5;color:var(--t0_4)}
+.smart-actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.smart-btn{height:28px;padding:0 11px;border:1px solid var(--line);border-radius:999px;background:transparent;color:var(--t0_4);font-size:12px;font-weight:500;line-height:1;cursor:pointer;transition:color .2s,background .2s,border-color .2s}
+.smart-btn:hover{color:var(--gold);border-color:rgba(var(--gold-rgb),.38);background:rgba(var(--gold-rgb),.08)}
+.smart-btn:disabled{opacity:.5;cursor:default}
+@media(max-width:768px){.smart-btn{height:32px;padding:0 12px}}
 .msg-hint .i{margin-top:2px;font-size:15px;color:var(--gold)}
 .typing-indicator{display:flex;align-items:center;gap:5px;width:fit-content;padding:15px 18px;border:1px solid rgba(var(--rose-rgb),.2);border-radius:6px 18px 18px 18px;background:rgba(var(--rose-rgb),.05)}
 .typing-dot{width:6px;height:6px;border-radius:50%;background:var(--rose)}
@@ -691,6 +696,44 @@ function syncVocabFocusUI() {
 }
 if (vocabFocusOn()) syncVocabFocusUI(); // restore saved state; with Vocabulary OFF nothing changes
 
+// ── NIRVO Smart Actions™: one-tap follow-ups that go through the normal chat flow ──
+const SMART_ACTIONS = [
+  { label: 'Continue', show: 'Continue', prompt: 'Please continue our conversation naturally from your last reply. Keep it short.' },
+  { label: 'Challenge Me', show: 'Challenge me', prompt: 'Challenge me: give me ONE slightly harder speaking question or task about our topic that stretches my English, then wait for my answer. Keep it short.' },
+  { label: 'Use New Vocabulary', show: 'Use new vocabulary', prompt: 'Give me 2 useful new words related to our topic, then ask me one question that makes me use them in my answer. Keep it short.' }
+];
+let smartBusy = false;
+function addSmartActions() {
+  const msgs = document.getElementById('messages');
+  const bubble = msgs && msgs.lastElementChild && msgs.lastElementChild.querySelector('.msg-bubble');
+  if (!bubble) return;
+  const bar = document.createElement('div');
+  bar.className = 'smart-actions';
+  bar.setAttribute('role', 'group');
+  bar.setAttribute('aria-label', 'NIRVO Smart Actions');
+  SMART_ACTIONS.forEach((a, i) => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'smart-btn'; b.textContent = a.label;
+    b.onclick = () => runSmartAction(i);
+    bar.appendChild(b);
+  });
+  bubble.appendChild(bar);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+async function runSmartAction(i) {
+  if (smartBusy || document.getElementById('typing-msg')) return; // a reply is already pending
+  smartBusy = true;
+  document.querySelectorAll('.smart-btn').forEach(b => { b.disabled = true; });
+  try {
+    try { unlockCloudAudio(); } catch (e) {}
+    addMessage('user', SMART_ACTIONS[i].show);
+    await getNirvoResponse(SMART_ACTIONS[i].prompt);
+  } finally {
+    smartBusy = false;
+    document.querySelectorAll('.smart-btn').forEach(b => { b.disabled = false; });
+  }
+}
+
 // ── Get Groq response ──
 async function getNirvoResponse(userMsg) {
   const topic = document.getElementById('topic-select').value;
@@ -729,6 +772,7 @@ async function getNirvoResponse(userMsg) {
     chatHistory.push({ role:'assistant', content: reply });
     hideTyping();
     addMessage('nirvo', reply);
+    try { addSmartActions(); } catch (e) {}
     setNirvoState('speaking');
     try { speak(reply.replace(/\*\*/g,'').replace(/\[.*?\]/g,'')); } catch (err) { setNirvoState('idle'); }
   } catch(e) {
