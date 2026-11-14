@@ -139,6 +139,10 @@ a{color:inherit;text-decoration:none}
 
 .btn-clear{margin-left:auto;display:inline-flex;align-items:center;gap:8px;height:38px;padding:0 14px;border:1px solid var(--line);border-radius:12px;background:transparent;color:var(--t0_4);font-size:13px;font-weight:500;transition:color .2s,background .2s,border-color .2s}
 .btn-clear .i{font-size:16px}
+.btn-focus{display:inline-flex;align-items:center;gap:8px;height:38px;padding:0 14px;border:1px solid var(--line);border-radius:12px;background:transparent;color:var(--t0_4);font-size:13px;font-weight:500;cursor:pointer;transition:color .2s,background .2s,border-color .2s}
+.btn-focus .i{font-size:16px}
+.btn-focus:hover{color:var(--white)}
+.btn-focus[aria-pressed="true"]{color:var(--gold);background:rgba(var(--gold-rgb),.13);border-color:rgba(var(--gold-rgb),.38)}
 .btn-clear:hover{color:var(--pink);border-color:rgba(var(--pink-rgb),.4);background:rgba(var(--pink-rgb),.07)}
 
 /* ── Layout ── */
@@ -310,7 +314,7 @@ html.light-mode .msg.nirvo .msg-bubble{background:var(--f0_04);border-color:var(
   .switch #tts-knob{top:3px;width:20px;height:20px}
   .switch[aria-checked="true"] #tts-knob{transform:translateX(18px)}
   .mic-btn,.send-btn,.live-btn{min-width:44px;height:44px}
-  .btn-clear,.cd-trigger{min-height:44px}
+  .btn-clear,.cd-trigger,.btn-focus{min-height:44px}
   .chat-area{min-height:0}
 }
 /* menu: one more link now, so let it scroll on short screens instead of clipping */
@@ -423,6 +427,8 @@ html.light-mode .msg.nirvo .msg-bubble{background:var(--f0_04);border-color:var(
     <option value="Public Speaking">Public Speaking</option>
   </select>
 
+  <button type="button" class="btn-focus" id="vocab-focus-btn" onclick="toggleVocabFocus()" aria-pressed="false" title="Vocabulary Focus"><svg class="i" aria-hidden="true"><use href="#i-book"/></svg>Vocabulary Focus</button>
+
   <button type="button" onclick="clearChat()" class="btn-clear"><svg class="i" aria-hidden="true"><use href="#i-trash"/></svg>Clear</button>
 </div>
 
@@ -477,7 +483,9 @@ const sb = createClient('https://liixgxwpcxusocpixadt.supabase.co', 'sb_publisha
 
 // ── UI helpers (icons) ──
 const ICON_BULB = '<svg class="i" aria-hidden="true"><use href="#i-bulb"/></svg>';
+function vocabFocusOn() { try { return localStorage.getItem('nirvo_vocab_focus') === '1'; } catch (e) { return false; } }
 function modeChipHTML(mode, focusLabel) {
+  if (vocabFocusOn()) focusLabel = focusLabel ? focusLabel + ' · Vocabulary' : 'Vocabulary';
   const m = { coach:['i-cap','Speaking Coach'], conversation:['i-chat','Free Conversation'], roleplay:['i-users','Roleplay'] }[mode] || ['i-cap','Speaking Coach'];
   return `<span class="mode-line"><svg class="i" aria-hidden="true"><use href="#${m[0]}"/></svg>${m[1]}</span>` +
     (focusLabel ? `<span class="mode-focus">Focus: ${focusLabel}</span>` : '');
@@ -656,6 +664,33 @@ function getTodaysFocus() {
   return { key: focus, label: labels[focus] || focus, score: score };
 }
 
+// ── Vocabulary Focus (independent of Today's Focus / Grammar) ──
+const VOCAB_FOCUS_PROMPT = `
+
+VOCABULARY FOCUS IS ON. In addition to everything above, after your reply (and your tip, if any) add a compact vocabulary card for ONE useful word — taken from the student's last message, or a stronger word they could have used for this topic. This card is the only exception to the "no lists" and length rules; the tip rules stay unchanged. Write each line of the card wrapped in square brackets, one line each, exactly in this order, in plain text (no nested brackets):
+[Word: <word> — <part of speech> — CEFR <A1-C2>]
+[Meaning: <short, simple definition>]
+[Example: <one natural example sentence>]
+[Collocations: <3 common collocations>]
+[Synonyms: <2-3 synonyms>]
+[Antonyms: <1-2 antonyms, or "none">]
+[Word family: <noun / verb / adjective / adverb forms>]
+[Common error: <typical learner mistake> → <correct form>]
+Do not repeat a word you already taught earlier in this conversation.`;
+function toggleVocabFocus() {
+  const on = !vocabFocusOn();
+  try { localStorage.setItem('nirvo_vocab_focus', on ? '1' : '0'); } catch (e) {}
+  syncVocabFocusUI();
+}
+function syncVocabFocusUI() {
+  const btn = document.getElementById('vocab-focus-btn');
+  if (btn) btn.setAttribute('aria-pressed', vocabFocusOn() ? 'true' : 'false');
+  const g = getTodaysFocus();
+  const ind = document.getElementById('mode-indicator');
+  if (ind) ind.innerHTML = modeChipHTML(currentMode, g ? g.label : '');
+}
+if (vocabFocusOn()) syncVocabFocusUI(); // restore saved state; with Vocabulary OFF nothing changes
+
 // ── Get Groq response ──
 async function getNirvoResponse(userMsg) {
   const topic = document.getElementById('topic-select').value;
@@ -667,7 +702,7 @@ async function getNirvoResponse(userMsg) {
     : '';
 
   const systemPrompt = modeConfigs[currentMode].system
-    .replace('{TOPIC}', topic) + focusLine;
+    .replace('{TOPIC}', topic) + focusLine + (vocabFocusOn() ? VOCAB_FOCUS_PROMPT : '');
 
   setNirvoState('thinking');
   showTyping();
