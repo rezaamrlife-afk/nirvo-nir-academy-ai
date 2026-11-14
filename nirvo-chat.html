@@ -633,6 +633,7 @@ async function startGreeting() {
 
 // ── Send message ──
 async function sendMessage() {
+  try { unlockCloudAudio(); } catch (e) {}
   const input = document.getElementById('chat-input');
   const text = input.value.trim();
   if (!text) return;
@@ -692,7 +693,7 @@ async function getNirvoResponse(userMsg) {
     hideTyping();
     addMessage('nirvo', reply);
     setNirvoState('speaking');
-    speak(reply.replace(/\*\*/g,'').replace(/\[.*?\]/g,''));
+    try { speak(reply.replace(/\*\*/g,'').replace(/\[.*?\]/g,'')); } catch (err) { setNirvoState('idle'); }
   } catch(e) {
     hideTyping();
     addMessage('nirvo', "I'm sorry, I had a little trouble connecting. Please try again!");
@@ -704,14 +705,17 @@ async function getNirvoResponse(userMsg) {
 let ttsUnlocked = false;
 function unlockTTS() {
   if (ttsUnlocked) return;
-  const u = new SpeechSynthesisUtterance('');
-  u.volume = 0;
-  window.speechSynthesis.speak(u);
+  try {
+    const u = new SpeechSynthesisUtterance('');
+    u.volume = 0;
+    window.speechSynthesis.speak(u);
+  } catch (e) {}
   ttsUnlocked = true;
 }
 // Unlock on any click or keypress
 document.addEventListener('click', unlockTTS, { once: false });
 document.addEventListener('keydown', unlockTTS, { once: false });
+document.addEventListener('touchend', unlockTTS, { once: false, passive: true });
 
 // ── TTS ──
 // Picks a clear English voice. Phones often list voices as "en_US" (underscore) and put the device-language
