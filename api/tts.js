@@ -63,15 +63,24 @@ module.exports = async function handler(req, res) {
         generation_config: { speech_config: [{ voice: VOICES[accent] }] }
       })
     });
-    if (!r.ok) return res.status(502).json({ error: 'TTS upstream error' });
-    const audio = findAudio(await r.json());
-    if (!audio) return res.status(502).json({ error: 'No audio returned' });
+    if (!r.ok) {
+      // TEMP DEBUG: Gemini status + error body only (never the key or user text). Remove when fixed.
+      console.error('TTS upstream', r.status, (await r.text().catch(() => '')).slice(0, 500));
+      return res.status(502).json({ error: 'TTS upstream error' });
+    }
+    const j = await r.json();
+    const audio = findAudio(j);
+    if (!audio) {
+      console.error('TTS no audio', JSON.stringify(j).slice(0, 500)); // TEMP DEBUG
+      return res.status(502).json({ error: 'No audio returned' });
+    }
     let buf = Buffer.from(audio.data, 'base64');
     if (buf.length < 4 || buf.toString('ascii', 0, 4) !== 'RIFF') buf = pcmToWav(buf, 24000);
     res.setHeader('Content-Type', 'audio/wav');
     res.setHeader('Cache-Control', 'no-store');
     return res.status(200).send(buf);
   } catch (e) {
+    console.error('TTS failed', e && e.message); // TEMP DEBUG
     return res.status(502).json({ error: 'TTS request failed' });
   }
 };
