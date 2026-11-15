@@ -685,9 +685,13 @@ Return only JSON with this structure:
   "feedback": [
     {"type": "strength" or "improve", "title": "...", "detail": "..."}
   ],
-  "encouragement": "<one motivating sentence>"
+  "encouragement": "<one motivating sentence>",
+  "memory": {
+    "mistakes": [{"category": "tense|agreement|articles|prepositions|word order|word choice|other", "quote": "<exact words copied from the speech>", "fix": "<corrected words>"}],
+    "new_words": ["<up to 5 useful words or collocations the student used or should learn, single words preferred>"]
+  }
 }
-Give 3-4 feedback items covering grammar and vocabulary only.`;
+Give 3-4 feedback items covering grammar and vocabulary only. In memory.mistakes list at most 4 real, repeatable mistakes (quote must be copied exactly from the speech; use [] if there are none or the speech is too short).`;
 
     try {
       const res = await fetch('/api/groq', {
@@ -729,6 +733,7 @@ Give 3-4 feedback items covering grammar and vocabulary only.`;
         overall_n: comps.length,
         feedback: (Array.isArray(ai.feedback) ? ai.feedback : []).filter(f => f && f.title && f.detail),
         local_feedback: localFeedback(M),
+        memory: buildMemory(ai, text, grammar, vocab),
         encouragement: typeof ai.encouragement === 'string' ? ai.encouragement : 'Keep practicing consistently — every session builds your confidence.',
       };
 
@@ -742,6 +747,24 @@ Give 3-4 feedback items covering grammar and vocabulary only.`;
       alert('Error analyzing speech. Please try again.');
       document.getElementById('analyze-btn').disabled = false;
     }
+  }
+
+  // ── Learning Memory: compact, validated record of this session (saved separately, best-effort) ──
+  function buildMemory(ai, text, grammar, vocab) {
+    try {
+      const m = ai && ai.memory;
+      if (!m || (grammar === null && vocab === null)) return null;
+      const norm = v => String(v).toLowerCase().replace(/[^a-z0-9' ]+/g, ' ').replace(/\s+/g, ' ').trim();
+      const body = ' ' + norm(text) + ' ';
+      const cats = ['tense', 'agreement', 'articles', 'prepositions', 'word order', 'word choice', 'other'];
+      const lvl = v => (typeof v === 'string' && /^(A1|A2|B1|B2|C1|C2)$/i.test(v.trim())) ? v.trim().toUpperCase() : null;
+      const short = (v, n) => String(v).replace(/[\r\n<>`]+/g, ' ').trim().slice(0, n);
+      const mistakes = (Array.isArray(m.mistakes) ? m.mistakes : []).filter(x => x && typeof x.quote === 'string' && typeof x.fix === 'string'
+        && x.quote.trim().length >= 3 && norm(x.quote).length >= 3 && body.includes(' ' + norm(x.quote) + ' ')).slice(0, 4)
+        .map(x => ({ c: cats.includes(String(x.category).toLowerCase()) ? String(x.category).toLowerCase() : 'other', q: short(x.quote, 100), f: short(x.fix, 100) }));
+      const words = [...new Set((Array.isArray(m.new_words) ? m.new_words : []).filter(w => typeof w === 'string' && /^[A-Za-z][A-Za-z' -]{2,29}$/.test(w.trim())).map(w => w.trim().toLowerCase()))].slice(0, 5);
+      return { v: 1, g: grammar === null ? null : lvl(ai.grammar_cefr), vc: vocab === null ? null : lvl(ai.vocabulary_cefr), m: mistakes, w: words };
+    } catch (_) { return null; }
   }
 
   // ── Measured (non-AI) feedback: only states what was actually measured ──
@@ -874,6 +897,18 @@ Give 3-4 feedback items covering grammar and vocabulary only.`;
         insight: result.encouragement || null,
       });
       if (error) console.error('Session save error:', error);
+      else if (result.memory) {
+        // Learning Memory: separate best-effort update; never affects the session save above
+        try {
+          const last = await sb.from('sessions').select('id').eq('user_id', session.user.id).eq('source', 'practice')
+            .order('created_at', { ascending: false }).limit(1);
+          const id = last.data && last.data[0] && last.data[0].id;
+          if (id !== undefined && id !== null) {
+            const up = await sb.from('sessions').update({ memory: result.memory }).eq('id', id);
+            if (up.error) console.warn('Learning memory not saved:', up.error.message);
+          }
+        } catch (e) { console.warn('Learning memory exception:', e); }
+      }
     } catch(e) {
       console.error('Session save exception:', e);
     }
