@@ -510,6 +510,62 @@ try{if(localStorage.getItem('nirvo-theme')==='light'){document.documentElement.c
   let currentTopic = 'Daily Life';
   let sessionStart = Date.now();
 
+  // ── Speech measurement (real timing + ASR confidence from recognition events) ──
+  const wc = t => (String(t).trim().match(/\S+/g) || []).length;
+  const newStats = () => ({ finalWords:0, maxCount:0, marks:[], confSum:0, confWords:0, restartPending:false });
+  let speechStats = newStats();
+
+  function trackSpeech(e) {
+    const st = speechStats;
+    const t = (typeof e.timeStamp === 'number' && e.timeStamp > 0) ? e.timeStamp : performance.now();
+    let interimWords = 0;
+    for (let i = e.resultIndex; i < e.results.length; i++) {
+      const r = e.results[i], w = wc(r[0].transcript);
+      if (r.isFinal) {
+        st.finalWords += w;
+        const c = r[0].confidence;
+        if (typeof c === 'number' && c > 0) { st.confSum += c * w; st.confWords += w; }
+      } else interimWords += w;
+    }
+    const count = st.finalWords + interimWords;
+    if (count > st.maxCount) {
+      st.marks.push({ t, count, afterRestart: st.restartPending });
+      st.restartPending = false;
+      st.maxCount = count;
+    }
+  }
+
+  function measureSpeech(words) {
+    const st = speechStats, m = st.marks;
+    const out = { words, fluency: null, pronunciation: null, wpm: null, pauseRatio: null, longPauses: 0, duration: null, conf: null };
+    if (m.length >= 2) {
+      const duration = (m[m.length-1].t - m[0].t) / 1000;
+      let pauseMs = 0;
+      for (let i = 1; i < m.length; i++) {
+        const gap = m[i].t - m[i-1].t;
+        if (m[i].afterRestart || gap <= 1000) continue;
+        pauseMs += Math.min(gap, 5000);
+        if (gap > 2000) out.longPauses++;
+      }
+      out.duration = duration;
+      if (words >= 25 && duration >= 10) {
+        const wpm = (st.maxCount - m[0].count) / duration * 60;
+        const ratio = Math.min(1, pauseMs / 1000 / duration);
+        const rate = wpm < 110 ? Math.max(20, 100 - (110 - wpm) * 1.2) : wpm > 170 ? Math.max(40, 100 - (wpm - 170)) : 100;
+        const pause = 100 - Math.min(60, ratio * 120) - Math.min(25, out.longPauses * 6);
+        out.wpm = Math.round(wpm);
+        out.pauseRatio = ratio;
+        out.fluency = Math.round(0.5 * rate + 0.5 * pause);
+      }
+    }
+    if (st.confWords >= 15) {
+      const c = st.confSum / st.confWords;
+      out.conf = c;
+      out.pronunciation = Math.round(Math.max(20, Math.min(98, 40 + (c - 0.60) / 0.37 * 58)));
+    }
+    return out;
+  }
+
   // ── Build wave bars ──
   const waveHeights = [6,10,16,22,14,30,22,28,16,12,6,18,24,12,6,18,10,20,14];
   const waveBox = document.getElementById('wave-box');
@@ -565,6 +621,7 @@ try{if(localStorage.getItem('nirvo-theme')==='light'){document.documentElement.c
         else interim += e.results[i][0].transcript;
       }
       fullTranscript += final;
+      try { trackSpeech(e); } catch (_) {}
       const box = document.getElementById('transcript-box');
       box.innerHTML = '<span style="color:var(--white)">' + fullTranscript + '</span><span style="color:var(--t0_4)">' + interim + '</span>';
       if (fullTranscript.trim()) document.getElementById('analyze-btn').disabled = false;
@@ -576,7 +633,7 @@ try{if(localStorage.getItem('nirvo-theme')==='light'){document.documentElement.c
     };
 
     recognition.onend = () => {
-      if (isListening) recognition.start(); // keep going
+      if (isListening) { speechStats.restartPending = true; recognition.start(); } // keep going
     };
 
     recognition.start();
@@ -606,27 +663,31 @@ try{if(localStorage.getItem('nirvo-theme')==='light'){document.documentElement.c
     document.getElementById('loading-section').style.display = 'block';
     document.getElementById('analyze-btn').disabled = true;
 
-    const prompt = `You are NIRVO AI, an expert English speaking coach. Analyze this speech sample from a student practicing the topic "${currentTopic}".
+    const words = wc(text);
+    const M = measureSpeech(words);
+    const prompt = `You are NIRVO AI, an expert English speaking coach. Analyze the GRAMMAR and VOCABULARY of this speech sample from a student practicing the topic "${currentTopic}".
 
-Speech: "${text}"
+Speech (automatic speech-recognition transcript, ${words} words): "${text}"
 
-Provide a JSON response with this exact structure:
+Rules:
+- The transcript comes from speech recognition: it has no reliable punctuation or capitalization and may contain misrecognized words. Never penalize or comment on punctuation, capitalization, or words that look like recognition errors.
+- Judge only grammar (tense, agreement, articles, prepositions, word order, sentence structure) and vocabulary (range, precision, repetition, collocations). Do NOT score or comment on pronunciation or fluency; those are measured separately from audio.
+- Be CEFR-aware: estimate the learner's level (A1-C2) for each skill and give scores relative to what is shown: ~90+ nearly error-free C1-C2; 75-89 B2 with few errors; 60-74 B1 with some errors that do not block meaning; 40-59 A2; below 40 A1 or frequent errors.
+- Quote the learner's actual words when pointing out an error and give the corrected form. Suggest 1-3 more precise or higher-level words that fit what they said. Only mention errors that really occur.
+- Short samples: if the speech is under 10 words set grammar_score to null; if under 25 words set vocabulary_score to null (and the matching cefr to null). Never invent a score.
+
+Return only JSON with this structure:
 {
-  "pronunciation_score": <number 0-100>,
-  "fluency_score": <number 0-100>,
-  "grammar_score": <number 0-100>,
-  "vocabulary_score": <number 0-100>,
-  "overall_score": <number 0-100>,
+  "grammar_score": <integer 0-100 or null>,
+  "grammar_cefr": "<A1|A2|B1|B2|C1|C2 or null>",
+  "vocabulary_score": <integer 0-100 or null>,
+  "vocabulary_cefr": "<A1|A2|B1|B2|C1|C2 or null>",
   "feedback": [
-    {"type": "strength", "title": "...", "detail": "..."},
-    {"type": "strength", "title": "...", "detail": "..."},
-    {"type": "improve", "title": "...", "detail": "..."},
-    {"type": "improve", "title": "...", "detail": "..."}
+    {"type": "strength" or "improve", "title": "...", "detail": "..."}
   ],
   "encouragement": "<one motivating sentence>"
 }
-
-Be specific, constructive, and encouraging. Base feedback on the actual words used.`;
+Give 3-4 feedback items covering grammar and vocabulary only.`;
 
     try {
       const res = await fetch('/api/groq', {
@@ -637,8 +698,8 @@ Be specific, constructive, and encouraging. Base feedback on the actual words us
         body: JSON.stringify({
           model: 'openai/gpt-oss-120b',
           messages: [{ role: 'user', content: prompt }],
-          temperature: 0.7,
-          max_tokens: 800
+          temperature: 0.3,
+          max_tokens: 2500
         })
       });
 
@@ -647,7 +708,29 @@ Be specific, constructive, and encouraging. Base feedback on the actual words us
 
       // Parse JSON from response
       const jsonMatch = raw.match(/\{[\s\S]*\}/);
-      const result = JSON.parse(jsonMatch[0]);
+      const ai = JSON.parse(jsonMatch[0]);
+
+      const clean = v => (typeof v === 'number' && isFinite(v)) ? Math.round(Math.max(0, Math.min(100, v))) : null;
+      const cefr = v => (typeof v === 'string' && /^(A1|A2|B1|B2|C1|C2)$/i.test(v.trim())) ? v.trim().toUpperCase() : null;
+      const grammar = words >= 10 ? clean(ai.grammar_score) : null;
+      const vocab = words >= 25 ? clean(ai.vocabulary_score) : null;
+      const comps = [[grammar, .30], [vocab, .20], [M.fluency, .25], [M.pronunciation, .25]].filter(c => c[0] !== null);
+      const wsum = comps.reduce((a, c) => a + c[1], 0);
+      const overall = comps.length >= 2 ? Math.round(comps.reduce((a, c) => a + c[0] * c[1], 0) / wsum) : null;
+
+      const result = {
+        grammar_score: grammar,
+        grammar_cefr: grammar === null ? null : cefr(ai.grammar_cefr),
+        vocabulary_score: vocab,
+        vocabulary_cefr: vocab === null ? null : cefr(ai.vocabulary_cefr),
+        fluency_score: M.fluency,
+        pronunciation_score: M.pronunciation,
+        overall_score: overall,
+        overall_n: comps.length,
+        feedback: (Array.isArray(ai.feedback) ? ai.feedback : []).filter(f => f && f.title && f.detail),
+        local_feedback: localFeedback(M),
+        encouragement: typeof ai.encouragement === 'string' ? ai.encouragement : 'Keep practicing consistently — every session builds your confidence.',
+      };
 
       // ── Save session to Supabase ──
       saveSession(result);
@@ -661,6 +744,25 @@ Be specific, constructive, and encouraging. Base feedback on the actual words us
     }
   }
 
+  // ── Measured (non-AI) feedback: only states what was actually measured ──
+  function localFeedback(M) {
+    const out = [];
+    if (M.fluency === null) {
+      out.push({ type: 'improve', title: 'Fluency: Insufficient data', detail: 'Fluency needs at least 25 words and 10 seconds of continuous speech to measure pace and pauses reliably. Speak a little longer and try again.' });
+    } else {
+      const slow = M.wpm < 110, fast = M.wpm > 170, pausey = M.pauseRatio > 0.25 || M.longPauses >= 3;
+      out.push({ type: (slow || fast || pausey) ? 'improve' : 'strength', title: `Fluency: ${M.wpm} words/min`,
+        detail: `Measured over ${Math.round(M.duration)}s of speech: ${M.wpm} words per minute (target 110–170), about ${Math.round(M.pauseRatio * 100)}% of the time in pauses, ${M.longPauses} long pause${M.longPauses === 1 ? '' : 's'} (over 2s). Timing is estimated from when the recognizer received your words.` });
+    }
+    if (M.pronunciation === null) {
+      out.push({ type: 'improve', title: 'Speech Clarity: Insufficient data', detail: 'Speech Clarity is scored from the speech recognizer\'s confidence in your audio. Not enough confidence data was available (at least 15 recognized words are needed, and some browsers do not report confidence).' });
+    } else {
+      out.push({ type: M.pronunciation >= 75 ? 'strength' : 'improve', title: `Speech Clarity: ${Math.round(M.conf * 100)}% recognizer confidence`,
+        detail: 'Based on how confidently the speech recognizer understood your audio. It reflects overall clarity, not pronunciation of individual sounds, and can be affected by background noise or microphone quality.' });
+    }
+    return out;
+  }
+
   // ── Show feedback ──
   function showFeedback(r) {
     document.getElementById('loading-section').style.display = 'none';
@@ -669,10 +771,11 @@ Be specific, constructive, and encouraging. Base feedback on the actual words us
     // Score cards
     const scores = [
       { label: 'Overall', score: r.overall_score, color: 'var(--gold)' },
-      { label: 'Pronunciation', score: r.pronunciation_score, color: 'var(--gold)' },
+      { label: 'Speech Clarity', score: r.pronunciation_score, color: 'var(--gold)' },
       { label: 'Fluency', score: r.fluency_score, color: 'var(--pk)' },
-      { label: 'Grammar', score: r.grammar_score, color: 'var(--mint)' },
+      { label: 'Grammar', score: r.grammar_score, color: 'var(--mint)', cefr: r.grammar_cefr },
     ];
+    const bandOf = s => s >= 90 ? 'Excellent' : s >= 75 ? 'Good' : s >= 60 ? 'Fair' : 'Keep Practicing';
 
     document.getElementById('score-cards').innerHTML = scores.map(s => `
       <div style="background:var(--f0_03);border:1px solid var(--b0_07);border-radius:14px;padding:20px;text-align:center">
@@ -681,24 +784,25 @@ Be specific, constructive, and encouraging. Base feedback on the actual words us
           <svg width="72" height="72" style="transform:rotate(-90deg)">
             <circle cx="36" cy="36" r="28" fill="none" stroke="var(--b0_07)" stroke-width="5"/>
             <circle cx="36" cy="36" r="28" fill="none" stroke="${s.color}" stroke-width="5"
-              stroke-dasharray="176" stroke-dashoffset="${176 - (s.score/100)*176}" stroke-linecap="round"/>
+              stroke-dasharray="176" stroke-dashoffset="${s.score === null ? 176 : 176 - (s.score/100)*176}" stroke-linecap="round"/>
           </svg>
-          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:16.5px;font-weight:700;font-family:'Cormorant Garamond',serif">${s.score}%</div>
+          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:16.5px;font-weight:700;font-family:'Cormorant Garamond',serif">${s.score === null ? '—' : s.score + '%'}</div>
         </div>
-        <div style="font-size:12px;color:${s.color};opacity:0.8">${s.score >= 90 ? 'Excellent' : s.score >= 75 ? 'Good' : s.score >= 60 ? 'Fair' : 'Keep Practicing'}</div>
+        <div style="font-size:12px;color:${s.color};opacity:0.8">${s.score === null ? 'Insufficient data' : bandOf(s.score) + (s.cefr ? ' · ' + s.cefr : '') + (s.label === 'Overall' && r.overall_n < 4 ? ' · ' + r.overall_n + '/4 measures' : '')}</div>
       </div>
     `).join('');
 
     // Feedback items
-    const feedbackHTML = r.feedback.map(f => `
+    const esc = v => String(v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    const feedbackHTML = r.feedback.concat(r.local_feedback || []).map(f => `
       <div class="feedback-item">
         <div style="width:28px;height:28px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:14px;
           background:${f.type === 'strength' ? 'rgba(var(--mint-rgb),0.12)' : 'rgba(var(--gold-rgb),0.12)'};
           border:1px solid ${f.type === 'strength' ? 'rgba(var(--mint-rgb),0.25)' : 'rgba(var(--gold-rgb),0.25)'}"
         >${f.type === 'strength' ? '✓' : '↑'}</div>
         <div>
-          <div style="font-size:14px;font-weight:500;margin-bottom:3px;color:${f.type === 'strength' ? 'var(--mint)' : 'var(--gold)'}">${f.title}</div>
-          <div style="font-size:14px;color:var(--t0_5);line-height:1.6">${f.detail}</div>
+          <div style="font-size:14px;font-weight:500;margin-bottom:3px;color:${f.type === 'strength' ? 'var(--mint)' : 'var(--gold)'}">${esc(f.title)}</div>
+          <div style="font-size:14px;color:var(--t0_5);line-height:1.6">${esc(f.detail)}</div>
         </div>
       </div>
     `).join('');
@@ -706,7 +810,7 @@ Be specific, constructive, and encouraging. Base feedback on the actual words us
     document.getElementById('feedback-content').innerHTML = `
       ${feedbackHTML}
       <div style="margin-top:16px;padding:14px 16px;background:rgba(var(--gold-rgb),0.06);border:1px solid rgba(var(--gold-rgb),0.15);border-radius:10px;font-size:14px;color:rgba(var(--gold-rgb),0.85);line-height:1.6">
-        💬 ${r.encouragement}
+        💬 ${esc(r.encouragement)}
       </div>
       <div style="margin-top:12px;padding:14px 16px;background:rgba(var(--rose-rgb),0.06);border:1px solid rgba(var(--rose-rgb),0.2);border-radius:10px">
         <div style="font-size:11.5px;color:rgba(var(--rose-rgb),0.6);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:6px">🎯 Today's Focus</div>
@@ -725,10 +829,12 @@ Be specific, constructive, and encouraging. Base feedback on the actual words us
       grammar: r.grammar_score,
       vocabulary: r.vocabulary_score,
     };
-    const lowest = Object.entries(scores).sort((a,b) => a[1]-b[1])[0];
+    const known = Object.entries(scores).filter(e => e[1] !== null && e[1] !== undefined);
+    if (!known.length) return "Speak a bit longer next time so NIRVO has enough data to find your focus area.";
+    const lowest = known.sort((a,b) => a[1]-b[1])[0];
     const rules = {
       fluency:       "Focus on reducing pauses — try to speak in longer, connected phrases without stopping.",
-      pronunciation: "Focus on word stress — emphasize the right syllable in multi-syllable words.",
+      pronunciation: "Focus on speech clarity — speak a little slower and articulate each word clearly.",
       grammar:       "Focus on sentence structure — try to use complete subject-verb-object sentences.",
       vocabulary:    "Focus on word variety — try to replace repeated words with synonyms.",
     };
@@ -738,6 +844,7 @@ Be specific, constructive, and encouraging. Base feedback on the actual words us
   // ── Clear all ──
   function clearAll() {
     fullTranscript = '';
+    speechStats = newStats();
     stopListening();
     document.getElementById('transcript-box').innerHTML = '<span style="color:var(--t0_2);font-style:italic">Your words will appear here as you speak...</span>';
     document.getElementById('feedback-section').style.display = 'none';
