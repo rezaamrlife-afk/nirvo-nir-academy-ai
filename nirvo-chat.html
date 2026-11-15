@@ -326,6 +326,64 @@ html.light-mode .msg.nirvo .msg-bubble{background:var(--f0_04);border-color:var(
 .mobile-menu{overflow-y:auto;justify-content:safe center;padding:max(72px,env(safe-area-inset-top)) 20px max(24px,env(safe-area-inset-bottom))}
 @media(max-height:760px){.mobile-menu{gap:14px}.mobile-menu a{font-size:24px}}
 </style>
+<style id="nvd-drawer">
+/* ── Menu drawer ── */
+.mobile-menu{z-index:1000!important;align-items:center!important;justify-content:center!important;gap:0!important;overflow:hidden!important;
+  padding:max(16px,env(safe-area-inset-top)) 16px calc(16px + env(safe-area-inset-bottom))!important;
+  background:rgba(var(--sh),.55)!important;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.mobile-menu.open .nvd{animation:nvdIn .38s var(--ease) both}
+@keyframes nvdIn{from{opacity:0;transform:translateY(18px) scale(.97)}to{opacity:1;transform:none}}
+.nvd{width:min(390px,100%);max-height:100%;display:flex;flex-direction:column;border-radius:32px;overflow:hidden;position:relative;
+  background:linear-gradient(160deg,rgba(var(--gold-rgb),.12),rgba(var(--black-rgb),.94) 46%);
+  border:1px solid rgba(var(--gold-rgb),.3);
+  box-shadow:0 30px 80px rgba(var(--sh),calc(.6 * var(--shk))),0 0 70px rgba(var(--gold-rgb),.12);
+  -webkit-backdrop-filter:blur(30px) saturate(1.4);backdrop-filter:blur(30px) saturate(1.4)}
+.nvd [hidden]{display:none!important}
+.nvd-head{display:flex;align-items:center;justify-content:space-between;padding:16px 18px 14px 20px;border-bottom:1px solid var(--b0_07)}
+.nvd-brand{display:flex;align-items:center;gap:14px}
+.nvd-brand img{width:46px;height:46px;border-radius:14px;object-fit:cover;box-shadow:0 6px 20px rgba(var(--gold-rgb),.28);background:#000}
+.nvd-word{font-family:'Outfit',sans-serif;font-size:19px;font-weight:600;letter-spacing:.3em;color:var(--gold)}
+.nvd-word b{font-weight:600;color:var(--rose)}
+.nvd-close{width:42px;height:42px;border-radius:50%;border:1px solid var(--b0_1);background:var(--f0_04);color:var(--white);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s,transform .2s}
+.nvd-close:hover{background:rgba(var(--gold-rgb),.12)}.nvd-close:active{transform:scale(.92)}
+.nvd-close svg,.nvd-ic svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.nvd-body{overflow-y:auto;overscroll-behavior:contain;padding:6px 14px 10px;-webkit-overflow-scrolling:touch}
+.nvd-label{display:flex;align-items:center;gap:12px;margin:14px 6px 8px;font-family:'Outfit',sans-serif;font-size:12px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:var(--t0_4)}
+.nvd-label::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--b0_1),transparent)}
+.mobile-menu .nvd .nvd-row{display:flex;align-items:center;gap:14px;width:100%;margin-bottom:4px;padding:6px 10px;border-radius:16px;border:1px solid transparent;background:transparent;
+  font-family:'Outfit',sans-serif;font-size:16px;font-weight:500;letter-spacing:0;text-align:left;max-width:none;color:var(--white);text-decoration:none;cursor:pointer;transition:background .2s,border-color .2s,transform .15s}
+.mobile-menu .nvd .nvd-row:hover{background:var(--f0_04);color:var(--white)}
+.mobile-menu .nvd .nvd-row:active{transform:scale(.985)}
+.nvd-row>span:nth-child(2){flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mobile-menu .nvd .nvd-primary,.mobile-menu .nvd .nvd-toggle{background:rgba(var(--gold-rgb),.09);border-color:rgba(var(--gold-rgb),.24)}
+.nvd-ic{width:36px;height:36px;flex-shrink:0;border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--gold);background:rgba(var(--gold-rgb),.12);border:1px solid rgba(var(--gold-rgb),.28)}
+.nvd-chev{width:16px;height:16px;fill:none;stroke:var(--t0_4);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+.mobile-menu .nvd .nvd-danger{color:var(--pink)}
+.nvd-danger .nvd-ic{color:var(--pink);background:rgba(var(--pink-rgb),.1);border-color:rgba(var(--pink-rgb),.3)}
+.nvd-dot{width:7px;height:7px;border-radius:50%;background:var(--rose);animation:nvdPulse 2s ease infinite;flex-shrink:0}
+.nvd-switch{width:52px;height:30px;flex-shrink:0;border-radius:999px;background:var(--b0_14);position:relative;transition:background .25s}
+.nvd-switch::after{content:"";position:absolute;top:4px;left:4px;width:22px;height:22px;border-radius:50%;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.3);transition:transform .25s var(--ease)}
+.nvd-switch.on{background:linear-gradient(135deg,var(--gold),var(--gold-light))}
+.nvd-switch.on::after{transform:translateX(22px)}
+.nvd-foot{padding:12px 20px calc(16px + env(safe-area-inset-bottom,0px)*0);border-top:1px solid var(--b0_07);text-align:center;font-family:'Outfit',sans-serif;font-size:12px;font-weight:500;letter-spacing:.22em;line-height:1.9;font-size:11.5px;text-transform:uppercase;color:var(--t0_5);background:rgba(var(--gold-rgb),.04)}
+@media(max-height:620px){.nvd-brand img{width:38px;height:38px}.nvd-label{margin-top:14px}}
+
+/* ── Floating bottom bar (mobile) ── */
+@media(max-width:768px){
+body{padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))}
+#nv-mob-nav{left:12px!important;right:12px!important;bottom:calc(10px + env(safe-area-inset-bottom,0px))!important;padding:6px!important;border-radius:26px;
+  border:1px solid rgba(var(--gold-rgb),.28)!important;background:rgba(var(--black-rgb),.78)!important;
+  box-shadow:0 18px 44px rgba(var(--sh),calc(.55 * var(--shk))),0 0 0 1px rgba(var(--gold-rgb),.04) inset!important;
+  -webkit-backdrop-filter:blur(26px) saturate(1.5)!important;backdrop-filter:blur(26px) saturate(1.5)!important}
+#nv-mob-nav .nv-grid{padding:0!important;gap:2px}
+#nv-mob-nav a{border-radius:20px;min-height:52px}
+#nv-mob-nav a.on{background:rgba(var(--gold-rgb),.14)}
+#nv-mob-nav a.on::before{display:none}
+}
+
+.mobile-menu .nvd .nvd-row.nvd-cur{background:rgba(var(--gold-rgb),.09);border-color:rgba(var(--gold-rgb),.24);color:var(--gold)}
+@keyframes nvdPulse{0%,100%{opacity:1}50%{opacity:.35}}
+</style>
 </head>
 <body>
 
@@ -386,18 +444,31 @@ html.light-mode .msg.nirvo .msg-bubble{background:var(--f0_04);border-color:var(
 </header>
 
 <!-- MOBILE MENU -->
-<div class="mobile-menu" id="mobile-menu">
-  <button type="button" class="mobile-close" onclick="toggleMenu()" aria-label="Close menu"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button>
-  <a href="index.html" onclick="toggleMenu()">Home</a>
-  <a href="dashboard.html" onclick="toggleMenu()">Dashboard</a>
-  <a href="practice.html" onclick="toggleMenu()">Practice</a>
-  <a href="progress.html" onclick="toggleMenu()">Progress</a>
-  <a href="learning-path.html" onclick="toggleMenu()">Learning Path</a>
-  <a href="nirvo-chat.html" onclick="toggleMenu()" aria-current="page">Chat</a>
-  <a href="profile.html" onclick="toggleMenu()">My Profile</a>
-  <div class="menu-rule"></div>
-  <a href="#" class="nv-theme-row" onclick="toggleTheme();return false"><svg class="i nv-theme-ico" aria-hidden="true"><use href="#i-sun"/></svg><span class="nv-theme-lbl">Light mode</span></a>
-  <a href="#" class="menu-signout" onclick="handleLogout()">Sign Out</a>
+<div class="mobile-menu" id="mobile-menu" role="dialog" aria-modal="true" aria-label="Menu">
+  <div class="nvd">
+    <div class="nvd-head">
+      <div class="nvd-brand"><img id="nvd-logo" alt="NIRVO" width="46" height="46"><span class="nvd-word">NIR<b>VO</b></span></div>
+      <button type="button" class="nvd-close" onclick="toggleMenu()" aria-label="Close menu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+    </div>
+    <div class="nvd-body">
+      <div class="nvd-label">Account</div>
+      <a href="auth.html" id="nvd-account" class="nvd-row nvd-primary"><span class="nvd-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span><span id="nvd-account-name">Log in / Sign up</span><svg class="nvd-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a>
+
+      <div class="nvd-label">Explore</div>
+      <a href="index.html" class="nvd-row"><span class="nvd-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .7-1.5l7-6a2 2 0 0 1 2.6 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></span><span>Home</span><svg class="nvd-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a>
+      <a href="dashboard.html" class="nvd-row"><span class="nvd-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3v18h18"/><path d="M8 17V9"/><path d="M13 17V5"/><path d="M18 17v-6"/></svg></span><span>Dashboard</span><svg class="nvd-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a>
+      <a href="practice.html" class="nvd-row"><span class="nvd-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><path d="M12 19v3"/></svg></span><span>Practice</span><svg class="nvd-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a>
+      <a href="progress.html" class="nvd-row"><span class="nvd-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m22 7-8.5 8.5-5-5L2 17"/><path d="M16 7h6v6"/></svg></span><span>Progress</span><svg class="nvd-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a>
+      <a href="learning-path.html" class="nvd-row"><span class="nvd-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="6" cy="19" r="3"/><path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15"/><circle cx="18" cy="5" r="3"/></svg></span><span>Learning Path</span><svg class="nvd-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a>
+      <a href="profile.html" class="nvd-row"><span class="nvd-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span><span>Profile</span><svg class="nvd-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a>
+      <a href="nirvo-chat.html" class="nvd-row nvd-cur" aria-current="page"><span class="nvd-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg></span><span>Chat with NIRVO</span><i class="nvd-dot"></i><svg class="nvd-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a>
+
+      <div class="nvd-label">Settings</div>
+      <button type="button" class="nvd-row nvd-toggle" role="switch" aria-checked="false" onclick="toggleTheme()"><span class="nvd-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg></span><span class="nv-theme-lbl">Light mode</span><span class="nvd-switch" aria-hidden="true"></span></button>
+      <button type="button" id="nvd-signout" class="nvd-row nvd-danger" style="margin-top:10px" onclick="handleLogout()"><span class="nvd-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></svg></span><span>Sign Out</span></button>
+    </div>
+    <div class="nvd-foot">NIRVO · NIR Academy<br>Dr. Niki Majidi · Speaking Intelligence</div>
+  </div>
 </div>
 
 <!-- TOOLBAR -->
@@ -1425,6 +1496,7 @@ if (window.speechSynthesis.getVoices().length === 0) {
     document.querySelectorAll('.nv-theme-btn').forEach(function(x){var g=x.querySelector('svg');if(g)g.innerHTML=ico;x.setAttribute('aria-label',l?'Switch to dark mode':'Switch to light mode');});
     document.querySelectorAll('.nv-theme-ico').forEach(function(x){x.innerHTML=ico;});
     document.querySelectorAll('.nv-theme-lbl').forEach(function(x){x.textContent=l?'Dark mode':'Light mode';});
+    document.querySelectorAll('.nvd-switch').forEach(function(x){x.classList.toggle('on',l);var r=x.closest('[role=switch]');if(r)r.setAttribute('aria-checked',l?'true':'false');});
   }
   function toggleTheme(){
     var l=!document.body.classList.contains('light-mode');
@@ -1455,6 +1527,24 @@ if (window.speechSynthesis.getVoices().length === 0) {
   }
   v.addEventListener('resize',fit); v.addEventListener('scroll',function(){ if(document.activeElement&&document.activeElement.id==='chat-input') window.scrollTo(0,0); });
   document.addEventListener('focusout',function(){ setTimeout(fit,50); });
+})();
+</script>
+<script>
+// Menu drawer: logo, account name, backdrop/Esc close
+(function(){
+  var m=document.getElementById('mobile-menu');
+  if(m)m.addEventListener('click',function(e){if(e.target===m)toggleMenu()});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&m&&m.classList.contains('open'))toggleMenu()});
+  var s=document.querySelector('.brand-logo'),t=document.getElementById('nvd-logo');if(s&&t)t.src=s.src;
+  (async function(){
+    try{
+      var r=await sb.auth.getSession(), u=r.data&&r.data.session&&r.data.session.user;
+      if(!u)return;
+      var meta=u.user_metadata||{}, name=meta.full_name||meta.name||(u.email||'').split('@')[0]||'Account';
+      document.getElementById('nvd-account-name').textContent=name;
+      document.getElementById('nvd-account').setAttribute('href','dashboard.html');
+    }catch(e){}
+  })();
 })();
 </script>
 </body>
