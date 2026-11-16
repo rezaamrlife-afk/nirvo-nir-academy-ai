@@ -17,6 +17,7 @@
   <link rel="apple-touch-icon" href="/icons/icon-192.png">
 <title>NIRVO AI — Dashboard</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="i18n.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
   function toggleMenu() {
@@ -286,6 +287,31 @@ body{padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))}
 .wk{gap:5px}.wk-bar{height:46px}
 }
 </style>
+<style id="nv-i18n-dash">
+/* Language switcher + RTL support for dashboard.html (additive; English/LTR rendering is unchanged) */
+.nv-langbar{display:inline-flex;align-items:center;gap:2px;padding:2px;border-radius:999px;border:1px solid var(--b0_1);background:var(--f0_04);direction:ltr}
+.nv-langbar button{min-width:30px;min-height:0;height:26px;padding:0 7px;border:0;border-radius:999px;background:transparent;color:var(--t0_5);font-family:'Outfit',sans-serif;font-size:11.5px;font-weight:600;letter-spacing:.04em;line-height:1;cursor:pointer;transition:background .2s,color .2s}
+.nv-langbar button:hover{color:var(--white)}
+.nv-langbar button.active{background:var(--gold);color:var(--on-gold)}
+.nv-langbar button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+nav .nv-langbar{margin-inline-end:2px}
+@media(max-width:768px){nav .nv-langbar{display:none}}
+.nvd-langrow{display:flex;align-items:center;gap:14px;padding:6px 10px;margin-bottom:4px}
+.nvd-langrow .nvd-ic{flex-shrink:0}
+.nvd-langrow>span:nth-child(2){flex:1;min-width:0;font-family:'Outfit',sans-serif;font-size:16px;font-weight:500;color:var(--white)}
+.nvd-langrow .nv-langbar button{min-width:40px;min-height:34px;height:34px}
+/* RTL (Persian) */
+html[dir="rtl"] .nvd-chev{transform:scaleX(-1)}
+html[dir="rtl"] .mobile-menu .nvd .nvd-row{text-align:right}
+html[dir="rtl"] nav [style*="text-align:right"]{text-align:left!important}
+html[dir="rtl"] nav [style*="border-left"]{border-left:0!important;padding-left:0!important;border-right:1px solid rgba(var(--gold-rgb),0.18);padding-right:12px}
+html[dir="rtl"] .session-row [style*="text-align:right"]{text-align:left!important}
+html[dir="rtl"] #todays-focus-card [style*="border-left"]{border-left:0!important;border-right:2px solid rgba(var(--rose-rgb),0.35);border-radius:8px 0 0 8px!important}
+html[dir="rtl"] #user-name{display:inline-block;direction:ltr;unicode-bidi:isolate}
+html[lang="fa"] .nvn-word,html[lang="fa"] .nvn-word *,html[lang="fa"] .nvd-word,html[lang="fa"] .nvd-word *{font-family:'Outfit',sans-serif!important}
+html[lang="fa"] .nvd-word{letter-spacing:.3em!important}
+html[lang="fa"] #nv-mob-nav a{font-size:clamp(9.5px,2.7vw,11.5px)}
+</style>
 </head>
 <body>
 <script>
@@ -318,6 +344,7 @@ try{if(localStorage.getItem('nirvo-theme')==='light'){document.documentElement.c
 
   <!-- User -->
   <div style="display:flex;align-items:center;gap:14px">
+    <div class="nv-langbar" role="group" aria-label="Language"><button type="button" data-lang-btn="en" aria-pressed="true">EN</button><button type="button" data-lang-btn="fa" aria-pressed="false">FA</button><button type="button" data-lang-btn="tr" aria-pressed="false">TR</button></div>
     <div style="text-align:right">
       <div id="user-name-nav" style="font-size:14px;font-weight:500;color:var(--white)"></div>
       <div id="user-email-nav" style="font-size:12px;color:var(--t0_3)"></div>
@@ -353,6 +380,7 @@ try{if(localStorage.getItem('nirvo-theme')==='light'){document.documentElement.c
       <a href="nirvo-chat.html" class="nvd-row"><span class="nvd-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg></span><span>Chat with NIRVO</span><i class="nvd-dot"></i><svg class="nvd-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a>
 
       <div class="nvd-label">Settings</div>
+      <div class="nvd-langrow"><span class="nvd-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span><span>Language</span><div class="nv-langbar" role="group" aria-label="Language"><button type="button" data-lang-btn="en" aria-pressed="true">EN</button><button type="button" data-lang-btn="fa" aria-pressed="false">FA</button><button type="button" data-lang-btn="tr" aria-pressed="false">TR</button></div></div>
       <button type="button" class="nvd-row nvd-toggle" role="switch" aria-checked="false" onclick="toggleTheme()"><span class="nvd-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg></span><span>Light Mode</span><span class="nvd-switch" aria-hidden="true"></span></button>
       <button type="button" id="nvd-signout" class="nvd-row nvd-danger" style="margin-top:10px" hidden><span class="nvd-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></svg></span><span>Sign Out</span></button>
     </div>
@@ -855,5 +883,156 @@ try{if(localStorage.getItem('nirvo-theme')==='light'){document.documentElement.c
 })();
 </script>
 <button type="button" class="nv-theme" onclick="toggleTheme()" aria-label="Switch to light mode">☀</button>
+<script id="nv-i18n-dash-js">
+/* Dashboard i18n (additive). Uses the shared i18n.js; adds this page's strings + a translator for dynamic text
+   (counts, "x min ago", score bands). The page's own scripts above are not modified. */
+(function () {
+  if (!window.nvI18n) return;
+  var T = {
+    'NIRVO AI — Dashboard': ['NIRVO AI — داشبورد', 'NIRVO AI — Panel'],
+    'Progress': ['پیشرفت', 'İlerleme'],
+    'Welcome back,': ['خوش برگشتید،', 'Tekrar hoş geldiniz,'],
+    'Speaker!': ['زبان‌آموز!', 'Konuşmacı!'],
+    "Your AI coach is ready. Let's practice today.": ['مربی هوش مصنوعی شما آماده است. بیایید امروز تمرین کنیم.', 'Yapay zekâ koçunuz hazır. Hadi bugün pratik yapalım.'],
+    'Skill analytics': ['تحلیل مهارت‌ها', 'Beceri analizi'],
+    'Average of your last 5 scored sessions': ['میانگین 5 جلسه امتیازدار اخیر', 'Son 5 puanlı oturumun ortalaması'],
+    'Excellent ↑': ['عالی ↑', 'Mükemmel ↑'],
+    'Fluent ↑': ['روان ↑', 'Akıcı ↑'],
+    'Good →': ['خوب →', 'İyi →'],
+    'Daily Goal': ['هدف روزانه', 'Günlük Hedef'],
+    "Today's Focus": ['تمرکز امروز', 'Bugünün Odağı'],
+    'Reason': ['دلیل', 'Neden'],
+    'Action': ['راهکار', 'Öneri'],
+    'Practice Now →': ['همین حالا تمرین کنید ←', 'Şimdi Pratik Yap →'],
+    'Your week': ['هفته شما', 'Haftanız'],
+    'Practice minutes per day': ['دقایق تمرین در هر روز', 'Günlük pratik dakikaları'],
+    'Weekly Streak': ['تداوم هفتگی', 'Haftalık Seri'],
+    'Quick Practice': ['تمرین سریع', 'Hızlı Pratik'],
+    'Quick Stats': ['آمار سریع', 'Hızlı İstatistikler'],
+    'Total Sessions': ['کل جلسات', 'Toplam Oturum'],
+    'Total Minutes': ['کل دقایق', 'Toplam Dakika'],
+    'Best Score': ['بهترین امتیاز', 'En İyi Puan'],
+    'This Week': ['این هفته', 'Bu Hafta'],
+    'Recent Sessions': ['جلسات اخیر', 'Son Oturumlar'],
+    'View all →': ['مشاهده همه ←', 'Tümünü gör →'],
+    'Your Current Focus': ['تمرکز فعلی شما', 'Mevcut Odağınız'],
+    'Practice →': ['تمرین ←', 'Pratik →'],
+    'No sessions yet —': ['هنوز جلسه‌ای ندارید —', 'Henüz oturum yok —'],
+    'start your first practice!': ['اولین تمرین خود را شروع کنید!', 'ilk pratiğinize başlayın!'],
+    'Overall': ['کلی', 'Genel'],
+    'Speaking Session': ['جلسه مکالمه', 'Konuşma Oturumu'],
+    "Couldn't load your sessions. Please refresh the page.": ['بارگذاری جلسات شما ممکن نشد. لطفاً صفحه را تازه‌سازی کنید.', 'Oturumlarınız yüklenemedi. Lütfen sayfayı yenileyin.'],
+    'Daily goal reached': ['به هدف روزانه رسیدید', 'Günlük hedefe ulaşıldı'],
+    'You practiced today — nice work': ['امروز تمرین کردید — آفرین', 'Bugün pratik yaptınız — harika iş'],
+    'Practice today to extend your streak': ['برای حفظ تداوم، امروز تمرین کنید', 'Serinizi uzatmak için bugün pratik yapın'],
+    'Start a session to begin your streak': ['برای شروع تداوم، یک جلسه را شروع کنید', 'Serinize başlamak için bir oturum başlatın'],
+    'No data yet': ['هنوز داده‌ای نیست', 'Henüz veri yok'],
+    'Excellent': ['عالی', 'Mükemmel'],
+    'Keep practicing': ['تمرین را ادامه دهید', 'Pratiğe devam edin'],
+    'Vocabulary': ['واژگان', 'Kelime Bilgisi'],
+    'Fluency has been your lowest-scoring skill in recent sessions.': ['روانی در جلسات اخیر کم‌امتیازترین مهارت شما بوده است.', 'Akıcılık, son oturumlarda en düşük puanlı becerinizdi.'],
+    'Pronunciation has been your lowest-scoring skill in recent sessions.': ['تلفظ در جلسات اخیر کم‌امتیازترین مهارت شما بوده است.', 'Telaffuz, son oturumlarda en düşük puanlı becerinizdi.'],
+    'Grammar has been your lowest-scoring skill in recent sessions.': ['گرامر در جلسات اخیر کم‌امتیازترین مهارت شما بوده است.', 'Dilbilgisi, son oturumlarda en düşük puanlı becerinizdi.'],
+    'Vocabulary has been your lowest-scoring skill in recent sessions.': ['واژگان در جلسات اخیر کم‌امتیازترین مهارت شما بوده است.', 'Kelime bilgisi, son oturumlarda en düşük puanlı becerinizdi.'],
+    'Speak in longer connected phrases and try to reduce pauses between words.': ['با عبارت‌های طولانی‌تر و پیوسته صحبت کنید و مکث بین کلمات را کم کنید.', 'Daha uzun ve bağlantılı cümlelerle konuşun, kelimeler arasındaki duraklamaları azaltmaya çalışın.'],
+    'Focus on word stress — emphasize the correct syllable in multi-syllable words.': ['روی تکیه‌ی کلمه تمرکز کنید — در کلمات چندهجایی، هجای درست را پررنگ ادا کنید.', 'Kelime vurgusuna odaklanın — çok heceli kelimelerde doğru heceyi vurgulayın.'],
+    'Use complete subject-verb-object sentences and pay attention to verb tenses.': ['از جمله‌های کامل فاعل-فعل-مفعول استفاده کنید و به زمان افعال دقت کنید.', 'Tam özne-fiil-nesne cümleleri kullanın ve fiil zamanlarına dikkat edin.'],
+    'Try to replace repeated words with synonyms and use more varied expressions.': ['کلمات تکراری را با مترادف‌ها جایگزین کنید و از عبارت‌های متنوع‌تری استفاده کنید.', 'Tekrarlanan kelimeleri eş anlamlılarıyla değiştirin ve daha çeşitli ifadeler kullanın.'],
+    'Just now': ['همین الان', 'Az önce']
+  };
+  var add = {}; for (var k in T) add[k] = { fa: T[k][0], tr: T[k][1] };
+  nvI18n.add(add);
+
+  // ── dynamic-text patterns: [regex, fa(fn), tr(fn)] ──
+  function tw(s) { return nvI18n.t(s); }
+  var P = [
+    [/^(Excellent|Good|Keep practicing|No data yet)( · [↑↓]\d+)?$/, function (m, l) { return tw(m[1]) + (m[2] ? (l === 'fa' ? ' · \u2066' + m[2].slice(3) + '\u2069' : m[2]) : ''); }],
+    [/^(\d+(?:\.\d+)?) \/ (\d+) minutes$/, { fa: '\u2066$1 / $2\u2069 دقیقه', tr: '$1 / $2 dakika' }],
+    [/^(\d+) min left today$/, { fa: '\u2066$1\u2069 دقیقه تا هدف امروز', tr: 'Bugün $1 dk kaldı' }],
+    [/^(\d+) days?$/, { fa: '$1 روز', tr: '$1 gün' }],
+    [/^avg (\d+)%$/, { fa: 'میانگین \u2066$1%\u2069', tr: 'ort. $1%' }],
+    [/^(\d+) min ago$/, { fa: '$1 دقیقه پیش', tr: '$1 dk önce' }],
+    [/^(\d+) hrs? ago$/, { fa: '$1 ساعت پیش', tr: '$1 sa önce' }],
+    [/^(\d+) days? ago$/, { fa: '$1 روز پیش', tr: '$1 gün önce' }],
+    [/^(\d+) min$/, { fa: '$1 دقیقه', tr: '$1 dk' }],
+    [/^(Fluency|Pronunciation|Grammar|Vocabulary) \(avg (\d+)%\) — (.+)$/, function (m, l) { return tw(m[1]) + ' (' + (l === 'fa' ? 'میانگین \u2066' + m[2] + '%\u2069' : 'ort. ' + m[2] + '%') + ') — ' + tw(m[3]); }]
+  ];
+  var DAYS = { fa: ['د', 'س', 'چ', 'پ', 'ج', 'ش', 'ی'], tr: ['P', 'S', 'Ç', 'P', 'C', 'C', 'P'] };
+  var EN_DAYS = 'MTWTFSS';
+  var recs = new WeakMap(), list = [], busy = false;
+
+  function conv(en, l) {
+    for (var i = 0; i < P.length; i++) {
+      var m = en.match(P[i][0]); if (!m) continue;
+      var f = P[i][1];
+      if (typeof f === 'function') return f(m, l);
+      return f[l].replace(/\$(\d)/g, function (_, n) { return m[+n]; });
+    }
+    return null;
+  }
+  function visit(n) {
+    var rec = recs.get(n);
+    if (rec) { if (n.data === rec.out) return; rec.en = n.data; }
+    var core = n.data.trim(); if (!core) return;
+    if (!rec) { if (!conv(core, 'fa')) return; rec = { n: n, en: n.data, out: n.data }; recs.set(n, rec); list.push(rec); }
+    render(rec);
+  }
+  function render(rec) {
+    var l = nvI18n.lang, lead = rec.en.match(/^\s*/)[0], trail = rec.en.match(/\s*$/)[0], core = rec.en.trim();
+    var out = l === 'en' ? null : conv(core, l);
+    var v = out ? lead + out + trail : rec.en;
+    rec.out = v; if (rec.n.data !== v) rec.n.data = v;
+  }
+  var tAttr = [];
+  function visitTitle(el) {
+    var v = el.getAttribute('title'); if (v == null) return;
+    var rec = null; for (var i = 0; i < tAttr.length; i++) if (tAttr[i].el === el) { rec = tAttr[i]; break; }
+    if (rec) { if (v === rec.out) return; rec.en = v; } else { if (!/^\d+ min$/.test(v)) return; rec = { el: el, en: v, out: v }; tAttr.push(rec); }
+    var out = nvI18n.lang === 'en' ? null : conv(rec.en, nvI18n.lang);
+    rec.out = out || rec.en; if (v !== rec.out) el.setAttribute('title', rec.out);
+  }
+  function days() {
+    var l = nvI18n.lang, ds = document.querySelectorAll('#st-days .streak-day');
+    for (var i = 0; i < ds.length; i++) { var t = l === 'en' ? EN_DAYS[i] : DAYS[l][i]; if (t && ds[i].textContent !== t) ds[i].textContent = t; }
+  }
+  function walk(root) {
+    var w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null), n;
+    while ((n = w.nextNode())) { if (n.parentNode && /^(SCRIPT|STYLE)$/.test(n.parentNode.nodeName)) continue; visit(n); }
+    if (root.querySelectorAll) { var e = root.querySelectorAll('[title]'); for (var i = 0; i < e.length; i++) visitTitle(e[i]); }
+  }
+  function refresh() {
+    busy = true;
+    list = list.filter(function (r) { return r.n.isConnected; }); list.forEach(render);
+    tAttr = tAttr.filter(function (r) { return r.el.isConnected; });
+    tAttr.forEach(function (r) { var o = nvI18n.lang === 'en' ? null : conv(r.en, nvI18n.lang); r.out = o || r.en; r.el.setAttribute('title', r.out); });
+    walk(document.body); days(); busy = false;
+  }
+  new MutationObserver(function (ms) {
+    if (busy) return; busy = true;
+    try {
+      ms.forEach(function (m) {
+        if (m.type === 'characterData') visit(m.target);
+        else if (m.type === 'attributes') visitTitle(m.target);
+        else m.addedNodes.forEach(function (a) { if (a.nodeType === 3) visit(a); else if (a.nodeType === 1) walk(a); });
+      }); days();
+    } catch (e) {}
+    busy = false;
+  }).observe(document.body, { childList: true, characterData: true, subtree: true, attributes: true, attributeFilter: ['title'] });
+  document.addEventListener('nvlangchange', refresh);
+  refresh();
+
+  // The page finds each ring by reading its label text ("pronunciation"/"fluency"/"grammar").
+  // Put the English label back for that call; i18n.js re-translates it right after.
+  var orig = window.renderRings;
+  if (typeof orig === 'function') {
+    window.renderRings = function () {
+      var EN = ['Pronunciation', 'Fluency', 'Grammar'], ws = document.querySelectorAll('.score-ring-wrap');
+      for (var i = 0; i < ws.length && i < 3; i++) { var l = ws[i].firstElementChild; if (l && l.textContent.trim() !== EN[i]) l.textContent = EN[i]; }
+      return orig.apply(this, arguments);
+    };
+  }
+})();
+</script>
+
 </body>
 </html>
