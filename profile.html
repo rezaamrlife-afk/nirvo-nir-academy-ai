@@ -17,6 +17,7 @@
   <link rel="apple-touch-icon" href="/icons/icon-192.png">
 <title>NIRVO AI — My Profile</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="i18n.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
   function toggleMenu() {
@@ -450,6 +451,35 @@ body{padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))}
   body{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
 }
 </style>
+<style id="nv-i18n-prof">
+/* Language switcher + RTL support for profile.html (additive; English/LTR rendering is unchanged) */
+.nv-langbar{display:inline-flex;align-items:center;gap:2px;padding:2px;border-radius:999px;border:1px solid var(--b0_1);background:var(--f0_04);direction:ltr}
+.nv-langbar button{min-width:30px;min-height:0;height:26px;padding:0 7px;border:0;border-radius:999px;background:transparent;color:var(--t0_5);font-family:'Outfit',sans-serif;font-size:11.5px;font-weight:600;letter-spacing:.04em;line-height:1;cursor:pointer;transition:background .2s,color .2s}
+.nv-langbar button:hover{color:var(--white)}
+.nv-langbar button.active{background:var(--gold);color:var(--on-gold)}
+.nv-langbar button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+nav .nv-langbar{margin-inline-end:2px}
+@media(max-width:768px){nav .nv-langbar{display:none}}
+.nvd-langrow{display:flex;align-items:center;gap:14px;padding:6px 10px;margin-bottom:4px}
+.nvd-langrow .nvd-ic{flex-shrink:0}
+.nvd-langrow>span:nth-child(2){flex:1;min-width:0;font-family:'Outfit',sans-serif;font-size:16px;font-weight:500;color:var(--white)}
+.nvd-langrow .nv-langbar button{min-width:40px;min-height:34px;height:34px}
+/* RTL (Persian) */
+html[dir="rtl"] .nvd-chev{transform:scaleX(-1)}
+html[dir="rtl"] .mobile-menu .nvd .nvd-row{text-align:right}
+html[dir="rtl"] nav [style*="text-align:right"]{text-align:left!important}
+html[dir="rtl"] nav [style*="border-left"]{border-left:0!important;padding-left:0!important;border-right:1px solid rgba(var(--gold-rgb),0.18);padding-right:12px}
+html[lang="fa"] .nvn-word,html[lang="fa"] .nvn-word *,html[lang="fa"] .nvd-word,html[lang="fa"] .nvd-word *{font-family:'Outfit',sans-serif!important}
+html[lang="fa"] .nvd-word{letter-spacing:.3em!important}
+html[lang="fa"] #nv-mob-nav a{font-size:clamp(9.5px,2.7vw,11.5px)}
+html[dir="rtl"] .pf-pw .pf-input{padding-right:15px;padding-left:78px}
+html[dir="rtl"] .pf-eye{right:auto;left:6px}
+@media(max-width:768px){html[dir="rtl"] .pf-pw .pf-input{padding-right:15px;padding-left:70px}html[dir="rtl"] .pf-eye{right:auto;left:4px}}
+html[dir="rtl"] #f-email,html[dir="rtl"] #f-pw,html[dir="rtl"] #f-pw2{direction:ltr;text-align:left}
+html[dir="rtl"] .pf-id{text-align:right}
+html[dir="rtl"] .pf-jump a{text-align:right}
+html[dir="rtl"] .pf-msg{text-align:right}
+</style>
 </head>
 <body>
 <script>
@@ -482,6 +512,7 @@ try{if(localStorage.getItem('nirvo-theme')==='light'){document.documentElement.c
 
   <!-- User -->
   <div style="display:flex;align-items:center;gap:14px">
+    <div class="nv-langbar" role="group" aria-label="Language"><button type="button" data-lang-btn="en" aria-pressed="true">EN</button><button type="button" data-lang-btn="fa" aria-pressed="false">FA</button><button type="button" data-lang-btn="tr" aria-pressed="false">TR</button></div>
     <div style="text-align:right">
       <div id="user-name-nav" style="font-size:14px;font-weight:500;color:var(--white)"></div>
       <div id="user-email-nav" style="font-size:12px;color:var(--t0_3)"></div>
@@ -516,6 +547,7 @@ try{if(localStorage.getItem('nirvo-theme')==='light'){document.documentElement.c
       <a href="nirvo-chat.html" class="nvd-row"><span class="nvd-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg></span><span>Chat with NIRVO</span><i class="nvd-dot"></i><svg class="nvd-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a>
 
       <div class="nvd-label">Settings</div>
+      <div class="nvd-langrow"><span class="nvd-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span><span>Language</span><div class="nv-langbar" role="group" aria-label="Language"><button type="button" data-lang-btn="en" aria-pressed="true">EN</button><button type="button" data-lang-btn="fa" aria-pressed="false">FA</button><button type="button" data-lang-btn="tr" aria-pressed="false">TR</button></div></div>
       <button type="button" class="nvd-row nvd-toggle" role="switch" aria-checked="false" onclick="toggleTheme()"><span class="nvd-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg></span><span>Light Mode</span><span class="nvd-switch" aria-hidden="true"></span></button>
       <button type="button" id="nvd-signout" class="nvd-row nvd-danger" style="margin-top:10px" hidden><span class="nvd-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></svg></span><span>Sign Out</span></button>
     </div>
@@ -530,7 +562,7 @@ try{if(localStorage.getItem('nirvo-theme')==='light'){document.documentElement.c
 <main class="pf-wrap">
   <header class="pf-head anim d1">
     <div class="pf-badge"><i></i>My Profile</div>
-    <h1 class="pf-title">My <em>Profile</em></h1>
+    <h1 class="pf-title" data-i18n-html="prof.h1">My <em>Profile</em></h1>
     <p class="pf-sub">Manage your personal details, account security and learning goals.</p>
   </header>
 
@@ -789,5 +821,108 @@ try{if(localStorage.getItem('nirvo-theme')==='light'){document.documentElement.c
 })();
 </script>
 <button type="button" class="nv-theme" onclick="toggleTheme()" aria-label="Switch to light mode">☀</button>
+<script id="nv-i18n-prof-js">
+/* Profile page i18n (additive). Uses the shared i18n.js; this page's strings are added here. Page scripts above are not modified.
+   Saved values (data-v on chips, names, native language, passwords) are never translated. */
+(function () {
+  if (!window.nvI18n) return;
+  var T = {
+    'NIRVO AI — My Profile': ['NIRVO AI — پروفایل من', 'NIRVO AI — Profilim'],
+    'Progress': ['پیشرفت', 'İlerleme'],
+    'Logout': ['خروج', 'Çıkış'],
+    'Log out': ['خروج از حساب', 'Çıkış Yap'],
+    'Manage your personal details, account security and learning goals.': ['اطلاعات شخصی، امنیت حساب و اهداف یادگیری خود را مدیریت کنید.', 'Kişisel bilgilerinizi, hesap güvenliğinizi ve öğrenme hedeflerinizi yönetin.'],
+    'Member since': ['عضو از', 'Üyelik tarihi'],
+    'Profile sections': ['بخش‌های پروفایل', 'Profil bölümleri'],
+    'Personal Info': ['اطلاعات شخصی', 'Kişisel Bilgiler'],
+    'Account Security': ['امنیت حساب', 'Hesap Güvenliği'],
+    'Learning Goals': ['اهداف یادگیری', 'Öğrenme Hedefleri'],
+    '01 · Personal Info': ['01 · اطلاعات شخصی', '01 · Kişisel Bilgiler'],
+    '02 · Account Security': ['02 · امنیت حساب', '02 · Hesap Güvenliği'],
+    '03 · Learning Goals': ['03 · اهداف یادگیری', '03 · Öğrenme Hedefleri'],
+    '04 · Logout': ['04 · خروج', '04 · Çıkış'],
+    'How NIRVO addresses you across the dashboard and your practice feedback.': ['نحوه‌ی خطاب NIRVO به شما در داشبورد و بازخوردهای تمرین.', 'NIRVO’nun panelde ve pratik geri bildirimlerinde size nasıl hitap edeceği.'],
+    'First name': ['نام', 'Ad'],
+    'Last name': ['نام خانوادگی', 'Soyad'],
+    'Email': ['ایمیل', 'E-posta'],
+    'This is your sign-in email. It can’t be changed here.': ['این ایمیل ورود شماست و از اینجا قابل تغییر نیست.', 'Bu, giriş e-postanızdır. Buradan değiştirilemez.'],
+    'Native language': ['زبان مادری', 'Ana dil'],
+    'e.g. Persian': ['مثلاً فارسی', 'örn. Farsça'],
+    'Save changes': ['ذخیره تغییرات', 'Değişiklikleri kaydet'],
+    'Choose a strong password you don’t use anywhere else.': ['رمز عبور قوی‌ای انتخاب کنید که جای دیگری استفاده نمی‌کنید.', 'Başka hiçbir yerde kullanmadığınız güçlü bir şifre seçin.'],
+    'New password': ['رمز عبور جدید', 'Yeni şifre'],
+    'At least 8 characters': ['حداقل 8 کاراکتر', 'En az 8 karakter'],
+    'Show': ['نمایش', 'Göster'],
+    'Hide': ['پنهان', 'Gizle'],
+    'Show password': ['نمایش رمز عبور', 'Şifreyi göster'],
+    'Hide password': ['پنهان کردن رمز عبور', 'Şifreyi gizle'],
+    'Confirm password': ['تکرار رمز عبور', 'Şifreyi onayla'],
+    'Repeat new password': ['رمز عبور جدید را تکرار کنید', 'Yeni şifreyi tekrarlayın'],
+    'Update password': ['به‌روزرسانی رمز عبور', 'Şifreyi güncelle'],
+    'Active sessions': ['نشست‌های فعال', 'Etkin oturumlar'],
+    'Signed in on a shared or lost device? Sign out everywhere, including this one.': ['روی دستگاه مشترک یا گم‌شده وارد شده‌اید؟ از همه‌جا خارج شوید، از جمله همین دستگاه.', 'Ortak veya kaybolmuş bir cihazda mı oturum açtınız? Bu cihaz dahil her yerden çıkış yapın.'],
+    'Sign out of all devices': ['خروج از همه دستگاه‌ها', 'Tüm cihazlardan çıkış yap'],
+    'Click again to confirm': ['برای تأیید دوباره کلیک کنید', 'Onaylamak için tekrar tıklayın'],
+    'Tell NIRVO where you are and where you’re heading.': ['به NIRVO بگویید اکنون کجا هستید و به کجا می‌روید.', 'NIRVO’ya şu an nerede olduğunuzu ve nereye gittiğinizi söyleyin.'],
+    'Current level (CEFR)': ['سطح فعلی (CEFR)', 'Mevcut seviye (CEFR)'],
+    'Target level': ['سطح هدف', 'Hedef seviye'],
+    'Main purpose': ['هدف اصلی', 'Ana amaç'],
+    'General fluency': ['روانی عمومی', 'Genel akıcılık'],
+    'IELTS / TOEFL': ['آیلتس / تافل', 'IELTS / TOEFL'],
+    'Academic': ['آکادمیک', 'Akademik'],
+    'Job interviews': ['مصاحبه‌های شغلی', 'İş mülakatları'],
+    'Daily practice goal': ['هدف تمرین روزانه', 'Günlük pratik hedefi'],
+    '10 min': ['10 دقیقه', '10 dk'], '15 min': ['15 دقیقه', '15 dk'], '20 min': ['20 دقیقه', '20 dk'], '30 min': ['30 دقیقه', '30 dk'], '45 min': ['45 دقیقه', '45 dk'],
+    'Practice days per week': ['روزهای تمرین در هفته', 'Haftada pratik günü'],
+    'Preferred English accent': ['لهجه‌ی ترجیحی انگلیسی', 'Tercih edilen İngilizce aksan'],
+    'American': ['آمریکایی', 'Amerikan'],
+    'British': ['بریتانیایی', 'İngiliz'],
+    'Feedback style': ['سبک بازخورد', 'Geri bildirim tarzı'],
+    'Brief': ['مختصر', 'Kısa'],
+    'Balanced': ['متعادل', 'Dengeli'],
+    'Detailed': ['مفصل', 'Ayrıntılı'],
+    'Weekly learning target': ['هدف یادگیری هفتگی', 'Haftalık öğrenme hedefi'],
+    '3 sessions': ['3 جلسه', '3 oturum'], '5 sessions': ['5 جلسه', '5 oturum'], '7 sessions': ['7 جلسه', '7 oturum'],
+    'Focus areas': ['حوزه‌های تمرکز', 'Odak alanları'],
+    '· pick any': ['· هر تعداد که می‌خواهید', '· istediğiniz kadar seçin'],
+    'Vocabulary': ['واژگان', 'Kelime Bilgisi'],
+    'Save goals': ['ذخیره اهداف', 'Hedefleri kaydet'],
+    'Sign out of NIRVO on this device. Your progress stays saved.': ['از NIRVO در این دستگاه خارج شوید. پیشرفت شما ذخیره می‌ماند.', 'Bu cihazda NIRVO’dan çıkış yapın. İlerlemeniz kayıtlı kalır.'],
+    'Saving…': ['در حال ذخیره…', 'Kaydediliyor…'],
+    'Please enter your first name.': ['لطفاً نام خود را وارد کنید.', 'Lütfen adınızı girin.'],
+    'Personal info saved.': ['اطلاعات شخصی ذخیره شد.', 'Kişisel bilgiler kaydedildi.'],
+    'Learning goals saved.': ['اهداف یادگیری ذخیره شد.', 'Öğrenme hedefleri kaydedildi.'],
+    'Password must be at least 8 characters.': ['رمز عبور باید حداقل 8 کاراکتر باشد.', 'Şifre en az 8 karakter olmalıdır.'],
+    'Passwords do not match.': ['رمزهای عبور یکسان نیستند.', 'Şifreler eşleşmiyor.'],
+    'Updating…': ['در حال به‌روزرسانی…', 'Güncelleniyor…'],
+    'Could not update password.': ['به‌روزرسانی رمز عبور ممکن نشد.', 'Şifre güncellenemedi.'],
+    'Password updated.': ['رمز عبور به‌روز شد.', 'Şifre güncellendi.'],
+    'Signing out…': ['در حال خروج…', 'Çıkış yapılıyor…'],
+    'Could not save. Please try again.': ['ذخیره ممکن نشد. لطفاً دوباره تلاش کنید.', 'Kaydedilemedi. Lütfen tekrar deneyin.'],
+    'New password should be different from the old password.': ['رمز عبور جدید باید با رمز قبلی متفاوت باشد.', 'Yeni şifre eskisinden farklı olmalıdır.'],
+    'prof.h1': ['پروفایل <em>من</em>', '<em>Profilim</em>']
+  };
+  var add = {}; for (var k in T) add[k] = { fa: T[k][0], tr: T[k][1] };
+  nvI18n.add(add);
+
+  // "Member since" date: the page formats it with the browser locale; follow the selected language instead (Gregorian, Latin digits).
+  var rec = null, busy = false;
+  var loc = { fa: 'fa-u-ca-gregory-nu-latn', tr: 'tr' };
+  function fix(force) {
+    var el = document.getElementById('pf-since'); if (!el || busy) return;
+    var t = el.firstChild && el.firstChild.nodeType === 3 ? el.firstChild : null; if (!t) return;
+    if (!force && rec && rec.n === t && t.data === rec.out) return;
+    if (rec && rec.n === t) { if (t.data !== rec.out) rec.en = t.data; } else { if (!/^[A-Za-z]+ \d{4}$/.test(t.data.trim())) return; rec = { n: t, en: t.data, out: t.data }; }
+    var l = nvI18n.lang, out = rec.en;
+    if (l !== 'en') { try { var m = rec.en.trim().split(' '); var d = new Date(Date.parse(m[0] + ' 1, ' + m[1] + ' 12:00 UTC')); if (!isNaN(d)) out = new Intl.DateTimeFormat(loc[l], { month: 'long', year: 'numeric', timeZone: 'UTC' }).format(d); } catch (e) {} }
+    busy = true; rec.out = out; if (t.data !== out) t.data = out; busy = false;
+  }
+  var sinceEl = document.getElementById('pf-since');
+  if (sinceEl) new MutationObserver(function () { fix(); }).observe(sinceEl, { childList: true, characterData: true, subtree: true });
+  document.addEventListener('nvlangchange', function () { rec = rec && rec.n.isConnected ? rec : null; fix(true); });
+  fix();
+})();
+</script>
+
 </body>
 </html>
