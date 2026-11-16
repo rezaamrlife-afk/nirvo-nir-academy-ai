@@ -26,6 +26,7 @@
 
 </script>
 <script>try{if(localStorage.getItem('nirvo-theme')==='light')document.documentElement.classList.add('light-mode')}catch(e){}</script>
+<script src="i18n.js"></script>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html { overflow-x: hidden; }
@@ -267,6 +268,26 @@ html.light-mode .alert-success{background:rgba(31,122,99,.08);border-color:rgba(
 html.light-mode .nv-theme{border-color:rgba(169,35,58,.35);background:rgba(246,247,251,.85);color:#A9233A}
 html.light-mode .nv-theme:hover{background:rgba(169,35,58,.08);border-color:#A9233A}
 </style>
+<style id="nv-i18n-auth">
+/* Language switcher + RTL support for auth.html (additive; English/LTR look is unchanged) */
+.nv-lang{position:fixed;top:max(24px,env(safe-area-inset-top));right:88px;z-index:20;height:44px;display:flex;align-items:center;gap:2px;padding:3px;border-radius:999px;border:1px solid rgba(212,175,55,.35);background:rgba(8,8,8,.6);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);direction:ltr}
+.nv-lang button{min-width:38px;height:36px;padding:0 8px;border:0;border-radius:999px;background:transparent;color:rgba(255,255,255,.72);font-family:'Outfit',sans-serif;font-size:12.5px;font-weight:600;letter-spacing:.04em;cursor:pointer;transition:background .2s,color .2s}
+.nv-lang button:hover{color:#fff}
+.nv-lang button.active{background:#D4AF37;color:#000}
+.nv-lang button:focus-visible{outline:2px solid #D4AF37;outline-offset:2px}
+@media(max-width:480px){.nv-lang{right:68px;top:max(14px,env(safe-area-inset-top))}.nv-lang button{min-width:34px;padding:0 6px}}
+html.light-mode .nv-lang{border-color:rgba(169,35,58,.35);background:rgba(246,247,251,.85)}
+html.light-mode .nv-lang button{color:rgba(20,23,43,.72)}
+html.light-mode .nv-lang button:hover{color:#14172B}
+html.light-mode .nv-lang button.active{background:#A9233A;color:#fff}
+html.light-mode .nv-lang button:focus-visible{outline-color:#A9233A}
+/* RTL (Persian) */
+html[dir="rtl"] .forgot{text-align:left}
+html[dir="rtl"] .pw-toggle{right:auto!important;left:8px}
+html[dir="rtl"] #signin-password,html[dir="rtl"] #signup-password{padding-right:16px!important;padding-left:44px!important}
+html[dir="rtl"] .spinner{margin-right:0;margin-left:8px}
+html[dir="rtl"] .back-link:hover{transform:translateX(2px)}
+</style>
 </head>
 <body>
 
@@ -311,7 +332,7 @@ html.light-mode .nv-theme:hover{background:rgba(169,35,58,.08);border-color:#A92
     </div>
     <div class="forgot"><a href="#" onclick="handleForgotPassword()">Forgot password?</a></div>
     <button class="btn-submit" id="btn-signin" onclick="handleSignIn()">Sign In</button>
-    <div class="terms-text">
+    <div class="terms-text" data-i18n-html="auth.terms.signin">
       By signing in you agree to our <a href="#">Terms</a> and <a href="#">Privacy Policy</a>
     </div>
   </div>
@@ -347,7 +368,7 @@ html.light-mode .nv-theme:hover{background:rgba(169,35,58,.08);border-color:#A92
       <div id="strength-label" style="font-size:12px;color:var(--nv-muted);margin-top:4px"></div>
     </div>
     <button class="btn-submit" id="btn-signup" onclick="handleSignUp()">Create Account</button>
-    <div class="terms-text">
+    <div class="terms-text" data-i18n-html="auth.terms.signup">
       By signing up you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
     </div>
   </div>
@@ -501,6 +522,7 @@ html.light-mode .nv-theme:hover{background:rgba(169,35,58,.08);border-color:#A92
       });
     }
   </script>
+<div class="nv-lang" role="group" aria-label="Language"><button type="button" data-lang-btn="en" aria-pressed="true">EN</button><button type="button" data-lang-btn="fa" aria-pressed="false">FA</button><button type="button" data-lang-btn="tr" aria-pressed="false">TR</button></div>
 <button type="button" class="nv-theme" onclick="toggleTheme()" aria-label="Switch to light mode">☀</button>
 <script>
 function nvTheme(l){document.documentElement.classList.toggle('light-mode',l);var m=document.querySelector('meta[name="theme-color"]');if(m)m.content=l?'#F6F7FB':'#D4AF37';document.querySelectorAll('.nv-theme').forEach(function(x){x.textContent=l?'\u263E':'\u2600';x.setAttribute('aria-label',l?'Switch to dark mode':'Switch to light mode')})}
