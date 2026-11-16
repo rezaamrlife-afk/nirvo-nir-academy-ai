@@ -17,6 +17,7 @@
   <link rel="apple-touch-icon" href="/icons/icon-192.png">
 <title>NIRVO AI — My Progress</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="i18n.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
   function toggleMenu() {
@@ -434,6 +435,31 @@ body>div[style*="max-width:1240px"]{padding-bottom:64px!important}
 .pg-ar{width:12px;height:12px;vertical-align:-1px;margin-right:3px;stroke-width:2.4}
 .nv-theme svg{width:20px;height:20px;stroke-width:1.8;display:block;margin:auto}
 </style>
+<style id="nv-i18n-progress">
+/* Language switcher + RTL support for progress.html (additive; English/LTR rendering is unchanged) */
+.nv-langbar{display:inline-flex;align-items:center;gap:2px;padding:2px;border-radius:999px;border:1px solid var(--b0_1);background:var(--f0_04);direction:ltr}
+.nv-langbar button{min-width:30px;min-height:0;height:26px;padding:0 7px;border:0;border-radius:999px;background:transparent;color:var(--t0_5);font-family:'Outfit',sans-serif;font-size:11.5px;font-weight:600;letter-spacing:.04em;line-height:1;cursor:pointer;transition:background .2s,color .2s}
+.nv-langbar button:hover{color:var(--white)}
+.nv-langbar button.active{background:var(--gold);color:var(--on-gold)}
+.nv-langbar button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+@media(max-width:768px){nav .nv-langbar{display:none}}
+.nvd-langrow{display:flex;align-items:center;gap:14px;padding:6px 10px;margin-bottom:4px}
+.nvd-langrow .nvd-ic{flex-shrink:0}
+.nvd-langrow>span:nth-child(2){flex:1;min-width:0;font-family:'Outfit',sans-serif;font-size:16px;font-weight:500;color:var(--white)}
+.nvd-langrow .nv-langbar button{min-width:40px;min-height:34px;height:34px}
+/* RTL (Persian) */
+html[dir="rtl"] .nvd-chev{transform:scaleX(-1)}
+html[dir="rtl"] .mobile-menu .nvd .nvd-row{text-align:right}
+html[dir="rtl"] nav [style*="border-left"]{border-left:0!important;padding-left:0!important;border-right:1px solid rgba(var(--gold-rgb),0.18);padding-right:12px}
+html[dir="rtl"] .anim.d2>.card,html[dir="rtl"] .anim.d2>.card-gold{text-align:right!important}
+html[dir="rtl"] .pg-chartbox,html[dir="rtl"] #chart-labels{direction:ltr}
+html[dir="rtl"] .pg-sk-top em{margin-left:0;margin-right:8px}
+html[dir="rtl"] .pg-ci,html[dir="rtl"] .pg-ar{margin-right:0;margin-left:6px}
+html[dir="rtl"] .pg-topic [style*="text-align:right"]{text-align:left!important}
+html[lang="fa"] .nvn-word,html[lang="fa"] .nvn-word *,html[lang="fa"] .nvd-word,html[lang="fa"] .nvd-word *{font-family:'Outfit',sans-serif!important}
+html[lang="fa"] .nvd-word{letter-spacing:.3em!important}
+html[lang="fa"] #nv-mob-nav a{font-size:clamp(9.5px,2.7vw,11.5px)}
+</style>
 </head>
 <body>
 <script>
@@ -462,6 +488,7 @@ try{if(localStorage.getItem('nirvo-theme')==='light'){document.documentElement.c
     <a href="index.html" class="nav-link">Home</a>
   </div>
   <div style="display:flex;align-items:center;gap:14px">
+    <div class="nv-langbar" role="group" aria-label="Language"><button type="button" data-lang-btn="en" aria-pressed="true">EN</button><button type="button" data-lang-btn="fa" aria-pressed="false">FA</button><button type="button" data-lang-btn="tr" aria-pressed="false">TR</button></div>
     <div id="user-avatar" style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-light));display:flex;align-items:center;justify-content:center;font-size:14.8px;font-weight:700;color:var(--on-gold)"></div>
     <button onclick="handleLogout()" style="background:var(--f0_04);border:1px solid var(--b0_09);border-radius:8px;color:var(--t0_45);font-size:13px;padding:7px 16px;cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.2s" onmouseover="this.style.borderColor='rgba(var(--gold-rgb),0.35)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--b0_09)';this.style.color='var(--t0_45)'">Sign Out</button>
   </div>
@@ -491,6 +518,7 @@ try{if(localStorage.getItem('nirvo-theme')==='light'){document.documentElement.c
       <a href="nirvo-chat.html" class="nvd-row"><span class="nvd-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg></span><span>Chat with NIRVO</span><i class="nvd-dot"></i><svg class="nvd-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a>
 
       <div class="nvd-label">Settings</div>
+      <div class="nvd-langrow"><span class="nvd-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span><span>Language</span><div class="nv-langbar" role="group" aria-label="Language"><button type="button" data-lang-btn="en" aria-pressed="true">EN</button><button type="button" data-lang-btn="fa" aria-pressed="false">FA</button><button type="button" data-lang-btn="tr" aria-pressed="false">TR</button></div></div>
       <button type="button" class="nvd-row nvd-toggle" role="switch" aria-checked="false" onclick="toggleTheme()"><span class="nvd-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg></span><span>Light Mode</span><span class="nvd-switch" aria-hidden="true"></span></button>
       <button type="button" id="nvd-signout" class="nvd-row nvd-danger" style="margin-top:10px" hidden><span class="nvd-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></svg></span><span>Sign Out</span></button>
     </div>
@@ -1322,5 +1350,185 @@ try{if(localStorage.getItem('nirvo-theme')==='light'){document.documentElement.c
 })();
 </script>
 <button type="button" class="nv-theme" onclick="toggleTheme()" aria-label="Switch to light mode"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
+<script id="nv-i18n-progress-js">
+/* Progress page i18n (additive). Uses the shared i18n.js. This page's strings are added here, plus a translator for
+   text the page builds from numbers/dates (tips, chart readouts, durations, dates). Session feedback written by the AI
+   (summaries, grammar corrections, transcripts) is English learning content and is intentionally left in English.
+   The page's own scripts above are not modified. */
+(function () {
+  if (!window.nvI18n) return;
+  var T = {
+    'NIRVO AI — My Progress': ['NIRVO AI — پیشرفت من', 'NIRVO AI — İlerlemem'],
+    'Log in / Sign up': ['ورود / ثبت‌نام', 'Giriş Yap / Kayıt Ol'],
+    'Progress': ['پیشرفت', 'İlerleme'],
+    'My Progress': ['پیشرفت من', 'İlerlemem'],
+    'Your Speaking': ['مسیر', 'Konuşma'],
+    'Journey': ['گفتاری شما', 'Yolculuğunuz'],
+    'Track your improvement across pronunciation, fluency, and grammar': ['پیشرفت خود را در تلفظ، روانی و گرامر دنبال کنید', 'Telaffuz, akıcılık ve dilbilgisindeki gelişiminizi takip edin'],
+    'New Session': ['جلسه‌ی جدید', 'Yeni Oturum'],
+    'We couldn’t load your sessions. Check your connection and refresh the page.': ['بارگذاری جلسات شما ممکن نشد. اتصال اینترنت را بررسی کنید و صفحه را تازه‌سازی کنید.', 'Oturumlarınız yüklenemedi. Bağlantınızı kontrol edip sayfayı yenileyin.'],
+    'Total Sessions': ['کل جلسات', 'Toplam Oturum'],
+    'Total Minutes': ['کل دقایق', 'Toplam Dakika'],
+    'All time': ['کل زمان', 'Tüm zamanlar'],
+    'Speaking time': ['زمان صحبت', 'Konuşma süresi'],
+    'Best Score': ['بهترین امتیاز', 'En İyi Puan'],
+    'Overall': ['کلی', 'Genel'],
+    'Avg Score': ['میانگین امتیاز', 'Ort. Puan'],
+    'All sessions': ['همه‌ی جلسات', 'Tüm oturumlar'],
+    'Current Streak': ['تداوم فعلی', 'Mevcut Seri'],
+    'Days in a row': ['روز پیاپی', 'Ardışık gün'],
+    'Score History': ['تاریخچه‌ی امتیاز', 'Puan Geçmişi'],
+    'All': ['همه', 'Tümü'],
+    'Week': ['هفته', 'Hafta'],
+    'Month': ['ماه', 'Ay'],
+    'No sessions to chart': ['جلسه‌ای برای نمودار نیست', 'Grafik için oturum yok'],
+    'Complete a speaking session (or pick a wider range) to see your scores here.': ['برای دیدن امتیازها، یک جلسه‌ی مکالمه را کامل کنید (یا بازه‌ی بزرگ‌تری انتخاب کنید).', 'Puanlarınızı burada görmek için bir konuşma oturumunu tamamlayın (veya daha geniş bir aralık seçin).'],
+    'Tap or focus a session to see its scores.': ['برای دیدن امتیازهای هر جلسه روی آن بزنید.', 'Puanları görmek için bir oturuma dokunun.'],
+    'Fluency': ['روانی', 'Akıcılık'],
+    'Pronunciation': ['تلفظ', 'Telaffuz'],
+    'Grammar': ['گرامر', 'Dilbilgisi'],
+    'Vocabulary': ['واژگان', 'Kelime Bilgisi'],
+    'Skill Breakdown': ['تفکیک مهارت‌ها', 'Beceri Dökümü'],
+    'Your skill breakdown appears after your first scored session.': ['تفکیک مهارت‌های شما بعد از اولین جلسه‌ی امتیازدار نمایش داده می‌شود.', 'Beceri dökümünüz, ilk puanlı oturumunuzdan sonra görünür.'],
+    'Focus Area': ['حوزه‌ی تمرکز', 'Odak Alanı'],
+    'Performance by Topic': ['عملکرد به تفکیک موضوع', 'Konuya Göre Performans'],
+    'No sessions yet': ['هنوز جلسه‌ای نیست', 'Henüz oturum yok'],
+    'Other': ['سایر', 'Diğer'],
+    'avg score': ['میانگین امتیاز', 'ort. puan'],
+    'Achievements': ['دستاوردها', 'Başarılar'],
+    'First Session': ['اولین جلسه', 'İlk Oturum'],
+    'Complete 1 session': ['یک جلسه را کامل کنید', '1 oturumu tamamlayın'],
+    '3-Day Streak': ['تداوم 3 روزه', '3 Günlük Seri'],
+    'Practice 3 days in a row': ['3 روز پیاپی تمرین کنید', 'Art arda 3 gün pratik yapın'],
+    'Score 90+': ['امتیاز 90+', '90+ Puan'],
+    'Get overall 90% or above': ['امتیاز کلی 90% یا بالاتر بگیرید', 'Genel puanda %90 veya üzerini alın'],
+    '10 Sessions': ['10 جلسه', '10 Oturum'],
+    'Complete 10 sessions': ['10 جلسه را کامل کنید', '10 oturumu tamamlayın'],
+    'All Sessions': ['همه‌ی جلسات', 'Tüm Oturumlar'],
+    'Select a session to see detailed feedback.': ['برای دیدن بازخورد تفصیلی، یک جلسه را انتخاب کنید.', 'Ayrıntılı geri bildirimi görmek için bir oturum seçin.'],
+    'No sessions yet —': ['هنوز جلسه‌ای ندارید —', 'Henüz oturum yok —'],
+    'start your first practice!': ['اولین تمرین خود را شروع کنید!', 'ilk pratiğinize başlayın!'],
+    'No sessions for this topic yet —': ['هنوز جلسه‌ای برای این موضوع نیست —', 'Bu konuda henüz oturum yok —'],
+    'start a practice!': ['یک تمرین شروع کنید!', 'bir pratik başlatın!'],
+    'Speaking Session': ['جلسه مکالمه', 'Konuşma Oturumu'],
+    'Not recorded': ['ثبت نشده', 'Kaydedilmedi'],
+    'at your average': ['برابر با میانگین شما', 'ortalamanızda'],
+    'Score breakdown': ['تفکیک امتیاز', 'Puan dökümü'],
+    'Strengths': ['نقاط قوت', 'Güçlü yönler'],
+    'Needs work': ['نیازمند تمرین', 'Geliştirilmeli'],
+    'Grammar corrections': ['اصلاحات گرامری', 'Dilbilgisi düzeltmeleri'],
+    'Recommendations': ['پیشنهادها', 'Öneriler'],
+    'Transcript': ['متن گفتار', 'Metin dökümü'],
+    'Practice again': ['دوباره تمرین کنید', 'Tekrar pratik yap'],
+    'Note': ['یادداشت', 'Not'],
+    'You said': ['گفتید', 'Dediğiniz'],
+    'Better': ['بهتر', 'Daha iyi'],
+    'Word': ['واژه', 'Kelime'],
+    'Try': ['امتحان کنید', 'Deneyin'],
+    'Based on this session’s scores.': ['بر اساس امتیازهای همین جلسه.', 'Bu oturumun puanlarına göre.'],
+    'No clear weak area in this session’s scores.': ['در امتیازهای این جلسه نقطه‌ضعف مشخصی دیده نمی‌شود.', 'Bu oturumun puanlarında belirgin bir zayıf alan yok.'],
+    'No skill scores were saved for this session.': ['امتیاز مهارتی برای این جلسه ذخیره نشده است.', 'Bu oturum için beceri puanı kaydedilmedi.'],
+    'No strengths were saved for this session.': ['نقطه قوتی برای این جلسه ذخیره نشده است.', 'Bu oturum için güçlü yön kaydedilmedi.'],
+    'No weaknesses were saved for this session.': ['نقطه‌ضعفی برای این جلسه ذخیره نشده است.', 'Bu oturum için zayıf yön kaydedilmedi.'],
+    'No grammar corrections were saved for this session.': ['اصلاح گرامری برای این جلسه ذخیره نشده است.', 'Bu oturum için dilbilgisi düzeltmesi kaydedilmedi.'],
+    'No vocabulary feedback was saved for this session.': ['بازخورد واژگانی برای این جلسه ذخیره نشده است.', 'Bu oturum için kelime geri bildirimi kaydedilmedi.'],
+    'No fluency details were saved for this session.': ['جزئیات روانی برای این جلسه ذخیره نشده است.', 'Bu oturum için akıcılık ayrıntısı kaydedilmedi.'],
+    'No reliable pronunciation data was saved for this session.': ['داده‌ی قابل اتکایی از تلفظ برای این جلسه ذخیره نشده است.', 'Bu oturum için güvenilir telaffuz verisi kaydedilmedi.'],
+    'No recommendations were saved for this session.': ['پیشنهادی برای این جلسه ذخیره نشده است.', 'Bu oturum için öneri kaydedilmedi.']
+  };
+  var add = {}; for (var k in T) add[k] = { fa: T[k][0], tr: T[k][1] };
+  nvI18n.add(add);
+
+  var tw = function (s) { return nvI18n.t(s); };
+  var LOC = { fa: 'fa-u-ca-gregory-nu-latn', tr: 'tr' };
+  var I = function (s) { return '\u2066' + s + '\u2069'; };           // keep numbers left-to-right inside Persian text
+  var NA = { fa: 'نامشخص', tr: 'yok' };
+  function pv(v, l) { return v === 'n/a' ? NA[l] : (l === 'fa' ? I(v) : (/^\d+%$/.test(v) ? '%' + v.slice(0, -1) : v)); }
+  function pct(n, l) { return l === 'fa' ? I(n + '%') : '%' + n; }
+  function dt(str, o, l) { var d = new Date(Date.parse(str + ' 12:00')); if (isNaN(d)) return str; try { return new Intl.DateTimeFormat(LOC[l], o).format(d); } catch (e) { return str; } }
+  function tm(str, l) { var m = str.match(/^(\d{1,2}):(\d{2}) ([AP])M$/); if (!m) return str; var h = +m[1] % 12 + (m[3] === 'P' ? 12 : 0); return (h < 10 ? '0' : '') + h + ':' + m[2]; }
+  function dur(s, l) { return l === 'fa' ? I(s) + ' دقیقه' : s + ' dk'; }
+  var SK = '(Pronunciation|Fluency|Grammar|Vocabulary)';
+  var P = [
+    [new RegExp('^Your ' + SK + ' score \\((\\d+)%\\) needs the most attention\\. Focus your next sessions here!$'), function (m, l) {
+      return l === 'fa' ? 'امتیاز ' + tw(m[1]) + ' شما (' + pct(m[2], l) + ') بیشترین توجه را می‌طلبد. جلسه‌های بعدی خود را روی آن متمرکز کنید!'
+                        : tw(m[1]) + ' puanınız (' + pct(m[2], l) + ') en çok dikkat gerektiriyor. Sonraki oturumlarınızı buna odaklayın!'; }],
+    [/^(\d+\/\d+) · Overall (n\/a|\d+%) · Fluency (n\/a|\d+%) · Pronunciation (n\/a|\d+%)$/, function (m, l) {
+      return l === 'fa' ? m[1] + ' · کلی ' + pv(m[2], l) + ' · روانی ' + pv(m[3], l) + ' · تلفظ ' + pv(m[4], l)
+                        : m[1] + ' · Genel ' + pv(m[2], l) + ' · Akıcılık ' + pv(m[3], l) + ' · Telaffuz ' + pv(m[4], l); }],
+    [/^(\d+\/\d+): overall (n\/a|\d+%), fluency (n\/a|\d+%), pronunciation (n\/a|\d+%)$/, function (m, l) {
+      return l === 'fa' ? m[1] + ': کلی ' + pv(m[2], l) + '، روانی ' + pv(m[3], l) + '، تلفظ ' + pv(m[4], l)
+                        : m[1] + ': genel ' + pv(m[2], l) + ', akıcılık ' + pv(m[3], l) + ', telaffuz ' + pv(m[4], l); }],
+    [/^(Overall|Fluency|Pronunciation): (\d+)%$/, function (m, l) { return tw(m[1]) + ': ' + (l === 'fa' ? I(m[2] + '%') : '%' + m[2]); }],
+    [new RegExp('^' + SK + ': (\\d+)%$'), function (m, l) { return tw(m[1]) + ': ' + (l === 'fa' ? I(m[2] + '%') : '%' + m[2]); }],
+    [/^(\d+) sessions?$/, function (m, l) { return l === 'fa' ? m[1] + ' جلسه' : m[1] + ' oturum'; }],
+    [/^([A-Z][a-z]{2} \d{1,2}, \d{4})(?: · (\d+:\d{2}) min)?$/, function (m, l) { return dt(m[1], { year: 'numeric', month: 'short', day: 'numeric' }, l) + (m[2] ? ' · ' + dur(m[2], l) : ''); }],
+    [/^([A-Z][a-z]+day, [A-Z][a-z]+ \d{1,2}, \d{4})(?: · (\d{1,2}:\d{2} [AP]M))?$/, function (m, l) { return dt(m[1], { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }, l) + (m[2] ? ' · ' + tm(m[2], l) : ''); }],
+    [/^(\d+:\d{2}) min( speaking)?$/, function (m, l) { return dur(m[1], l) + (m[2] ? (l === 'fa' ? ' گفتار' : ' konuşma') : ''); }],
+    [/^(\d+) words\/min$/, function (m, l) { return l === 'fa' ? m[1] + ' کلمه در دقیقه' : m[1] + ' kelime/dk'; }],
+    [/^(\d+) filler words?$/, function (m, l) { return l === 'fa' ? m[1] + ' کلمه‌ی پرکننده' : m[1] + ' dolgu sözcüğü'; }],
+    [/^(\d+) words$/, function (m, l) { return l === 'fa' ? m[1] + ' کلمه' : m[1] + ' kelime'; }],
+    [/^(\d+) pauses?$/, function (m, l) { return l === 'fa' ? m[1] + ' مکث' : m[1] + ' duraklama'; }],
+    [new RegExp('^' + SK + ' score (\\d+)%$'), function (m, l) { return l === 'fa' ? 'امتیاز ' + tw(m[1]) + ' ' + I(m[2] + '%') : tw(m[1]) + ' puanı %' + m[2]; }],
+    [/^(\d+) vs your average$/, function (m, l) { return l === 'fa' ? m[1] + ' نسبت به میانگین شما' : 'Ortalamanıza göre ' + m[1]; }],
+    [new RegExp('^Focus your next (.+ )?session on ' + SK + ' \\((\\d+)%\\), your lowest score here\\.$'), function (m, l) {
+      var topic = m[1] ? tw(m[1].trim()) : '';
+      return l === 'fa' ? 'جلسه‌ی بعدی' + (topic ? ' ' + topic : '') + ' خود را روی ' + tw(m[2]) + ' (' + pct(m[3], l) + ') متمرکز کنید؛ پایین‌ترین امتیاز شما در این جلسه.'
+                        : 'Bir sonraki ' + (topic ? topic + ' ' : '') + 'oturumunuzda ' + tw(m[2]) + ' becerisine odaklanın (' + pct(m[3], l) + ') — bu oturumdaki en düşük puanınız.'; }],
+    [new RegExp('^' + SK + ' was (\\d+) points below your average — worth revisiting\\.$'), function (m, l) {
+      return l === 'fa' ? tw(m[1]) + ' ' + m[2] + ' امتیاز کمتر از میانگین شما بود — ارزش مرور دارد.'
+                        : tw(m[1]) + ', ortalamanızın ' + m[2] + ' puan altındaydı — tekrar gözden geçirmeye değer.'; }],
+    [/^(.+), ([A-Z][a-z]{2} \d{1,2}, \d{4}), overall (—|\d+%)\. Show detailed feedback$/, function (m, l) {
+      var o = m[3] === '—' ? '—' : pv(m[3], l), d = dt(m[2], { year: 'numeric', month: 'short', day: 'numeric' }, l);
+      return l === 'fa' ? tw(m[1]) + '، ' + d + '، امتیاز کلی ' + o + '. نمایش بازخورد تفصیلی' : tw(m[1]) + ', ' + d + ', genel ' + o + '. Ayrıntılı geri bildirimi göster'; }]
+  ];
+  function conv(en, l) { for (var i = 0; i < P.length; i++) { var m = en.match(P[i][0]); if (m) return P[i][1](m, l); } return null; }
+
+  var recs = new WeakMap(), list = [], attrs = [], busy = false;
+  function render(rec) {
+    var l = nvI18n.lang, lead = rec.en.match(/^\s*/)[0], trail = rec.en.match(/\s*$/)[0];
+    var out = l === 'en' ? null : conv(rec.en.trim(), l); var v = out ? lead + out + trail : rec.en;
+    rec.out = v; if (rec.n.data !== v) rec.n.data = v;
+  }
+  function visit(n) {
+    var rec = recs.get(n);
+    if (rec) { if (n.data === rec.out) return; rec.en = n.data; }
+    var core = n.data.trim(); if (!core) return;
+    if (!rec) { if (!conv(core, 'fa')) return; rec = { n: n, en: n.data, out: n.data }; recs.set(n, rec); list.push(rec); }
+    render(rec);
+  }
+  function renderAttr(r) { var l = nvI18n.lang, o = l === 'en' ? null : conv(r.en, l); r.out = o || r.en; if (r.el.getAttribute('aria-label') !== r.out) r.el.setAttribute('aria-label', r.out); }
+  function visitAttr(el) {
+    var v = el.getAttribute('aria-label'); if (v == null) return;
+    var rec = null; for (var i = 0; i < attrs.length; i++) if (attrs[i].el === el) { rec = attrs[i]; break; }
+    if (rec) { if (v === rec.out) return; rec.en = v; } else { if (!conv(v, 'fa')) return; rec = { el: el, en: v, out: v }; attrs.push(rec); }
+    renderAttr(rec);
+  }
+  function walk(root) {
+    var w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null), n;
+    while ((n = w.nextNode())) { if (n.parentNode && /^(SCRIPT|STYLE)$/.test(n.parentNode.nodeName)) continue; visit(n); }
+    if (root.nodeType === 1 && root.hasAttribute('aria-label')) visitAttr(root);
+    if (root.querySelectorAll) { var e = root.querySelectorAll('[aria-label]'); for (var i = 0; i < e.length; i++) visitAttr(e[i]); }
+  }
+  function refresh() {
+    busy = true;
+    list = list.filter(function (r) { return r.n.isConnected; }); list.forEach(render);
+    attrs = attrs.filter(function (r) { return r.el.isConnected; }); attrs.forEach(renderAttr);
+    walk(document.body); busy = false;
+  }
+  new MutationObserver(function (ms) {
+    if (busy) return; busy = true;
+    try { ms.forEach(function (m) {
+      if (m.type === 'characterData') visit(m.target);
+      else if (m.type === 'attributes') visitAttr(m.target);
+      else m.addedNodes.forEach(function (a) { if (a.nodeType === 3) visit(a); else if (a.nodeType === 1) walk(a); });
+    }); } catch (e) {}
+    busy = false;
+  }).observe(document.body, { childList: true, characterData: true, subtree: true, attributes: true, attributeFilter: ['aria-label'] });
+  document.addEventListener('nvlangchange', refresh);
+  refresh();
+})();
+</script>
+
 </body>
 </html>
