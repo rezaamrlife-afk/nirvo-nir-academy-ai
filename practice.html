@@ -17,6 +17,7 @@
   <link rel="apple-touch-icon" href="/icons/icon-192.png">
 <title>NIRVO AI — Speaking Practice</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="i18n.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
   function toggleMenu() {
@@ -391,6 +392,31 @@ nav a svg{width:18px!important;height:18px!important}
   };
 })();
 </script>
+<style id="nv-i18n-practice">
+/* Language switcher + RTL support for practice.html (additive; English/LTR rendering is unchanged) */
+.nv-langbar{display:inline-flex;align-items:center;gap:2px;padding:2px;border-radius:999px;border:1px solid var(--b0_1);background:var(--f0_04);direction:ltr}
+.nv-langbar button{min-width:30px;min-height:0;height:26px;padding:0 7px;border:0;border-radius:999px;background:transparent;color:var(--t0_5);font-family:'Outfit',sans-serif;font-size:11.5px;font-weight:600;letter-spacing:.04em;line-height:1;cursor:pointer;transition:background .2s,color .2s}
+.nv-langbar button:hover{color:var(--white)}
+.nv-langbar button.active{background:var(--gold);color:var(--on-gold)}
+.nv-langbar button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+@media(max-width:768px){nav .nv-langbar{display:none}}
+.nvd-langrow{display:flex;align-items:center;gap:14px;padding:6px 10px;margin-bottom:4px}
+.nvd-langrow .nvd-ic{flex-shrink:0}
+.nvd-langrow>span:nth-child(2){flex:1;min-width:0;font-family:'Outfit',sans-serif;font-size:16px;font-weight:500;color:var(--white)}
+.nvd-langrow .nv-langbar button{min-width:40px;min-height:34px;height:34px}
+/* RTL (Persian) */
+html[dir="rtl"] .nvd-chev{transform:scaleX(-1)}
+html[dir="rtl"] .mobile-menu .nvd .nvd-row{text-align:right}
+html[dir="rtl"] .nvd-switch::after{left:auto;right:4px}
+html[dir="rtl"] #topic-pills .topic-pill{padding:10px 10px 10px 16px!important;text-align:right}
+@media(max-width:560px){html[dir="rtl"] #topic-pills .topic-pill{padding:8px 8px 8px 10px!important}}
+@media(max-width:340px){html[dir="rtl"] #topic-pills .topic-pill{padding-right:8px!important;padding-left:6px!important}}
+html[dir="rtl"] .transcript-box{unicode-bidi:plaintext}
+html[dir="rtl"] .feedback-item>div:last-child>div,html[dir="rtl"] #feedback-content>div[style*="margin-top"]{unicode-bidi:plaintext}
+html[lang="fa"] .nvn-word,html[lang="fa"] .nvn-word *,html[lang="fa"] .nvd-word,html[lang="fa"] .nvd-word *{font-family:'Outfit',sans-serif!important}
+html[lang="fa"] .nvd-word{letter-spacing:.3em!important}
+html[lang="fa"] #nv-mob-nav a{font-size:clamp(9.5px,2.7vw,11.5px)}
+</style>
 </head>
 <body>
 <script>
@@ -412,6 +438,7 @@ try{if(localStorage.getItem('nirvo-theme')==='light'){document.documentElement.c
     </div>
   </div>
   <div style="display:flex;align-items:center;gap:24px">
+    <div class="nv-langbar" role="group" aria-label="Language"><button type="button" data-lang-btn="en" aria-pressed="true">EN</button><button type="button" data-lang-btn="fa" aria-pressed="false">FA</button><button type="button" data-lang-btn="tr" aria-pressed="false">TR</button></div>
     <a href="profile.html" class="nv-desk-profile" style="display:inline-flex;align-items:center;gap:8px;font-size:14px;color:var(--t0_4);text-decoration:none;transition:color 0.2s" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--t0_4)'"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" style="fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0"><rect width="20" height="14" x="2" y="5" rx="2"/><circle cx="9" cy="11" r="2"/><path d="M6.2 16a3 3 0 0 1 5.6 0"/><path d="M15 10h3"/><path d="M15 14h3"/></svg>Profile</a>
   <a href="dashboard.html" style="display:inline-flex;align-items:center;gap:8px;font-size:14px;color:var(--t0_4);text-decoration:none;transition:color 0.2s" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--t0_4)'"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" style="fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>Back to Dashboard</a>
   </div>
@@ -443,6 +470,7 @@ try{if(localStorage.getItem('nirvo-theme')==='light'){document.documentElement.c
       <a href="profile.html" class="nvd-row"><span class="nvd-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><rect width="20" height="14" x="2" y="5" rx="2"/><circle cx="9" cy="11" r="2"/><path d="M6.2 16a3 3 0 0 1 5.6 0"/><path d="M15 10h3"/><path d="M15 14h3"/></svg></span><span>Profile</span><svg class="nvd-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a>
 
       <div class="nvd-label">Settings</div>
+      <div class="nvd-langrow"><span class="nvd-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span><span>Language</span><div class="nv-langbar" role="group" aria-label="Language"><button type="button" data-lang-btn="en" aria-pressed="true">EN</button><button type="button" data-lang-btn="fa" aria-pressed="false">FA</button><button type="button" data-lang-btn="tr" aria-pressed="false">TR</button></div></div>
       <button type="button" class="nvd-row nvd-toggle" role="switch" aria-checked="false" onclick="toggleTheme()"><span class="nvd-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg></span><span>Light Mode</span><span class="nvd-switch" aria-hidden="true"></span></button>
       <button type="button" id="nvd-signout" class="nvd-row nvd-danger" style="margin-top:10px" hidden><span class="nvd-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></svg></span><span>Sign Out</span></button>
     </div>
@@ -1012,5 +1040,145 @@ Give 3-4 feedback items covering grammar and vocabulary only. In memory.mistakes
 })();
 </script>
 <button type="button" class="nv-theme" onclick="toggleTheme()" aria-label="Switch to light mode">☀</button>
+<script id="nv-i18n-pc-js">
+/* Practice page i18n (additive). Uses the shared i18n.js. Interface text, score labels and the app's own measured feedback are
+   translated. Things that are English learning content or data stay English: what you say (the transcript), the AI's grammar and
+   vocabulary feedback, the speech-recognition language (en-US), and the topic/score values that are saved to your history.
+   The page's own scripts above are not modified. */
+(function () {
+  if (!window.nvI18n) return;
+  var T = {
+    'NIRVO AI — Speaking Practice': ['NIRVO AI — تمرین گفتاری', 'NIRVO AI — Konuşma Pratiği'],
+    'SPEAKING PRACTICE': ['تمرین گفتاری', 'KONUŞMA PRATİĞİ'],
+    'Back to Dashboard': ['بازگشت به داشبورد', 'Panele Dön'],
+        'Choose a topic, press the mic, and start speaking naturally': ['یک موضوع انتخاب کنید، میکروفون را بزنید و طبیعی صحبت کنید', 'Bir konu seçin, mikrofona basın ve doğal bir şekilde konuşmaya başlayın'],
+    'Choose Topic': ['انتخاب موضوع', 'Konu Seçin'],
+    'Business': ['کسب‌وکار', 'İş Hayatı'], 'Education': ['آموزش', 'Eğitim'], 'Travel': ['سفر', 'Seyahat'],
+    'Public Speaking': ['سخنرانی عمومی', 'Topluluk Önünde Konuşma'],
+    'Ready to listen': ['آماده‌ی شنیدن', 'Dinlemeye hazır'],
+    'Listening...': ['در حال گوش دادن...', 'Dinleniyor...'],
+    'Speak naturally. Press again to stop.': ['طبیعی صحبت کنید. برای توقف دوباره بزنید.', 'Doğal konuşun. Durdurmak için tekrar basın.'],
+    'Press the mic and speak for at least 5 seconds': ['میکروفون را بزنید و دست‌کم 5 ثانیه صحبت کنید', 'Mikrofona basın ve en az 5 saniye konuşun'],
+    'Your Speech': ['گفتار شما', 'Konuşmanız'],
+    'Your words will appear here as you speak...': ['هنگام صحبت، کلمات شما اینجا نمایش داده می‌شود...', 'Konuştukça sözcükleriniz burada görünecek...'],
+    'Analyze My Speech': ['تحلیل گفتار من', 'Konuşmamı Analiz Et'],
+    'Clear': ['پاک کردن', 'Temizle'],
+    'Detailed Feedback': ['بازخورد تفصیلی', 'Ayrıntılı Geri Bildirim'],
+    '🎤 Practice Again': ['🎤 دوباره تمرین کنید', '🎤 Tekrar Pratik Yap'],
+    'Analyzing your speech...': ['در حال تحلیل گفتار شما...', 'Konuşmanız analiz ediliyor...'],
+    '🎯 Today\'s Focus': ['🎯 تمرکز امروز', '🎯 Bugünün Odağı'],
+    'Progress': ['پیشرفت', 'İlerleme'],
+    'Overall': ['کلی', 'Genel'], 'Speech Clarity': ['وضوح گفتار', 'Konuşma Netliği'],
+    'Grammar': ['گرامر', 'Dilbilgisi'],
+    'Insufficient data': ['داده‌ی ناکافی', 'Yetersiz veri'],
+    'Fluency needs at least 25 words and 10 seconds of continuous speech to measure pace and pauses reliably. Speak a little longer and try again.': ['برای سنجش قابل‌اعتماد سرعت و مکث‌ها، روانی به دست‌کم 25 کلمه و 10 ثانیه گفتار پیوسته نیاز دارد. کمی طولانی‌تر صحبت کنید و دوباره امتحان کنید.', 'Hız ve duraklamaları güvenilir biçimde ölçmek için akıcılık en az 25 sözcük ve 10 saniyelik kesintisiz konuşma gerektirir. Biraz daha uzun konuşup tekrar deneyin.'],
+    'Speech Clarity is scored from the speech recognizer\'s confidence in your audio. Not enough confidence data was available (at least 15 recognized words are needed, and some browsers do not report confidence).': ['وضوح گفتار از میزان اطمینان تشخیص‌دهنده‌ی گفتار به صدای شما محاسبه می‌شود. داده‌ی اطمینان کافی در دسترس نبود (دست‌کم 15 کلمه‌ی تشخیص‌داده‌شده لازم است و برخی مرورگرها اطمینان را گزارش نمی‌کنند).', 'Konuşma Netliği, konuşma tanıyıcının sesinize olan güveninden puanlanır. Yeterli güven verisi yoktu (en az 15 tanınan sözcük gerekir ve bazı tarayıcılar güveni bildirmez).'],
+    'Based on how confidently the speech recognizer understood your audio. It reflects overall clarity, not pronunciation of individual sounds, and can be affected by background noise or microphone quality.': ['بر اساس میزان اطمینان تشخیص‌دهنده‌ی گفتار در فهمیدن صدای شما. این عدد وضوح کلی را نشان می‌دهد، نه تلفظ تک‌تک صداها، و می‌تواند تحت تأثیر نویز محیط یا کیفیت میکروفون باشد.', 'Konuşma tanıyıcının sesinizi ne kadar güvenle anladığına dayanır. Tek tek seslerin telaffuzunu değil, genel netliği yansıtır; arka plan gürültüsü veya mikrofon kalitesinden etkilenebilir.'],
+    'Speak a bit longer next time so NIRVO has enough data to find your focus area.': ['دفعه‌ی بعد کمی طولانی‌تر صحبت کنید تا NIRVO داده‌ی کافی برای پیدا کردن حوزه‌ی تمرکز شما داشته باشد.', 'Bir dahaki sefere biraz daha uzun konuşun; böylece NIRVO odak alanınızı bulmak için yeterli veriye sahip olur.'],
+    'Focus on reducing pauses — try to speak in longer, connected phrases without stopping.': ['روی کم کردن مکث‌ها تمرکز کنید — سعی کنید با عبارت‌های بلندتر و پیوسته و بدون توقف صحبت کنید.', 'Duraklamaları azaltmaya odaklanın — durmadan, daha uzun ve bağlantılı ifadelerle konuşmaya çalışın.'],
+    'Focus on speech clarity — speak a little slower and articulate each word clearly.': ['روی وضوح گفتار تمرکز کنید — کمی آهسته‌تر صحبت کنید و هر کلمه را واضح ادا کنید.', 'Konuşma netliğine odaklanın — biraz daha yavaş konuşun ve her sözcüğü net telaffuz edin.'],
+    'Focus on sentence structure — try to use complete subject-verb-object sentences.': ['روی ساختار جمله تمرکز کنید — سعی کنید جمله‌های کامل فاعل-فعل-مفعول بسازید.', 'Cümle yapısına odaklanın — özne-fiil-nesne düzeninde tam cümleler kurmaya çalışın.'],
+    'Focus on word variety — try to replace repeated words with synonyms.': ['روی تنوع واژگان تمرکز کنید — سعی کنید کلمه‌های تکراری را با مترادف‌ها جایگزین کنید.', 'Sözcük çeşitliliğine odaklanın — tekrar eden sözcükleri eş anlamlılarıyla değiştirmeye çalışın.'],
+    'Keep practicing consistently — every session builds your confidence.': ['تمرین مداوم را ادامه دهید — هر جلسه اعتمادبه‌نفس شما را بیشتر می‌کند.', 'Düzenli pratik yapmaya devam edin — her oturum özgüveninizi artırır.'],
+    'Your browser does not support speech recognition. Please use Chrome.': ['مرورگر شما از تشخیص گفتار پشتیبانی نمی‌کند. لطفاً از Chrome استفاده کنید.', 'Tarayıcınız konuşma tanımayı desteklemiyor. Lütfen Chrome kullanın.'],
+    'Error analyzing speech. Please try again.': ['خطا در تحلیل گفتار. لطفاً دوباره تلاش کنید.', 'Konuşma analiz edilirken hata oluştu. Lütfen tekrar deneyin.'],
+    'Your session could not be saved to your history. Your feedback is still shown.': ['جلسه‌ی شما در تاریخچه ذخیره نشد. بازخورد شما همچنان نمایش داده می‌شود.', 'Oturumunuz geçmişinize kaydedilemedi. Geri bildiriminiz yine de gösteriliyor.'],
+    'Dismiss notification': ['بستن اعلان', 'Bildirimi kapat']
+  };
+  var add = {}; for (var k in T) add[k] = { fa: T[k][0], tr: T[k][1] };
+  nvI18n.add(add);
+
+  /* The page title (h1) holds two words with the second inside a gradient span; translate it as one fragment. */
+  var h1 = document.querySelector('.practice-main h1');
+  if (h1 && h1.querySelector('span')) {
+    var st = h1.querySelector('span').getAttribute('style') || '';
+    var q = function (w) { return w + ' <span style="' + st + '">'; };
+    nvI18n.add({ 'pc-h1': { fa: q('تمرین') + 'گفتاری</span>', tr: q('Konuşma') + 'Pratiği</span>' } });
+    /* i18n.js may already have translated the h1's words, so give it the page's original English markup to restore */
+    h1._nvEn = '\n      Speaking <span style="' + st + '">Practice</span>\n    ';
+    h1.setAttribute('data-i18n-html', 'pc-h1');
+    nvI18n.add({});
+  }
+
+  /* Keep what the user says exactly as spoken: a one-word transcript such as "Travel" must not be translated. */
+  var box = document.getElementById('transcript-box');
+  if (box) {
+    var d = Object.getOwnPropertyDescriptor(Element.prototype, 'innerHTML');
+    Object.defineProperty(box, 'innerHTML', { configurable: true, get: function () { return d.get.call(this); },
+      set: function (v) { d.set.call(this, /font-style:italic/.test(v) ? v : String(v).replace(/(<span[^>]*>)([^<]+)(<\/span>)/g, '$1$2​$3')); } });
+  }
+
+  var tw = function (s) { return nvI18n.t(s); };
+  var idx = function (l) { return l === 'fa' ? 0 : 1; };
+  var I = function (s) { return '⁦' + s + '⁩'; };
+  var N = function (n, l) { return l === 'fa' ? I(n) : String(n); };
+  var CODE = '(A1|A2|B1|B2|C1|C2)';
+  var BAND = { Excellent: ['عالی', 'Mükemmel'], Good: ['خوب', 'İyi'], Fair: ['قابل‌قبول', 'Orta'], 'Keep Practicing': ['به تمرین ادامه دهید', 'Pratiğe Devam Edin'] };
+  var P = [
+    [new RegExp('^(Excellent|Good|Fair|Keep Practicing)(?: · ' + CODE + ')?(?: · (\\d)/4 measures)?$'), function (m, l) {
+      var s = BAND[m[1]][idx(l)]; if (m[2]) s += ' · ' + (l === 'fa' ? I(m[2]) : m[2]);
+      if (m[3]) s += ' · ' + (l === 'fa' ? I(m[3] + '/4') + ' معیار' : m[3] + '/4 ölçüt'); return s; }],
+    [/^Fluency: Insufficient data$/, function (m, l) { return tw('Fluency') + ': ' + tw('Insufficient data'); }],
+    [/^Speech Clarity: Insufficient data$/, function (m, l) { return tw('Speech Clarity') + ': ' + tw('Insufficient data'); }],
+    [/^Fluency: (\d+) words\/min$/, function (m, l) { return l === 'fa' ? 'روانی: ' + N(m[1], l) + ' کلمه در دقیقه' : 'Akıcılık: dakikada ' + m[1] + ' sözcük'; }],
+    [/^Speech Clarity: (\d+)% recognizer confidence$/, function (m, l) { return l === 'fa' ? 'وضوح گفتار: ' + I(m[1] + '%') + ' اطمینان تشخیص‌دهنده' : 'Konuşma Netliği: %' + m[1] + ' tanıyıcı güveni'; }],
+    [/^Timing was not reliable enough to score fluency: the recognizer reported (\d+) words per minute over (\d+)s(, which is not a realistic speaking rate| with too few timing updates)\. This usually means the browser delivered your words in delayed batches\. Try again with a longer, continuous answer\.$/, function (m, l) {
+      var why = m[3].indexOf('realistic') >= 0;
+      return l === 'fa' ? 'زمان‌بندی برای امتیازدهی روانی به‌اندازه‌ی کافی قابل‌اعتماد نبود: تشخیص‌دهنده ' + N(m[1], l) + ' کلمه در دقیقه طی ' + N(m[2], l) + ' ثانیه گزارش کرد' + (why ? ' که سرعت گفتار واقع‌بینانه‌ای نیست' : ' و به‌روزرسانی‌های زمانی بسیار کم بود') + '. معمولاً یعنی مرورگر کلمات شما را با تأخیر و دسته‌ای تحویل داده است. با یک پاسخ طولانی‌تر و پیوسته دوباره امتحان کنید.'
+        : 'Zamanlama akıcılığı puanlamak için yeterince güvenilir değildi: tanıyıcı ' + m[2] + ' saniyede dakikada ' + m[1] + ' sözcük bildirdi' + (why ? '; bu gerçekçi bir konuşma hızı değil' : ' ve zamanlama güncellemeleri çok azdı') + '. Bu genellikle tarayıcının sözcüklerinizi gecikmeli toplu halde ilettiği anlamına gelir. Daha uzun, kesintisiz bir yanıtla tekrar deneyin.'; }],
+    [/^Measured over (\d+)s of speech: (\d+) words per minute \(target 110–170\), about (\d+)% of the time in pauses, (\d+) long pauses? \(over 2s\)\. Timing is estimated from when the recognizer received your words\.$/, function (m, l) {
+      return l === 'fa' ? 'اندازه‌گیری در ' + N(m[1], l) + ' ثانیه گفتار: ' + N(m[2], l) + ' کلمه در دقیقه (هدف ' + I('110–170') + ')، حدود ' + I(m[3] + '%') + ' زمان در مکث، ' + N(m[4], l) + ' مکث طولانی (بیش از ' + N(2, l) + ' ثانیه). زمان‌بندی بر اساس لحظه‌ی دریافت کلمات توسط تشخیص‌دهنده برآورد می‌شود.'
+        : m[1] + ' saniyelik konuşmada ölçüldü: dakikada ' + m[2] + ' sözcük (hedef 110–170), zamanın yaklaşık %' + m[3] + '’i duraklamada, ' + m[4] + ' uzun duraklama (2 sn üzeri). Zamanlama, tanıyıcının sözcüklerinizi aldığı ana göre tahmin edilir.'; }],
+    [/^💬 (.+)$/, function (m, l) { var t = tw(m[1]); return t === m[1] ? null : '💬 ' + t; }]
+  ];
+  function conv(en, l) { for (var i = 0; i < P.length; i++) { var m = en.match(P[i][0]); if (m) { var r = P[i][1](m, l); if (r != null) return r; } } return null; }
+
+  var recs = new WeakMap(), list = [], attrRecs = new WeakMap(), attrList = [], busy = false;
+  function render(rec) {
+    var l = nvI18n.lang, lead = rec.en.match(/^\s*/)[0], trail = rec.en.match(/\s*$/)[0];
+    var out = l === 'en' ? null : conv(rec.en.trim(), l); var v = out ? lead + out + trail : rec.en;
+    rec.out = v; if (rec.n.data !== v) rec.n.data = v;
+  }
+  function visit(n) {
+    var rec = recs.get(n);
+    if (rec) { if (n.data === rec.out) return; rec.en = n.data; }
+    var core = n.data.trim(); if (!core) return;
+    if (!rec) { if (!conv(core, 'fa')) return; rec = { n: n, en: n.data, out: n.data }; recs.set(n, rec); list.push(rec); }
+    render(rec);
+  }
+  function renderAttr(r) { var l = nvI18n.lang, o = l === 'en' ? null : tw2(r.en, l); r.out = o || r.en; if (r.el.getAttribute('aria-label') !== r.out) r.el.setAttribute('aria-label', r.out); }
+  function tw2(en, l) { var t = nvI18n.t(en); return t !== en ? t : conv(en, l); }
+  function visitAttr(el) {
+    var v = el.getAttribute('aria-label'); if (v == null) return;
+    var rec = attrRecs.get(el);
+    if (rec) { if (v === rec.out) return; rec.en = v; } else { if (v !== 'Dismiss notification') return; rec = { el: el, en: v, out: v }; attrRecs.set(el, rec); attrList.push(rec); }
+    renderAttr(rec);
+  }
+  function walk(root) {
+    var w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null), n;
+    while ((n = w.nextNode())) { if (n.parentNode && /^(SCRIPT|STYLE)$/.test(n.parentNode.nodeName)) continue; visit(n); }
+    if (root.nodeType === 1) visitAttr(root);
+    if (root.querySelectorAll) { var e = root.querySelectorAll('[aria-label]'); for (var i = 0; i < e.length; i++) visitAttr(e[i]); }
+  }
+  function refresh() {
+    busy = true;
+    list = list.filter(function (r) { return r.n.isConnected; }); list.forEach(render);
+    attrList = attrList.filter(function (r) { return r.el.isConnected; }); attrList.forEach(renderAttr);
+    walk(document.body); busy = false;
+  }
+  new MutationObserver(function (ms) {
+    if (busy) return; busy = true;
+    try { ms.forEach(function (m) {
+      if (m.type === 'characterData') visit(m.target);
+      else if (m.type === 'attributes') visitAttr(m.target);
+      else m.addedNodes.forEach(function (a) { if (a.nodeType === 3) visit(a); else if (a.nodeType === 1) walk(a); });
+    }); } catch (e) {}
+    busy = false;
+  }).observe(document.body, { childList: true, characterData: true, subtree: true, attributes: true, attributeFilter: ['aria-label'] });
+  document.addEventListener('nvlangchange', refresh);
+  refresh();
+})();
+</script>
+
 </body>
 </html>
