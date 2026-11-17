@@ -952,6 +952,9 @@ async function getNirvoResponse(userMsg) {
 
   const systemPrompt = modeConfigs[currentMode].system
     .replace('{TOPIC}', topic) + (currentMode === 'conversation' ? '' : focusLine) + (vocabFocusOn() ? VOCAB_FOCUS_PROMPT : '') + (currentMode === 'conversation' ? '' : nvMemoryBlock); // Free Conversation stays purely conversational
+  // Language of tips/explanations follows the UI language; English learning content stays English
+  const nvL = (window.nvI18n && nvI18n.lang) || 'en', nvLN = { fa: 'Persian (Farsi)', tr: 'Turkish' }[nvL];
+  const langNote = nvLN ? `\nLANGUAGE RULE: Write every tip explanation, feedback comment, explanation and instruction in ${nvLN}. Format the tip as: 💡 Tip: <explanation in ${nvLN}> '<corrected English sentence>'. Start any other non-English explanation line with 🌐. Keep the "💡 Tip:" label, corrected sentences, example phrases, vocabulary words and your normal in-character or conversational replies in English.` : '';
 
   setNirvoState('thinking');
   showTyping();
@@ -965,7 +968,7 @@ async function getNirvoResponse(userMsg) {
       body: JSON.stringify({
         model: 'openai/gpt-oss-120b',
         messages: [
-          { role:'system', content: systemPrompt },
+          { role:'system', content: systemPrompt + langNote },
           ...chatHistory.slice(-10)
         ],
         temperature: 0.5,
@@ -1025,6 +1028,12 @@ function pickEnglishVoice() {
   return en.slice().sort((x, y) => score(y) - score(x))[0];
 }
 function speechChunks(text) {
+  // Voice engines here are English-only: in FA/TR skip the translated tip/explanation lines
+  if (window.nvI18n && nvI18n.lang !== 'en') text = String(text).split('\n').map(l => {
+    const k = l.indexOf('💡 Tip:'), pre = k < 0 ? l : l.slice(0, k), tip = k < 0 ? '' : l.slice(k);
+    const q = (tip.match(/(?:^|[\s:(—-])['"“‘]([^\n"“”]+?)['"”’](?=$|[\s.,;:!?)—-])/g) || []).map(x => x.replace(/^[^'"“‘]*['"“‘]|['"”’]$/g, '')).filter(x => !/[؀-ۿ]/.test(x)).join('. ');
+    return ((/^\s*\u{1F310}/u.test(pre) || /[؀-ۿ]/.test(pre)) ? '' : pre) + (q ? ' ' + q + '.' : '');
+  }).join('\n');
   const clean = String(text).replace(/https?:\/\/\S+/g, '').replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/gu, '').replace(/[*_`#~>]+/g, '').replace(/\s+/g, ' ').trim();
   const parts = clean.match(/[^.!?\n]+[.!?]*\s*/g) || [clean];
   const out = []; let cur = '';
