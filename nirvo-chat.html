@@ -1691,7 +1691,7 @@ if (window.speechSynthesis.getVoices().length === 0) {
       try {
         if (String(text) !== ERR) {
           var m = document.getElementById('messages'), el = m && m.lastElementChild, b = el && el.querySelector('.msg-bubble');
-          if (b) { var w = document.createTreeWalker(b, NodeFilter.SHOW_TEXT, null), n, list = []; while ((n = w.nextNode())) list.push(n); list.forEach(function (t) { if (t.data.trim()) t.data += '​'; }); }
+          if (b) { var w = document.createTreeWalker(b, NodeFilter.SHOW_TEXT, null), n, list = []; while ((n = w.nextNode())) list.push(n); list.forEach(function (t) { if (t.data.trim()) t.data += '\u200b'; }); }
         }
       } catch (e) {}
       return r;
@@ -1700,7 +1700,7 @@ if (window.speechSynthesis.getVoices().length === 0) {
 
   var tw = function (s) { return nvI18n.t(s); };
   var idx = function (l) { return l === 'fa' ? 0 : 1; };
-  var I = function (s) { return '⁦' + s + '⁩'; };
+  var I = function (s) { return '\u2066' + s + '\u2069'; };
   var N = function (n, l) { return l === 'fa' ? I(n) : String(n); };
   var CODE = '(A1|A2|B1|B2|C1|C2)';
   var FOC = { Fluency: ['روانی', 'Akıcılık'], Pronunciation: ['تلفظ', 'Telaffuz'], Grammar: ['گرامر', 'Dilbilgisi'], Vocabulary: ['واژگان', 'Kelime Bilgisi'] };
