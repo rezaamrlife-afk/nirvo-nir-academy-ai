@@ -1414,8 +1414,8 @@ async function handleLogout() {
   /* ── Translator for sentences built from numbers, dates, levels and the user's goals ── */
   var tw = function (s) { return nvI18n.t(s); };
   var LOC = { fa: 'fa-u-ca-gregory-nu-latn', tr: 'tr' };
-  var I = function (s) { return '⁦' + s + '⁩'; };
-  var F = function (s) { return '⁨' + s + '⁩'; };
+  var I = function (s) { return '\u2066' + s + '\u2069'; };
+  var F = function (s) { return '\u2068' + s + '\u2069'; };
   var N = function (n, l) { return l === 'fa' ? I(n) : String(n); };
   var CODE = '(A1|A2|B1|B2|C1|C2)', SK = '(Fluency|Pronunciation|Grammar|Vocabulary)';
   var LC = { fluency: ['روانی', 'akıcılık'], pronunciation: ['تلفظ', 'telaffuz'], grammar: ['گرامر', 'dilbilgisi'], vocabulary: ['واژگان', 'kelime bilgisi'] };
