@@ -17,6 +17,7 @@
   <link rel="apple-touch-icon" href="/icons/icon-192.png">
 <title>NIRVO AI — Learning Path</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="i18n.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
   function toggleMenu() {
@@ -481,6 +482,35 @@ nav>div:first-child>div{white-space:nowrap}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 </style>
 
+<style id="nv-i18n-lp">
+/* Language switcher + RTL support for learning-path.html (additive; English/LTR rendering is unchanged) */
+.nv-langbar{display:inline-flex;align-items:center;gap:2px;padding:2px;border-radius:999px;border:1px solid var(--b0_1);background:var(--f0_04);direction:ltr}
+.nv-langbar button{min-width:30px;min-height:0;height:26px;padding:0 7px;border:0;border-radius:999px;background:transparent;color:var(--t0_5);font-family:'Outfit',sans-serif;font-size:11.5px;font-weight:600;letter-spacing:.04em;line-height:1;cursor:pointer;transition:background .2s,color .2s}
+.nv-langbar button:hover{color:var(--white)}
+.nv-langbar button.active{background:var(--gold);color:var(--on-gold)}
+.nv-langbar button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+@media(max-width:768px){nav .nv-langbar{display:none}}
+.nvd-langrow{display:flex;align-items:center;gap:14px;padding:6px 10px;margin-bottom:4px}
+.nvd-langrow .nvd-ic{flex-shrink:0}
+.nvd-langrow>span:nth-child(2){flex:1;min-width:0;font-family:'Outfit',sans-serif;font-size:16px;font-weight:500;color:var(--white)}
+.nvd-langrow .nv-langbar button{min-width:40px;min-height:34px;height:34px}
+/* RTL (Persian) */
+html[dir="rtl"] .nvd-chev{transform:scaleX(-1)}
+html[dir="rtl"] .mobile-menu .nvd .nvd-row{text-align:right}
+html[dir="rtl"] nav [style*="border-left"]{border-left:0!important;padding-left:0!important;border-right:1px solid rgba(var(--gold-rgb),0.18);padding-right:12px}
+html[dir="rtl"] .nvd-switch::after{left:auto;right:4px}
+html[dir="rtl"] .lp-lv:not(:last-child)::after{left:auto;right:21px}
+html[dir="rtl"] .lp-ex li:not(:last-child)::before{left:auto;right:14px}
+@media(min-width:760px){
+  html[dir="rtl"] .lp-lv:not(:last-child)::after{left:auto;right:calc(50% + 26px);transform-origin:right}
+  html[dir="rtl"] .lp-lv.seg-go:not(:last-child)::after{background:linear-gradient(270deg,var(--gold),var(--cr))}
+}
+html[dir="rtl"] .lp-heat,html[dir="rtl"] .lp-spark{direction:ltr}
+html[dir="rtl"] .lp-delta{direction:ltr;unicode-bidi:isolate}
+html[lang="fa"] .nvn-word,html[lang="fa"] .nvn-word *,html[lang="fa"] .nvd-word,html[lang="fa"] .nvd-word *{font-family:'Outfit',sans-serif!important}
+html[lang="fa"] .nvd-word{letter-spacing:.3em!important}
+html[lang="fa"] #nv-mob-nav a{font-size:clamp(9.5px,2.7vw,11.5px)}
+</style>
 </head>
 <body>
 <script>
@@ -513,6 +543,7 @@ try{if(localStorage.getItem('nirvo-theme')==='light'){document.documentElement.c
 
   <!-- User -->
   <div style="display:flex;align-items:center;gap:14px">
+    <div class="nv-langbar" role="group" aria-label="Language"><button type="button" data-lang-btn="en" aria-pressed="true">EN</button><button type="button" data-lang-btn="fa" aria-pressed="false">FA</button><button type="button" data-lang-btn="tr" aria-pressed="false">TR</button></div>
     <div style="text-align:right">
       <div id="user-name-nav" style="font-size:14px;font-weight:500;color:var(--white)"></div>
       <div id="user-email-nav" style="font-size:12px;color:var(--t0_3)"></div>
@@ -547,6 +578,7 @@ try{if(localStorage.getItem('nirvo-theme')==='light'){document.documentElement.c
       <a href="nirvo-chat.html" class="nvd-row"><span class="nvd-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg></span><span>Chat with NIRVO</span><i class="nvd-dot"></i><svg class="nvd-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a>
 
       <div class="nvd-label">Settings</div>
+      <div class="nvd-langrow"><span class="nvd-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span><span>Language</span><div class="nv-langbar" role="group" aria-label="Language"><button type="button" data-lang-btn="en" aria-pressed="true">EN</button><button type="button" data-lang-btn="fa" aria-pressed="false">FA</button><button type="button" data-lang-btn="tr" aria-pressed="false">TR</button></div></div>
       <button type="button" class="nvd-row nvd-toggle" role="switch" aria-checked="false" onclick="toggleTheme()"><span class="nvd-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg></span><span>Light Mode</span><span class="nvd-switch" aria-hidden="true"></span></button>
       <button type="button" id="nvd-signout" class="nvd-row nvd-danger" style="margin-top:10px" hidden><span class="nvd-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></svg></span><span>Sign Out</span></button>
     </div>
@@ -1198,5 +1230,331 @@ async function handleLogout() {
 })();
 </script>
 <button type="button" class="nv-theme" onclick="toggleTheme()" aria-label="Switch to light mode">☀</button>
+<script id="nv-i18n-lp-js">
+/* Learning Path i18n (additive). Uses the shared i18n.js. This page's fixed strings are added to the dictionary here, plus a
+   translator for sentences the page builds from numbers, dates, levels and the user's own goals. The page's own scripts above
+   are not modified. Learning content that contains English examples (ship/sheep, collocations, "Tell me about a time when…")
+   keeps those examples in English. AI-written feedback is not shown on this page. */
+(function () {
+  if (!window.nvI18n) return;
+  var T = {
+    'NIRVO AI — Learning Path': ['NIRVO AI — مسیر یادگیری', 'NIRVO AI — Öğrenme Yolu'],
+    'Learning Path': ['مسیر یادگیری', 'Öğrenme Yolu'],
+    'Progress': ['پیشرفت', 'İlerleme'],
+    'Your speaking path': ['مسیر گفتاری شما', 'Konuşma yolunuz'],
+    'Build your speaking path': ['مسیر گفتاری خود را بسازید', 'Konuşma yolunuzu oluşturun'],
+    'Start practice': ['شروع تمرین', 'Pratiğe başla'],
+    'Adjust goals': ['تنظیم اهداف', 'Hedefleri ayarla'],
+    'Set my goals': ['تعیین اهداف من', 'Hedeflerimi belirle'],
+    'CEFR levels from A1 to C2': ['سطح‌های CEFR از A1 تا C2', 'A1’den C2’ye CEFR seviyeleri'],
+    'Weekly speaking plan': ['برنامه‌ی هفتگی مکالمه', 'Haftalık konuşma planı'],
+    'Skill analytics': ['تحلیل مهارت‌ها', 'Beceri analizi'],
+    'Scores from your recorded speaking sessions.': ['امتیازها از جلسه‌های مکالمه‌ی ثبت‌شده‌ی شما.', 'Kaydedilen konuşma oturumlarınızdan puanlar.'],
+    'Roadmap': ['نقشه‌ی راه', 'Yol haritası'],
+    'Progress & milestones': ['پیشرفت و نقاط عطف', 'İlerleme ve kilometre taşları'],
+    'Loading your plan': ['در حال بارگذاری برنامه‌ی شما', 'Planınız yükleniyor'],
+    'Loading your skills': ['در حال بارگذاری مهارت‌های شما', 'Becerileriniz yükleniyor'],
+    'Loading your roadmap': ['در حال بارگذاری نقشه‌ی راه شما', 'Yol haritanız yükleniyor'],
+    'Loading your milestones': ['در حال بارگذاری نقاط عطف شما', 'Kilometre taşlarınız yükleniyor'],
+    'This week': ['این هفته', 'Bu hafta'],
+    /* CEFR level names */
+    'Beginner': ['مبتدی', 'Başlangıç'], 'Elementary': ['مقدماتی', 'Temel'], 'Intermediate': ['متوسط', 'Orta'],
+    'Upper-intermediate': ['بالاتر از متوسط', 'Orta-üstü'], 'Advanced': ['پیشرفته', 'İleri'], 'Proficient': ['مسلط', 'Yetkin'],
+    'You are here': ['شما اینجا هستید', 'Buradasınız'], 'Your goal': ['هدف شما', 'Hedefiniz'],
+    /* skills */
+    'Fluency': ['روانی', 'Akıcılık'], 'Pronunciation': ['تلفظ', 'Telaffuz'], 'Grammar': ['گرامر', 'Dilbilgisi'], 'Vocabulary': ['واژگان', 'Kelime Bilgisi'],
+    'Your focus': ['تمرکز شما', 'Odağınız'], 'No score': ['بدون امتیاز', 'Puan yok'],
+    'Themes rotate through all four skills. Add focus areas in your profile to personalise them. Tap a day to see its exercises.': ['تمرین‌ها میان هر چهار مهارت می‌چرخند. برای شخصی‌سازی، حوزه‌های تمرکز را در پروفایل اضافه کنید. روی یک روز بزنید تا تمرین‌هایش را ببینید.', 'Temalar dört beceri arasında dönüşümlü ilerler. Kişiselleştirmek için profilinize odak alanları ekleyin. Egzersizleri görmek için bir güne dokunun.'],
+    'A plan needs your level and weekly rhythm.': ['برای ساخت برنامه، سطح و ریتم هفتگی شما لازم است.', 'Bir plan için seviyenize ve haftalık ritminize ihtiyaç var.'],
+    'No scored sessions in the last 30 days. Practise to refresh these.': ['در 30 روز گذشته جلسه‌ی امتیازدار نداشته‌اید. برای به‌روز شدن این‌ها تمرین کنید.', 'Son 30 günde puanlı oturum yok. Bunları yenilemek için pratik yapın.'],
+    'Your sessions don’t include skill scores yet.': ['جلسه‌های شما هنوز امتیاز مهارت ندارند.', 'Oturumlarınızda henüz beceri puanı yok.'],
+    'Complete a speaking session and your scores appear here.': ['یک جلسه‌ی مکالمه را کامل کنید تا امتیازهایتان اینجا نمایش داده شود.', 'Bir konuşma oturumunu tamamlayın, puanlarınız burada görünsün.'],
+    'We couldn’t load your session history.': ['بارگذاری تاریخچه‌ی جلسه‌های شما ممکن نشد.', 'Oturum geçmişiniz yüklenemedi.'],
+    'Try again': ['تلاش دوباره', 'Tekrar dene'],
+    'No speaking sessions recorded yet. Your first one starts your streak.': ['هنوز جلسه‌ی مکالمه‌ای ثبت نشده است. اولین جلسه، تداوم شما را شروع می‌کند.', 'Henüz kayıtlı konuşma oturumu yok. İlk oturumunuz serinizi başlatır.'],
+    'day streak': ['روز تداوم', 'günlük seri'],
+    'sessions this week': ['جلسه در این هفته', 'bu hafta oturum'],
+    'spoken in total': ['گفتار در مجموع', 'toplam konuşma'],
+    'of': ['از', '/'], 'earned': ['کسب‌شده', 'kazanıldı'], 'min': ['دقیقه', 'dk'],
+    /* weekdays */
+    'Monday': ['دوشنبه', 'Pazartesi'], 'Tuesday': ['سه‌شنبه', 'Salı'], 'Wednesday': ['چهارشنبه', 'Çarşamba'], 'Thursday': ['پنجشنبه', 'Perşembe'],
+    'Friday': ['جمعه', 'Cuma'], 'Saturday': ['شنبه', 'Cumartesi'], 'Sunday': ['یکشنبه', 'Pazar'],
+    'Mon': ['دوش', 'Pzt'], 'Tue': ['سه‌ش', 'Sal'], 'Wed': ['چهار', 'Çar'], 'Thu': ['پنج', 'Per'], 'Fri': ['جمع', 'Cum'], 'Sat': ['شنب', 'Cmt'], 'Sun': ['یکش', 'Paz'],
+    /* day panel */
+    'Completed': ['تکمیل شد', 'Tamamlandı'], 'Today': ['امروز', 'Bugün'], 'Planned': ['برنامه‌ریزی‌شده', 'Planlandı'],
+    'Not practised': ['تمرین نشده', 'Pratik yapılmadı'], 'Rest day': ['روز استراحت', 'Dinlenme günü'],
+    'No practice planned': ['تمرینی برنامه‌ریزی نشده', 'Planlanmış pratik yok'],
+    'You practised on a rest day. Rest matters too, but that is a bonus session.': ['در روز استراحت تمرین کردید. استراحت هم مهم است، اما این یک جلسه‌ی امتیازی است.', 'Dinlenme gününde pratik yaptınız. Dinlenmek de önemlidir ama bu bonus bir oturum.'],
+    'Recovery is part of the plan. Short breaks help new patterns settle before your next session.': ['استراحت بخشی از برنامه است. وقفه‌های کوتاه کمک می‌کند الگوهای تازه پیش از جلسه‌ی بعد جا بیفتند.', 'Dinlenme planın bir parçasıdır. Kısa molalar, yeni kalıpların bir sonraki oturumdan önce yerleşmesine yardımcı olur.'],
+    'Warm-up': ['گرم‌کردن', 'Isınma'], 'Review': ['مرور', 'Gözden geçirme'],
+    /* roadmap */
+    'Build:': ['بسازید:', 'Oluşturun:'], 'For you:': ['برای شما:', 'Sizin için:'], 'Current step': ['گام فعلی', 'Mevcut adım'],
+    'Your steps from level to level.': ['گام‌های شما از هر سطح تا سطح بعد.', 'Seviyeden seviyeye adımlarınız.'],
+    'Choose your current and target levels in your profile to see each step.': ['برای دیدن هر گام، سطح فعلی و سطح هدف را در پروفایل انتخاب کنید.', 'Her adımı görmek için profilinizde mevcut ve hedef seviyenizi seçin.'],
+    'You are at your target level.': ['در سطح هدف خود هستید.', 'Hedef seviyenizdesiniz.'],
+    'Your target is below your current level.': ['سطح هدف شما پایین‌تر از سطح فعلی‌تان است.', 'Hedefiniz mevcut seviyenizin altında.'],
+    'Choose your current and target CEFR levels to see your roadmap, weekly plan and daily exercises.': ['برای دیدن نقشه‌ی راه، برنامه‌ی هفتگی و تمرین‌های روزانه، سطح فعلی و سطح هدف CEFR خود را انتخاب کنید.', 'Yol haritanızı, haftalık planınızı ve günlük egzersizlerinizi görmek için mevcut ve hedef CEFR seviyenizi seçin.'],
+    /* milestones */
+    'Built only from your recorded sessions and profile.': ['فقط از جلسه‌های ثبت‌شده و پروفایل شما ساخته شده است.', 'Yalnızca kayıtlı oturumlarınızdan ve profilinizden oluşturulur.'],
+    'Your last 12 weeks of practice will fill in here': ['تمرین‌های 12 هفته‌ی اخیر شما اینجا نمایش داده می‌شود', 'Son 12 haftalık pratiğiniz burada görünecek'],
+    'Goals set': ['اهداف تعیین شد', 'Hedefler belirlendi'], 'Level, target and weekly rhythm chosen': ['سطح، هدف و ریتم هفتگی انتخاب شد', 'Seviye, hedef ve haftalık ritim seçildi'],
+    'First speaking session': ['اولین جلسه‌ی مکالمه', 'İlk konuşma oturumu'], 'Your first recorded session': ['اولین جلسه‌ی ثبت‌شده‌ی شما', 'İlk kayıtlı oturumunuz'],
+    'Ten sessions': ['ده جلسه', 'On oturum'], 'A habit starts to form': ['یک عادت شکل می‌گیرد', 'Bir alışkanlık oluşmaya başlıyor'],
+    'Seven-day streak': ['تداوم هفت‌روزه', 'Yedi günlük seri'], 'Seven days in a row': ['هفت روز پیاپی', 'Art arda yedi gün'],
+    'Weekly target met': ['هدف هفتگی محقق شد', 'Haftalık hedefe ulaşıldı'],
+    'Five hours spoken': ['پنج ساعت صحبت', 'Beş saat konuşma'], 'Total time speaking with NIRVO': ['کل زمان صحبت با NIRVO', 'NIRVO ile toplam konuşma süresi'],
+    'Score 80 in a skill': ['امتیاز 80 در یک مهارت', 'Bir becerede 80 puan'], 'Your strongest session score': ['بالاترین امتیاز جلسه‌ی شما', 'En güçlü oturum puanınız'],
+    'Fifty sessions': ['پنجاه جلسه', 'Elli oturum'], 'Consistency that compounds': ['پیوستگی که اثر ترکیبی دارد', 'Birikerek büyüyen düzenlilik'],
+    /* purpose tails */
+    'exam speaking tasks': ['تکلیف‌های مکالمه‌ی آزمون', 'sınav konuşma görevleri'], 'workplace scenarios': ['سناریوهای محیط کار', 'iş yeri senaryoları'],
+    'interview questions': ['پرسش‌های مصاحبه', 'mülakat soruları'], 'travel situations': ['موقعیت‌های سفر', 'seyahat durumları'], 'academic tasks': ['تکلیف‌های آکادمیک', 'akademik görevler']
+  };
+  /* Instructional text: CAN_DO (after "At B1, you can "), BRIDGE, warm-ups, reviews and the exercise bank. */
+  var CD = [
+    ['introduce yourself and answer simple questions about familiar things, speaking slowly and clearly.', 'خود را معرفی کنید و به پرسش‌های ساده درباره‌ی چیزهای آشنا پاسخ دهید و آهسته و واضح صحبت کنید.', 'kendinizi tanıtabilir ve tanıdık konulardaki basit soruları yavaş ve net konuşarak yanıtlayabilirsiniz.'],
+    ['handle short everyday exchanges and describe your routine, surroundings and background in simple sentences.', 'در گفت‌وگوهای کوتاه روزمره شرکت کنید و روال روزانه، محیط اطراف و پیشینه‌ی خود را با جمله‌های ساده توصیف کنید.', 'kısa günlük konuşmaları yürütebilir; rutininizi, çevrenizi ve geçmişinizi basit cümlelerle anlatabilirsiniz.'],
+    ['keep a conversation going on familiar topics, narrate experiences and give brief reasons and opinions.', 'گفت‌وگو درباره‌ی موضوع‌های آشنا را ادامه دهید، تجربه‌ها را روایت کنید و دلیل‌ها و نظرهای کوتاه ارائه دهید.', 'tanıdık konularda sohbeti sürdürebilir, deneyimleri anlatabilir ve kısa gerekçeler ile görüşler sunabilirsiniz.'],
+    ['speak fluently and spontaneously, explain a viewpoint in detail and interact comfortably with native speakers.', 'روان و بی‌مقدمه صحبت کنید، دیدگاه خود را با جزئیات توضیح دهید و با گویشوران بومی راحت تعامل کنید.', 'akıcı ve spontane konuşabilir, bir görüşü ayrıntılı açıklayabilir ve anadili konuşanlarla rahatça iletişim kurabilirsiniz.'],
+    ['express ideas fluently and precisely, adapting to social, academic and professional situations.', 'ایده‌ها را روان و دقیق بیان کنید و خود را با موقعیت‌های اجتماعی، دانشگاهی و حرفه‌ای تطبیق دهید.', 'fikirlerinizi akıcı ve kesin biçimde ifade edebilir, sosyal, akademik ve mesleki durumlara uyum sağlayabilirsiniz.'],
+    ['convey fine shades of meaning with ease and rephrase smoothly when a point is not landing.', 'ظرایف معنایی را به‌راحتی منتقل کنید و وقتی نکته‌ای جا نمی‌افتد، روان آن را بازگو کنید.', 'anlamın ince tonlarını kolaylıkla aktarabilir ve bir nokta anlaşılmadığında akıcı biçimde yeniden ifade edebilirsiniz.']
+  ];
+  var CDMAP = {}; CD.forEach(function (r) { CDMAP[r[0]] = r; });
+  var INSTR = [
+    ['Build a core of everyday phrases and answer in full sentences.', 'هسته‌ای از عبارت‌های روزمره بسازید و با جمله‌های کامل پاسخ دهید.', 'Günlük ifadelerden oluşan bir çekirdek oluşturun ve tam cümlelerle yanıt verin.'],
+    ['Extend your answers: connect ideas with because, so and but, and narrate past events.', 'پاسخ‌هایتان را گسترش دهید: ایده‌ها را با because، so و but به هم وصل کنید و رویدادهای گذشته را روایت کنید.', 'Yanıtlarınızı genişletin: fikirleri because, so ve but ile bağlayın ve geçmiş olayları anlatın.'],
+    ['Sustain a topic without long pauses, give reasons and counter-views, and widen your vocabulary beyond everyday words.', 'یک موضوع را بدون مکث طولانی ادامه دهید، دلیل و دیدگاه مخالف بیاورید و واژگانتان را فراتر از واژه‌های روزمره گسترش دهید.', 'Uzun duraklamalar olmadan bir konuyu sürdürün, gerekçeler ve karşıt görüşler sunun ve kelime dağarcığınızı günlük sözcüklerin ötesine taşıyın.'],
+    ['Organize longer talks clearly, use precise collocations and idiom naturally, and self-correct on the fly.', 'سخنرانی‌های طولانی‌تر را روشن سازمان‌دهی کنید، هم‌نشینی‌های دقیق و اصطلاحات را طبیعی به کار ببرید و در لحظه خودتان را اصلاح کنید.', 'Daha uzun konuşmaları net biçimde düzenleyin, kesin eşdizimleri ve deyimleri doğal kullanın ve konuşurken kendinizi düzeltin.'],
+    ['Refine nuance, register and rhythm, and paraphrase effortlessly under pressure.', 'ظرافت معنا، سطح رسمیت و ریتم را صیقل دهید و زیر فشار هم بی‌دردسر بازگویی کنید.', 'İnce anlam farklarını, üslubu ve ritmi geliştirin ve baskı altında bile zahmetsizce başka sözcüklerle ifade edin.'],
+    ['Read a short paragraph aloud', 'یک پاراگراف کوتاه را بلند بخوانید', 'Kısa bir paragrafı yüksek sesle okuyun'],
+    ['Slow and clear. Re-read the lines you stumbled over.', 'آهسته و واضح. سطرهایی را که در آن‌ها گیر کردید دوباره بخوانید.', 'Yavaş ve net. Takıldığınız satırları yeniden okuyun.'],
+    ['60-second free talk', 'صحبت آزاد 60 ثانیه‌ای', '60 saniyelik serbest konuşma'],
+    ['Talk about your day with no notes. Keep going when you slip.', 'بدون یادداشت درباره‌ی روزتان صحبت کنید. وقتی لغزیدید ادامه دهید.', 'Notlara bakmadan gününüzü anlatın. Hata yapınca bile devam edin.'],
+    ['Summarize something you read or heard today', 'چیزی را که امروز خوانده یا شنیده‌اید خلاصه کنید', 'Bugün okuduğunuz veya duyduğunuz bir şeyi özetleyin'],
+    ['Forty-five seconds, in your own words.', 'چهل‌وپنج ثانیه، با کلمات خودتان.', 'Kırk beş saniye, kendi sözcüklerinizle.'],
+    ['Fix one thing', 'یک مورد را اصلاح کنید', 'Tek bir şeyi düzeltin'],
+    ['Pick the most useful correction from your feedback and say it correctly three times.', 'مفیدترین اصلاح را از بازخورد خود انتخاب کنید و سه بار آن را درست بگویید.', 'Geri bildiriminizden en yararlı düzeltmeyi seçin ve üç kez doğru söyleyin.'],
+    ['Review the top three corrections', 'سه اصلاح مهم را مرور کنید', 'İlk üç düzeltmeyi gözden geçirin'],
+    ['Repeat each corrected phrase aloud, then use it in a new sentence.', 'هر عبارت اصلاح‌شده را بلند تکرار کنید و بعد در یک جمله‌ی تازه به کار ببرید.', 'Düzeltilen her ifadeyi yüksek sesle tekrarlayın, sonra yeni bir cümlede kullanın.'],
+    ['Study the full feedback', 'بازخورد کامل را مطالعه کنید', 'Geri bildirimin tamamını inceleyin'],
+    ['Note patterns in your errors, then re-record the weakest part of the session.', 'الگوهای اشتباه‌هایتان را یادداشت کنید و سپس ضعیف‌ترین بخش جلسه را دوباره ضبط کنید.', 'Hatalarınızdaki kalıpları not edin, sonra oturumun en zayıf bölümünü yeniden kaydedin.'],
+    /* fluency */
+    ['Answer five personal questions', 'به پنج پرسش شخصی پاسخ دهید', 'Beş kişisel soruyu yanıtlayın'],
+    ['Name, family, daily routine, likes and dislikes. Use full sentences and do not stop to translate.', 'نام، خانواده، روال روزانه، علاقه‌ها و بی‌علاقگی‌ها. جمله‌های کامل بگویید و برای ترجمه کردن نایستید.', 'Ad, aile, günlük rutin, sevdikleriniz ve sevmedikleriniz. Tam cümleler kurun ve çeviri yapmak için durmayın.'],
+    ['Describe your day in 45 seconds', 'روزتان را در 45 ثانیه توصیف کنید', 'Gününüzü 45 saniyede anlatın'],
+    ['Use first, then and after that. Keep going even if you make a mistake.', 'از first، then و after that استفاده کنید. حتی اگر اشتباه کردید ادامه دهید.', 'First, then ve after that kullanın. Hata yapsanız bile devam edin.'],
+    ['Two-minute talk on a familiar topic', 'صحبت دو دقیقه‌ای درباره‌ی یک موضوع آشنا', 'Tanıdık bir konuda iki dakikalık konuşma'],
+    ['Give an opinion, two reasons and one example without stopping.', 'بدون توقف یک نظر، دو دلیل و یک مثال بیان کنید.', 'Durmadan bir görüş, iki gerekçe ve bir örnek verin.'],
+    ['Tell a story from your past', 'داستانی از گذشته‌تان تعریف کنید', 'Geçmişinizden bir hikâye anlatın'],
+    ['Set the scene, say what happened and how it ended. Aim for no pause longer than three seconds.', 'صحنه را بسازید، بگویید چه شد و چگونه تمام شد. سعی کنید هیچ مکثی از سه ثانیه بیشتر نشود.', 'Ortamı kurun, ne olduğunu ve nasıl bittiğini söyleyin. Hiçbir duraklamanın üç saniyeyi geçmemesini hedefleyin.'],
+    ['Structured three-minute talk', 'صحبت ساختاریافته‌ی سه‌دقیقه‌ای', 'Yapılandırılmış üç dakikalık konuşma'],
+    ['State your position, give two arguments, answer one counterpoint, then conclude.', 'موضع خود را بیان کنید، دو استدلال بیاورید، به یک نکته‌ی مخالف پاسخ دهید و سپس جمع‌بندی کنید.', 'Görüşünüzü belirtin, iki argüman sunun, bir karşı noktayı yanıtlayın, sonra sonuçlandırın.'],
+    ['Answer an unexpected question', 'به یک پرسش غیرمنتظره پاسخ دهید', 'Beklenmedik bir soruyu yanıtlayın'],
+    ['Take 15 seconds to think, then speak for 90 seconds with a clear opening and close.', '15 ثانیه فکر کنید و بعد 90 ثانیه با شروع و پایان روشن صحبت کنید.', 'Düşünmek için 15 saniye ayırın, sonra net bir giriş ve kapanışla 90 saniye konuşun.'],
+    /* pronunciation */
+    ['Minimal pairs', 'جفت‌های کمینه', 'Minimal çiftler'],
+    ['Say ship/sheep, bad/bed and light/right. Record, compare and repeat the pairs you mix up.', 'ship/sheep، bad/bed و light/right را بگویید. ضبط کنید، مقایسه کنید و جفت‌هایی را که با هم اشتباه می‌گیرید تکرار کنید.', 'ship/sheep, bad/bed ve light/right çiftlerini söyleyin. Kaydedin, karşılaştırın ve karıştırdığınız çiftleri tekrarlayın.'],
+    ['Word stress in everyday words', 'تکیه‌ی واژه در کلمات روزمره', 'Günlük sözcüklerde vurgu'],
+    ['Say ten words from your day, such as banana, photograph and hotel, and mark the stressed syllable.', 'ده کلمه از روزتان مانند banana، photograph و hotel را بگویید و هجای تکیه‌دار را مشخص کنید.', 'Gününüzden banana, photograph ve hotel gibi on sözcük söyleyin ve vurgulu heceyi işaretleyin.'],
+    ['Shadow {spk}', 'شدوینگ با {spk}', '{spk} ile gölgeleme (shadowing)'],
+    ['Play 90 seconds of speech and repeat half a second behind, matching rhythm and stress.', '90 ثانیه گفتار پخش کنید و نیم‌ثانیه با تأخیر تکرار کنید و با ریتم و تکیه هماهنگ باشید.', '90 saniyelik bir konuşma oynatın ve yarım saniye geriden tekrarlayın; ritim ve vurguyu eşleştirin.'],
+    ['Linking and sentence stress', 'پیوند واژه‌ها و تکیه‌ی جمله', 'Bağlama ve cümle vurgusu'],
+    ['Read a short paragraph aloud, linking words and stressing the content words.', 'یک پاراگراف کوتاه را بلند بخوانید، واژه‌ها را به هم پیوند دهید و روی واژه‌های محتوایی تکیه کنید.', 'Kısa bir paragrafı yüksek sesle okuyun; sözcükleri bağlayın ve içerik sözcüklerini vurgulayın.'],
+    ['Intonation for emphasis', 'آهنگ گفتار برای تأکید', 'Vurgu için tonlama'],
+    ['Say one sentence three ways to change its meaning, then use each in a short exchange.', 'یک جمله را به سه شکل بگویید تا معنایش تغییر کند و هر کدام را در یک گفت‌وگوی کوتاه به کار ببرید.', 'Bir cümleyi anlamı değişecek şekilde üç farklı biçimde söyleyin, sonra her birini kısa bir konuşmada kullanın.'],
+    ['Shadow fast, natural speech', 'شدوینگ گفتار سریع و طبیعی', 'Hızlı, doğal konuşmayı gölgeleme'],
+    ['Follow {spk} for two minutes, matching chunking, weak forms and pace.', 'دو دقیقه {spk} را دنبال کنید و تکه‌بندی، صورت‌های ضعیف و سرعت را هماهنگ کنید.', '{spk} ile iki dakika boyunca öbekleme, zayıf biçimler ve hızı eşleştirerek ilerleyin.'],
+    /* grammar */
+    ['Routines in the present simple', 'روال‌ها در زمان حال ساده', 'Geniş zamanla rutinler'],
+    ['Describe your week, then ask and answer five do/does questions.', 'هفته‌ی خود را توصیف کنید، سپس پنج پرسش do/does بپرسید و پاسخ دهید.', 'Haftanızı anlatın, sonra beş do/does sorusu sorun ve yanıtlayın.'],
+    ['Yesterday and tomorrow', 'دیروز و فردا', 'Dün ve yarın'],
+    ['Use was/were and going to in short sentences about yesterday and tomorrow.', 'از was/were و going to در جمله‌های کوتاه درباره‌ی دیروز و فردا استفاده کنید.', 'Dün ve yarın hakkında kısa cümlelerde was/were ve going to kullanın.'],
+    ['Narrate last weekend', 'آخر هفته‌ی گذشته را روایت کنید', 'Geçen hafta sonunu anlatın'],
+    ['Mix past simple, past continuous and present perfect. Self-correct when you hear a slip.', 'گذشته‌ی ساده، گذشته‌ی استمراری و حال کامل را ترکیب کنید. وقتی لغزشی شنیدید خودتان اصلاح کنید.', 'Past simple, past continuous ve present perfect’i karıştırın. Bir hata duyduğunuzda kendinizi düzeltin.'],
+    ['Advice and possibilities', 'توصیه و احتمال‌ها', 'Tavsiye ve olasılıklar'],
+    ['Give advice with should and could, and speculate using first and second conditionals.', 'با should و could توصیه کنید و با شرطی نوع اول و دوم حدس بزنید.', 'Should ve could ile tavsiye verin, birinci ve ikinci koşul cümleleriyle tahmin yürütün.'],
+    ['Reformulate for precision', 'بازگویی برای دقت بیشتر', 'Kesinlik için yeniden ifade'],
+    ['Say an idea, then restate it using inversion or a cleft sentence.', 'یک ایده را بگویید و سپس با وارونگی (inversion) یا جمله‌ی شکافته (cleft) دوباره بیان کنید.', 'Bir fikri söyleyin, sonra devrik cümle (inversion) veya vurgulu yapı (cleft sentence) kullanarak yeniden ifade edin.'],
+    ['Hypothetical reasoning', 'استدلال فرضی', 'Varsayımsal akıl yürütme'],
+    ['Talk about a past decision using third and mixed conditionals.', 'درباره‌ی یک تصمیم گذشته با شرطی نوع سوم و ترکیبی صحبت کنید.', 'Geçmişteki bir karar hakkında üçüncü ve karma koşul cümleleriyle konuşun.'],
+    /* vocabulary */
+    ['Describe the room around you', 'اتاق اطرافتان را توصیف کنید', 'Çevrenizdeki odayı anlatın'],
+    ['Name and describe ten objects by colour, size and position.', 'ده شیء را با رنگ، اندازه و موقعیت نام ببرید و توصیف کنید.', 'On nesneyi renk, boyut ve konumlarıyla adlandırın ve tanımlayın.'],
+    ['Use five new words', 'پنج کلمه‌ی جدید به کار ببرید', 'Beş yeni sözcük kullanın'],
+    ['Pick five words you learned recently and use each in two spoken sentences.', 'پنج کلمه‌ای را که اخیراً یاد گرفته‌اید انتخاب کنید و هرکدام را در دو جمله‌ی گفتاری به کار ببرید.', 'Yakın zamanda öğrendiğiniz beş sözcüğü seçin ve her birini iki konuşma cümlesinde kullanın.'],
+    ['Collocations in context', 'هم‌نشینی‌ها در بافت', 'Bağlam içinde eşdizimler'],
+    ['Choose a topic and use three new collocations, such as make a decision or reach a conclusion.', 'یک موضوع انتخاب کنید و سه هم‌نشینی تازه مانند make a decision یا reach a conclusion به کار ببرید.', 'Bir konu seçin ve make a decision veya reach a conclusion gibi üç yeni eşdizim kullanın.'],
+    ['Upgrade common words', 'ارتقای واژه‌های رایج', 'Sık kullanılan sözcükleri yükseltin'],
+    ['Replace good, big and nice with more precise words while describing something you did.', 'هنگام توصیف کاری که کرده‌اید، good، big و nice را با واژه‌های دقیق‌تر جایگزین کنید.', 'Yaptığınız bir şeyi anlatırken good, big ve nice yerine daha kesin sözcükler kullanın.'],
+    ['Idiomatic and academic phrases', 'عبارت‌های اصطلاحی و آکادمیک', 'Deyimsel ve akademik ifadeler'],
+    ['Give a short talk that uses four phrases accurately and naturally.', 'سخنرانی کوتاهی ارائه دهید که چهار عبارت را دقیق و طبیعی به کار ببرد.', 'Dört ifadeyi doğru ve doğal biçimde kullanan kısa bir konuşma yapın.'],
+    ['One idea, three registers', 'یک ایده، سه سطح رسمیت', 'Bir fikir, üç üslup'],
+    ['Explain the same concept casually, professionally and academically.', 'همان مفهوم را غیررسمی، حرفه‌ای و آکادمیک توضیح دهید.', 'Aynı kavramı günlük, mesleki ve akademik üslupla açıklayın.'],
+    /* purpose twists */
+    ['IELTS Part 2 long turn', 'IELTS Part 2 (صحبت طولانی)', 'IELTS Part 2 uzun konuşma'],
+    ['One minute to prepare on a cue card, then speak for up to two minutes.', 'یک دقیقه برای آماده‌سازی روی کارت راهنما وقت دارید و سپس تا دو دقیقه صحبت کنید.', 'İpucu kartı üzerinde hazırlanmak için bir dakikanız var, sonra iki dakikaya kadar konuşun.'],
+    ['90-second work update', 'گزارش کاری 90 ثانیه‌ای', '90 saniyelik iş güncellemesi'],
+    ['Brief a colleague: where the project stands, the main risk and the next step.', 'یک همکار را توجیه کنید: وضعیت پروژه، ریسک اصلی و گام بعدی.', 'Bir meslektaşınızı bilgilendirin: projenin durumu, ana risk ve sonraki adım.'],
+    ['Behavioural interview answer', 'پاسخ مصاحبه‌ی رفتاری', 'Davranışsal mülakat yanıtı'],
+    ['Use situation, action and result to answer “Tell me about a time when…”.', 'برای پاسخ به «Tell me about a time when…» از موقعیت، اقدام و نتیجه استفاده کنید.', '“Tell me about a time when…” sorusunu yanıtlamak için durum, eylem ve sonucu kullanın.'],
+    ['Travel role-play', 'نقش‌آفرینی سفر', 'Seyahat canlandırması'],
+    ['Handle a booking, ask for directions and solve a small problem aloud.', 'یک رزرو را انجام دهید، آدرس بپرسید و یک مشکل کوچک را بلند حل کنید.', 'Bir rezervasyonu halledin, yol sorun ve küçük bir sorunu sesli çözün.'],
+    ['Summarize a short article aloud', 'خلاصه‌ی گفتاری یک مقاله‌ی کوتاه', 'Kısa bir makaleyi sesli özetleyin'],
+    ['Read a paragraph, then give the main point and one supporting detail in 90 seconds.', 'یک پاراگراف بخوانید و سپس نکته‌ی اصلی و یک جزئیات پشتیبان را در 90 ثانیه بگویید.', 'Bir paragraf okuyun, sonra ana fikri ve bir destekleyici ayrıntıyı 90 saniyede söyleyin.']
+  ];
+  var SPK = { 'a native speaker': ['یک گویشور بومی', 'anadili İngilizce olan bir konuşmacı'], 'an American speaker': ['یک گویشور آمریکایی', 'Amerikalı bir konuşmacı'], 'a British speaker': ['یک گویشور بریتانیایی', 'İngiliz bir konuşmacı'] };
+  var add = {}, k;
+  for (k in T) add[k] = { fa: T[k][0], tr: T[k][1] };
+  CD.forEach(function (r) { add[r[0]] = { fa: r[1], tr: r[2] }; });
+  INSTR.forEach(function (r) {
+    if (r[0].indexOf('{spk}') < 0) { add[r[0]] = { fa: r[1], tr: r[2] }; return; }
+    Object.keys(SPK).forEach(function (s) { add[r[0].replace(/\{spk\}/g, s)] = { fa: r[1].replace(/\{spk\}/g, SPK[s][0]), tr: r[2].replace(/\{spk\}/g, SPK[s][1]) }; });
+  });
+  nvI18n.add(add);
+
+  /* ── Translator for sentences built from numbers, dates, levels and the user's goals ── */
+  var tw = function (s) { return nvI18n.t(s); };
+  var LOC = { fa: 'fa-u-ca-gregory-nu-latn', tr: 'tr' };
+  var I = function (s) { return '⁦' + s + '⁩'; };
+  var F = function (s) { return '⁨' + s + '⁩'; };
+  var N = function (n, l) { return l === 'fa' ? I(n) : String(n); };
+  var CODE = '(A1|A2|B1|B2|C1|C2)', SK = '(Fluency|Pronunciation|Grammar|Vocabulary)';
+  var LC = { fluency: ['روانی', 'akıcılık'], pronunciation: ['تلفظ', 'telaffuz'], grammar: ['گرامر', 'dilbilgisi'], vocabulary: ['واژگان', 'kelime bilgisi'] };
+  var PURP = { 'General fluency': ['روانی عمومی', 'genel akıcılık'], 'IELTS / TOEFL': ['IELTS / TOEFL', 'IELTS / TOEFL'], 'Academic': ['آکادمیک', 'akademik'], 'Business': ['کسب‌وکار', 'iş İngilizcesi'], 'Travel': ['سفر', 'seyahat'], 'Job interviews': ['مصاحبه‌های شغلی', 'iş mülakatları'] };
+  var MISS = { 'current level': ['سطح فعلی', 'mevcut seviye'], 'practice days per week': ['روزهای تمرین در هفته', 'haftalık pratik günleri'], 'daily practice goal': ['هدف تمرین روزانه', 'günlük pratik hedefi'] };
+  var ACC = { American: ['لهجه‌ی آمریکایی', 'Amerikan aksanı'], British: ['لهجه‌ی بریتانیایی', 'İngiliz aksanı'] };
+  var FB = { Brief: ['بازخورد مختصر', 'Kısa geri bildirim'], Balanced: ['بازخورد متعادل', 'Dengeli geri bildirim'], Detailed: ['بازخورد تفصیلی', 'Ayrıntılı geri bildirim'] };
+  var idx = function (l) { return l === 'fa' ? 0 : 1; };
+  var lc = function (s, l) { var e = LC[s]; return e ? e[idx(l)] : s; };
+  var parts = function (s) { return s.split(/, | and /); };
+  var join = function (a, l) { if (a.length < 2) return a.join(''); return l === 'fa' ? a.slice(0, -1).join('، ') + ' و ' + a[a.length - 1] : a.slice(0, -1).join(', ') + ' ve ' + a[a.length - 1]; };
+  var abl = function (c) { return c + '’den'; };
+  var dat = function (c) { return c + (c.charAt(1) === '2' ? '’ye' : '’e'); };
+  function focusList(s, l) { return join(parts(s).map(function (x) { return lc(x, l); }), l); }
+  function purp(s, l) { var e = PURP[s]; return e ? e[idx(l)] : s; }
+  function dt(str, o, l) { var d = new Date(Date.parse(str + ' 12:00')); if (isNaN(d)) return str; try { return new Intl.DateTimeFormat(LOC[l], o).format(d); } catch (e) { return str; } }
+  function fmtSes(n, l) { return l === 'fa' ? N(n, l) + ' جلسه' : n + ' oturum'; }
+
+  var P = [
+    [/^Good (morning|afternoon|evening), (.+)$/, function (m, l) {
+      var g = { morning: ['صبح بخیر', 'Günaydın'], afternoon: ['عصر بخیر', 'İyi günler'], evening: ['شب بخیر', 'İyi akşamlar'] }[m[1]][idx(l)];
+      return g + (l === 'fa' ? '، ' : ', ') + F(m[2]); }],
+    [new RegExp('^From ' + CODE + ' to ' + CODE + '$'), function (m, l) { return l === 'fa' ? 'از ' + I(m[1]) + ' تا ' + I(m[2]) : abl(m[1]) + ' ' + dat(m[2]) + ' yolculuk'; }],
+    [new RegExp('^Consolidate your ' + CODE + '$'), function (m, l) { return l === 'fa' ? 'تثبیت سطح ' + I(m[1]) : m[1] + ' seviyenizi pekiştirin'; }],
+    [new RegExp('^Keep your ' + CODE + ' sharp$'), function (m, l) { return l === 'fa' ? 'سطح ' + I(m[1]) + ' خود را پایدار نگه دارید' : m[1] + ' seviyenizi canlı tutun'; }],
+    [new RegExp('^Your path beyond ' + CODE + '$'), function (m, l) { return l === 'fa' ? 'مسیر شما فراتر از ' + I(m[1]) : m[1] + ' ötesindeki yolunuz'; }],
+    [new RegExp('^At ' + CODE + ', you can (.+)$'), function (m, l) {
+      var r = CDMAP[m[2]]; if (!r) return null; var t = r[l === 'fa' ? 1 : 2];
+      return l === 'fa' ? 'در سطح ' + I(m[1]) + ' می‌توانید ' + t : m[1] + ' seviyesinde ' + t; }],
+    [/^Everything here is shaped by (.+)\.$/, function (m, l) {
+      var s = m[1], out = [], g = null, f = null, i = s.indexOf(' and your focus on ');
+      if (i >= 0) { g = s.slice(0, i); f = s.slice(i + 19); }
+      else if (s.indexOf('your focus on ') === 0) f = s.slice(14); else g = s;
+      if (g !== null) { g = g.replace(/^your goal of /, ''); out.push(l === 'fa' ? 'هدف شما (' + purp(g, l) + ')' : purp(g, l) + ' hedefiniz'); }
+      if (f !== null) out.push(l === 'fa' ? 'تمرکز شما روی ' + focusList(f, l) : focusList(f, l) + ' odağınız');
+      return l === 'fa' ? 'همه‌چیز در این صفحه بر پایه‌ی ' + join(out, l) + ' شکل گرفته است.' : 'Buradaki her şey ' + join(out, l) + ' temel alınarak şekillendirilir.'; }],
+    [new RegExp('^' + CODE + ' to ' + CODE + '$'), function (m, l) { return l === 'fa' ? I(m[1]) + ' تا ' + I(m[2]) : m[1] + ' → ' + m[2]; }],
+    [/^(?:prioritise (.+?)|practise across all four skills)(?:, using (.+))?\.$/, function (m, l) {
+      var a = m[1] ? (l === 'fa' ? 'روی ' + focusList(m[1], l) + ' تمرکز کنید' : focusList(m[1], l) + ' becerilerine öncelik verin') : (l === 'fa' ? 'در هر چهار مهارت تمرین کنید' : 'dört becerinin tamamında pratik yapın');
+      var t = m[2] ? (l === 'fa' ? '، با استفاده از ' + tw(m[2]) : ', ' + tw(m[2]) + ' kullanarak') : '';
+      return a + t + '.'; }],
+    [/^This week$/, function (m, l) { return tw('This week'); }],
+    [/^(\d+) min a day$/, function (m, l) { return l === 'fa' ? N(m[1], l) + ' دقیقه در روز' : 'günde ' + m[1] + ' dk'; }],
+    [/^(\d+) days? a week$/, function (m, l) { return l === 'fa' ? N(m[1], l) + ' روز در هفته' : 'haftada ' + m[1] + ' gün'; }],
+    [/^(American|British) accent$/, function (m, l) { return ACC[m[1]][idx(l)]; }],
+    [/^(Brief|Balanced|Detailed) feedback$/, function (m, l) { return FB[m[1]][idx(l)]; }],
+    [/^Add your (.+) in your profile and NIRVO will build your week\.$/, function (m, l) {
+      var a = parts(m[1]).map(function (x) { return MISS[x] ? MISS[x][idx(l)] : x; });
+      return l === 'fa' ? join(a, l) + ' خود را در پروفایل اضافه کنید تا NIRVO هفته‌ی شما را بسازد.' : 'Profilinize ' + join(a, l) + ' ekleyin, NIRVO haftanızı oluştursun.'; }],
+    [/^Each day is themed around (.+)\. Tap a day to see its exercises\.$/, function (m, l) {
+      var w = m[1].split(', plus ').map(function (x) {
+        var a = x.match(/^your focus on (.+)$/), b = x.match(/^your lowest recent score \((.+)\)$/);
+        if (a) return l === 'fa' ? 'تمرکز شما روی ' + focusList(a[1], l) : focusList(a[1], l) + ' odağınız';
+        if (b) return l === 'fa' ? 'پایین‌ترین امتیاز اخیر شما (' + lc(b[1], l) + ')' : 'son dönemdeki en düşük puanınız (' + lc(b[1], l) + ')';
+        return x; });
+      return l === 'fa' ? 'هر روز بر پایه‌ی ' + w.join('، و همچنین ') + ' طراحی شده است. برای دیدن تمرین‌های هر روز، روی آن بزنید.'
+                        : 'Her gün ' + w.join(', ayrıca ') + ' temel alınarak planlanır. Egzersizleri görmek için bir güne dokunun.'; }],
+    [new RegExp('^(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday) (\\d+), (?:' + SK + ' day|rest day)(, completed)?$'), function (m, l) {
+      var d = tw(m[1]), kind = m[3] ? (l === 'fa' ? 'روز ' + tw(m[3]) : tw(m[3]) + ' günü') : (l === 'fa' ? 'روز استراحت' : 'dinlenme günü');
+      return d + ' ' + N(m[2], l) + (l === 'fa' ? '، ' : ', ') + kind + (m[4] ? (l === 'fa' ? '، تکمیل شد' : ', tamamlandı') : ''); }],
+    [new RegExp('^' + SK + ' focus ·$'), function (m, l) { return l === 'fa' ? 'تمرکز روی ' + tw(m[1]) + ' ·' : tw(m[1]) + ' odağı ·'; }],
+    [new RegExp('^Reinforce · ' + SK + '$'), function (m, l) { return (l === 'fa' ? 'تقویت' : 'Pekiştirme') + ' · ' + tw(m[1]); }],
+    [/^(\d+) min$/, function (m, l) { return l === 'fa' ? N(m[1], l) + ' دقیقه' : m[1] + ' dk'; }],
+    [/^(\d+(?:\.\d)?) h$/, function (m, l) { return l === 'fa' ? N(m[1], l) + ' ساعت' : m[1] + ' sa'; }],
+    [/^(\d+) of (\d+)( min)?$/, function (m, l) { return l === 'fa' ? N(m[1], l) + ' از ' + N(m[2], l) + (m[3] ? ' دقیقه' : '') : m[1] + ' / ' + m[2] + (m[3] ? ' dk' : ''); }],
+    [/^Reach (\d+) sessions in a week$/, function (m, l) { return l === 'fa' ? 'در یک هفته به ' + N(m[1], l) + ' جلسه برسید' : 'Bir haftada ' + m[1] + ' oturuma ulaşın'; }],
+    [/^Average of your last 30 days across (\d+) scored sessions?, out of 100\.$/, function (m, l) {
+      return l === 'fa' ? 'میانگین 30 روز گذشته‌ی شما در ' + N(m[1], l) + ' جلسه‌ی امتیازدار، از ' + N(100, l) + '.' : 'Son 30 gününüzün ' + m[1] + ' puanlı oturum üzerinden ortalaması, 100 üzerinden.'; }],
+    [new RegExp('^(\\d+) steps? from ' + CODE + ' to ' + CODE + '\\. What to build at each one\\.$'), function (m, l) {
+      return l === 'fa' ? N(m[1], l) + ' گام از ' + I(m[2]) + ' تا ' + I(m[3]) + '. آنچه در هر گام باید بسازید.' : m[2] + ' → ' + m[3] + ': ' + m[1] + ' adım. Her adımda neyi geliştireceğiniz.'; }],
+    [new RegExp('^(?:Consolidating ' + CODE + ' means speaking with more accuracy and less effort\\. )?(?:Ready for more\\? Raise your target to ' + CODE + ' to see the next steps\\.|C2 is the top of the scale\\.)$'), function (m, l) {
+      var s = '';
+      if (m[1]) s += l === 'fa' ? 'تثبیت ' + I(m[1]) + ' یعنی صحبت با دقت بیشتر و تلاش کمتر. ' : m[1] + ' seviyesini pekiştirmek, daha doğru ve daha az çabayla konuşmak demektir. ';
+      if (m[2]) s += l === 'fa' ? 'آماده‌ی گام بعدی هستید؟ هدف خود را به ' + I(m[2]) + ' ارتقا دهید تا گام‌های بعدی را ببینید.' : 'Daha fazlasına hazır mısınız? Sonraki adımları görmek için hedefinizi ' + m[2] + ' seviyesine yükseltin.';
+      else s += l === 'fa' ? 'C2 بالاترین سطح مقیاس است.' : 'C2, ölçeğin en üst seviyesidir.';
+      return s; }],
+    [/^Practice activity over the last 12 weeks: (\d+) active days$/, function (m, l) { return l === 'fa' ? 'فعالیت تمرین در 12 هفته‌ی اخیر: ' + N(m[1], l) + ' روز فعال' : 'Son 12 haftadaki pratik etkinliği: ' + m[1] + ' aktif gün'; }],
+    [/^(\d+) active days? in the last 12 weeks$/, function (m, l) { return l === 'fa' ? N(m[1], l) + ' روز فعال در 12 هفته‌ی اخیر' : 'Son 12 haftada ' + m[1] + ' aktif gün'; }],
+    [/^(up|down) (\d+) points on the previous 30 days$/, function (m, l) { return l === 'fa' ? N(m[2], l) + ' امتیاز ' + (m[1] === 'up' ? 'بالاتر' : 'پایین‌تر') + ' از 30 روز قبل' : 'önceki 30 güne göre ' + m[2] + ' puan ' + (m[1] === 'up' ? 'yukarıda' : 'aşağıda'); }],
+    [/^unchanged points on the previous 30 days$/, function (m, l) { return l === 'fa' ? 'بدون تغییر نسبت به 30 روز قبل' : 'önceki 30 güne göre değişmedi'; }],
+    [new RegExp('^' + SK + ' (\\d+) out of 100$'), function (m, l) { return tw(m[1]) + ' ' + N(m[2], l) + (l === 'fa' ? ' از ' + N(100, l) : ' / 100'); }],
+    [new RegExp('^' + SK + ' not scored yet$'), function (m, l) { return tw(m[1]) + (l === 'fa' ? ': هنوز امتیاز نگرفته' : ': henüz puanlanmadı'); }],
+    [new RegExp('^' + SK + ' weekly average, last 8 weeks$'), function (m, l) { return l === 'fa' ? 'میانگین هفتگی ' + tw(m[1]) + '، 8 هفته‌ی اخیر' : tw(m[1]) + ' haftalık ortalaması, son 8 hafta'; }],
+    [/^([A-Z][a-z]{2} \d{1,2}, \d{4})$/, function (m, l) { return dt(m[1], { year: 'numeric', month: 'short', day: 'numeric' }, l); }],
+    [/^([A-Z][a-z]{2} \d{1,2})(?:: (\d+) sessions?)?$/, function (m, l) {
+      var y = new Date().getFullYear(), d = new Date(Date.parse(m[1] + ', ' + y + ' 12:00')); if (isNaN(d)) return null;
+      if (d - Date.now() > 7 * 864e5) d.setFullYear(y - 1);
+      var s; try { s = new Intl.DateTimeFormat(LOC[l], { month: 'short', day: 'numeric' }).format(d); } catch (e) { return null; }
+      return s + (m[2] ? ': ' + fmtSes(m[2], l) : ''); }]
+  ];
+  function conv(en, l) { for (var i = 0; i < P.length; i++) { var m = en.match(P[i][0]); if (m) { var r = P[i][1](m, l); if (r != null) return r; } } return null; }
+
+  var recs = new WeakMap(), list = [], attrRecs = new WeakMap(), attrList = [], busy = false, ATT = ['aria-label', 'title'];
+  function render(rec) {
+    var l = nvI18n.lang, lead = rec.en.match(/^\s*/)[0], trail = rec.en.match(/\s*$/)[0];
+    var out = l === 'en' ? null : conv(rec.en.trim(), l); var v = out ? lead + out + trail : rec.en;
+    rec.out = v; if (rec.n.data !== v) rec.n.data = v;
+  }
+  function visit(n) {
+    var rec = recs.get(n);
+    if (rec) { if (n.data === rec.out) return; rec.en = n.data; }
+    var core = n.data.trim(); if (!core) return;
+    if (!rec) { if (!conv(core, 'fa')) return; rec = { n: n, en: n.data, out: n.data }; recs.set(n, rec); list.push(rec); }
+    render(rec);
+  }
+  function renderAttr(r) { var l = nvI18n.lang, o = l === 'en' ? null : conv(r.en, l); r.out = o || r.en; if (r.el.getAttribute(r.a) !== r.out) r.el.setAttribute(r.a, r.out); }
+  function visitAttr(el, a) {
+    var v = el.getAttribute(a); if (v == null) return;
+    var m = attrRecs.get(el); if (!m) { m = {}; attrRecs.set(el, m); }
+    var rec = m[a];
+    if (rec) { if (v === rec.out) return; rec.en = v; } else { if (!conv(v, 'fa')) return; rec = m[a] = { el: el, a: a, en: v, out: v }; attrList.push(rec); }
+    renderAttr(rec);
+  }
+  function visitAll(el) { ATT.forEach(function (a) { if (el.hasAttribute && el.hasAttribute(a)) visitAttr(el, a); }); }
+  function walk(root) {
+    var w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null), n;
+    while ((n = w.nextNode())) { if (n.parentNode && /^(SCRIPT|STYLE)$/.test(n.parentNode.nodeName)) continue; visit(n); }
+    if (root.nodeType === 1) visitAll(root);
+    if (root.querySelectorAll) { var e = root.querySelectorAll('[aria-label],[title]'); for (var i = 0; i < e.length; i++) visitAll(e[i]); }
+  }
+  function refresh() {
+    busy = true;
+    list = list.filter(function (r) { return r.n.isConnected; }); list.forEach(render);
+    attrList = attrList.filter(function (r) { return r.el.isConnected; }); attrList.forEach(renderAttr);
+    walk(document.body); busy = false;
+  }
+  new MutationObserver(function (ms) {
+    if (busy) return; busy = true;
+    try { ms.forEach(function (m) {
+      if (m.type === 'characterData') visit(m.target);
+      else if (m.type === 'attributes') visitAttr(m.target, m.attributeName);
+      else m.addedNodes.forEach(function (a) { if (a.nodeType === 3) visit(a); else if (a.nodeType === 1) walk(a); });
+    }); } catch (e) {}
+    busy = false;
+  }).observe(document.body, { childList: true, characterData: true, subtree: true, attributes: true, attributeFilter: ATT });
+  document.addEventListener('nvlangchange', refresh);
+  refresh();
+})();
+</script>
+
 </body>
 </html>
