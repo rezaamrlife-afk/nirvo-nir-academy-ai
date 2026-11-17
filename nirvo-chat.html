@@ -20,6 +20,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Newsreader:opsz,wght@6..72,500;6..72,600&display=swap" rel="stylesheet">
+<script src="i18n.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
   function toggleMenu() {
@@ -440,6 +441,36 @@ body{padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))}
   };
 })();
 </script>
+<style id="nv-i18n-chat">
+/* Language switcher + RTL support for nirvo-chat.html (additive; English/LTR rendering is unchanged) */
+.nv-langbar{display:inline-flex;align-items:center;gap:2px;padding:2px;border-radius:999px;border:1px solid var(--b0_1);background:var(--f0_04);direction:ltr}
+.nv-langbar button{min-width:30px;min-height:0;height:26px;padding:0 7px;border:0;border-radius:999px;background:transparent;color:var(--t0_5);font-family:'Outfit',sans-serif;font-size:11.5px;font-weight:600;letter-spacing:.04em;line-height:1;cursor:pointer;transition:background .2s,color .2s}
+.nv-langbar button:hover{color:var(--white)}
+.nv-langbar button.active{background:var(--gold);color:var(--on-gold)}
+.nv-langbar button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+@media(max-width:900px){.nav-actions .nv-langbar{display:none}}
+.nvd-langrow{display:flex;align-items:center;gap:14px;padding:6px 10px;margin-bottom:4px}
+.nvd-langrow .nvd-ic{flex-shrink:0}
+.nvd-langrow>span:nth-child(2){flex:1;min-width:0;font-family:'Outfit',sans-serif;font-size:16px;font-weight:500;color:var(--white)}
+.nvd-langrow .nv-langbar button{min-width:40px;min-height:34px;height:34px}
+/* RTL (Persian). The conversation itself is English, so the message list keeps its left-to-right layout. */
+html[dir="rtl"] #messages{direction:ltr}
+html[dir="rtl"] #chat-input,html[dir="rtl"] #live-status-text{unicode-bidi:plaintext}
+html[dir="rtl"] .nvd-chev{transform:scaleX(-1)}
+html[dir="rtl"] .mobile-menu .nvd .nvd-row{text-align:right}
+html[dir="rtl"] .nvd-switch::after{left:auto;right:4px}
+html[dir="rtl"] .nvd-switch.on::after{transform:translateX(-22px)}
+html[dir="rtl"] .cd-menu{left:auto;right:0}
+html[dir="rtl"] .cd-option{text-align:right}
+html[dir="rtl"] .cd-option .cd-check{margin-left:0;margin-right:auto}
+html[dir="rtl"] .btn-clear{margin-left:0;margin-right:auto}
+html[dir="rtl"] #tts-label{text-align:left}
+@media(max-width:1024px){html[dir="rtl"] .avatar-panel{margin-left:0;margin-right:16px}}
+@media(max-width:768px){html[dir="rtl"] .navbar{padding-left:8px;padding-right:16px}html[dir="rtl"] .coach-id{text-align:right}html[dir="rtl"] .avatar-panel{margin-right:12px}}
+html[lang="fa"] .nvn-word,html[lang="fa"] .nvn-word *,html[lang="fa"] .nvd-word,html[lang="fa"] .nvd-word *,html[lang="fa"] .brand-name{font-family:'Outfit',sans-serif!important}
+html[lang="fa"] .nvd-word{letter-spacing:.3em!important}
+html[lang="fa"] #nv-mob-nav a{font-size:clamp(9.5px,2.7vw,11.5px)}
+</style>
 </head>
 <body>
 
@@ -492,6 +523,7 @@ body{padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))}
   </nav>
 
   <div class="nav-actions">
+    <div class="nv-langbar" role="group" aria-label="Language"><button type="button" data-lang-btn="en" aria-pressed="true">EN</button><button type="button" data-lang-btn="fa" aria-pressed="false">FA</button><button type="button" data-lang-btn="tr" aria-pressed="false">TR</button></div>
     <button type="button" class="icon-btn nv-theme-btn nav-theme" onclick="toggleTheme()" aria-label="Switch to light mode"><svg class="i" aria-hidden="true"><use href="#i-sun"/></svg></button>
     <div id="user-avatar" class="user-avatar" aria-hidden="true"></div>
     <button type="button" onclick="handleLogout()" class="nv-signout"><svg class="i" aria-hidden="true"><use href="#i-logout"/></svg>Sign Out</button>
@@ -520,6 +552,7 @@ body{padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))}
       <a href="nirvo-chat.html" class="nvd-row nvd-cur" aria-current="page"><span class="nvd-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg></span><span>Chat with NIRVO</span><i class="nvd-dot"></i><svg class="nvd-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a>
 
       <div class="nvd-label">Settings</div>
+      <div class="nvd-langrow"><span class="nvd-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span><span>Language</span><div class="nv-langbar" role="group" aria-label="Language"><button type="button" data-lang-btn="en" aria-pressed="true">EN</button><button type="button" data-lang-btn="fa" aria-pressed="false">FA</button><button type="button" data-lang-btn="tr" aria-pressed="false">TR</button></div></div>
       <button type="button" class="nvd-row nvd-toggle" role="switch" aria-checked="false" onclick="toggleTheme()"><span class="nvd-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg></span><span class="nv-theme-lbl">Light mode</span><span class="nvd-switch" aria-hidden="true"></span></button>
       <button type="button" id="nvd-signout" class="nvd-row nvd-danger" style="margin-top:10px" onclick="handleLogout()"><span class="nvd-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></svg></span><span>Sign Out</span></button>
     </div>
@@ -1603,5 +1636,128 @@ if (window.speechSynthesis.getVoices().length === 0) {
   })();
 })();
 </script>
+<script id="nv-i18n-chat-js">
+/* Chat page i18n (additive). Uses the shared i18n.js. The interface (toolbar, status text, buttons, live-voice messages, toasts)
+   is translated. The conversation itself stays English because this is English practice: NIRVO's replies, the greeting, your
+   messages, the prompts sent to the AI, the speech language (en-US) and the topic/transcript saved to your history. The
+   page's own scripts above are not modified. */
+(function () {
+  if (!window.nvI18n) return;
+  var T = {
+    'NIRVO AI — Chat': ['NIRVO AI — گفتگو', 'NIRVO AI — Sohbet'],
+    'Progress': ['پیشرفت', 'İlerleme'],
+    'Light mode': ['حالت روشن', 'Açık mod'], 'Dark mode': ['حالت تیره', 'Koyu mod'],
+    'NIRVO AI home': ['صفحه‌ی اصلی NIRVO AI', 'NIRVO AI ana sayfa'], 'Primary': ['ناوبری اصلی', 'Ana gezinme'],
+    'Mode': ['حالت', 'Mod'], 'Topic': ['موضوع', 'Konu'], 'Free Conversation': ['گفتگوی آزاد', 'Serbest Sohbet'], 'Roleplay': ['ایفای نقش', 'Rol Yapma'],
+    'Vocabulary': ['واژگان', 'Kelime Bilgisi'], 'Vocabulary Focus': ['تمرکز بر واژگان', 'Kelime Odağı'], 'Clear': ['پاک کردن', 'Temizle'],
+    'Ready to help you': ['آماده‌ی کمک به شما', 'Size yardıma hazır'], 'Thinking...': ['در حال فکر کردن...', 'Düşünüyor...'], 'Speaking...': ['در حال صحبت...', 'Konuşuyor...'],
+    'NIRVO Voice': ['صدای NIRVO', 'NIRVO Sesi'], 'NIRVO voice': ['صدای NIRVO', 'NIRVO sesi'], 'ON': ['روشن', 'AÇIK'], 'OFF': ['خاموش', 'KAPALI'],
+    'Voice input': ['ورودی صوتی', 'Sesli giriş'], 'Live': ['زنده', 'Canlı'], 'End': ['پایان', 'Bitir'],
+    'Start live voice conversation': ['شروع گفتگوی صوتی زنده', 'Canlı sesli sohbeti başlat'], 'Stop live voice conversation': ['پایان گفتگوی صوتی زنده', 'Canlı sesli sohbeti durdur'],
+    'Live voice conversation': ['گفتگوی صوتی زنده', 'Canlı sesli sohbet'],
+    'Message': ['پیام', 'Mesaj'], 'Send message': ['ارسال پیام', 'Mesajı gönder'],
+    'Type your message or press the mic to speak...': ['پیام خود را بنویسید یا برای صحبت، میکروفون را بزنید...', 'Mesajınızı yazın veya konuşmak için mikrofona basın...'],
+    'Listening...': ['در حال گوش دادن...', 'Dinleniyor...'],
+    'Press the mic to speak. NIRVO replies with voice.': ['برای صحبت، میکروفون را بزنید. NIRVO با صدا پاسخ می‌دهد.', 'Konuşmak için mikrofona basın. NIRVO sesle yanıt verir.'],
+    'NIRVO Smart Actions': ['اقدام‌های هوشمند NIRVO', 'NIRVO Akıllı Eylemler'],
+    'Continue': ['ادامه', 'Devam et'], 'Challenge Me': ['من را به چالش بکش', 'Beni zorla'], 'Use New Vocabulary': ['استفاده از واژگان جدید', 'Yeni Kelimeleri Kullan'],
+    'Listening… speak naturally': ['در حال گوش دادن… طبیعی صحبت کنید', 'Dinleniyor… doğal konuşun'],
+    'NIRVO is thinking…': ['NIRVO در حال فکر کردن است…', 'NIRVO düşünüyor…'], 'NIRVO is speaking…': ['NIRVO در حال صحبت است…', 'NIRVO konuşuyor…'], 'Getting ready…': ['در حال آماده‌سازی…', 'Hazırlanıyor…'],
+    'Microphone access is blocked. Allow it in your browser or app settings, then tap Live again.': ['دسترسی به میکروفون مسدود است. آن را در تنظیمات مرورگر یا اپ مجاز کنید و دوباره روی «زنده» بزنید.', 'Mikrofon erişimi engellendi. Tarayıcı veya uygulama ayarlarından izin verin, sonra tekrar Canlı’ya dokunun.'],
+    'No microphone was found on this device.': ['میکروفونی در این دستگاه پیدا نشد.', 'Bu cihazda mikrofon bulunamadı.'],
+    'Your microphone is being used by another app.': ['میکروفون شما توسط برنامه‌ی دیگری استفاده می‌شود.', 'Mikrofonunuz başka bir uygulama tarafından kullanılıyor.'],
+    'Could not access the microphone. You can still type your message.': ['دسترسی به میکروفون ممکن نشد. همچنان می‌توانید پیام خود را تایپ کنید.', 'Mikrofona erişilemedi. Mesajınızı yine de yazabilirsiniz.'],
+    'Speech recognition needs an internet connection. Please check it and try again.': ['تشخیص گفتار به اینترنت نیاز دارد. لطفاً اتصال را بررسی کنید و دوباره تلاش کنید.', 'Konuşma tanıma internet bağlantısı gerektirir. Lütfen bağlantıyı kontrol edip tekrar deneyin.'],
+    'Voice input stopped unexpectedly. You can still type your message.': ['ورودی صوتی به‌طور غیرمنتظره متوقف شد. همچنان می‌توانید پیام خود را تایپ کنید.', 'Sesli giriş beklenmedik biçimde durdu. Mesajınızı yine de yazabilirsiniz.'],
+    'Live mode paused — no speech heard. Tap Live to continue.': ['حالت زنده متوقف شد — صدایی شنیده نشد. برای ادامه روی «زنده» بزنید.', 'Canlı mod duraklatıldı — konuşma duyulmadı. Devam etmek için Canlı’ya dokunun.'],
+    'Could not start the microphone. You can still type your message.': ['راه‌اندازی میکروفون ممکن نشد. همچنان می‌توانید پیام خود را تایپ کنید.', 'Mikrofon başlatılamadı. Mesajınızı yine de yazabilirsiniz.'],
+    'Live voice works in Chrome, Edge or Samsung Internet. You can still type your message.': ['گفتگوی صوتی زنده در Chrome، Edge یا Samsung Internet کار می‌کند. همچنان می‌توانید پیام خود را تایپ کنید.', 'Canlı ses Chrome, Edge veya Samsung Internet’te çalışır. Mesajınızı yine de yazabilirsiniz.'],
+    'Please use Chrome for voice input.': ['برای ورودی صوتی لطفاً از Chrome استفاده کنید.', 'Sesli giriş için lütfen Chrome kullanın.'],
+    'Your conversation could not be saved to your history.': ['گفتگوی شما در تاریخچه ذخیره نشد.', 'Sohbetiniz geçmişinize kaydedilemedi.'],
+    'I\'m sorry, I had a little trouble connecting. Please try again!': ['متأسفم، در اتصال مشکلی پیش آمد. لطفاً دوباره تلاش کنید!', 'Üzgünüm, bağlanırken küçük bir sorun yaşadım. Lütfen tekrar deneyin!'],
+    'Dismiss notification': ['بستن اعلان', 'Bildirimi kapat']
+  };
+  var add = {}; for (var k in T) add[k] = { fa: T[k][0], tr: T[k][1] };
+  nvI18n.add(add);
+
+  /* Keep the conversation exactly as written/spoken: a message that happens to equal a UI word (for example the user's
+     "Continue" bubble) must not be translated. Message text gets an invisible zero-width mark; the connection-error
+     message is interface text, so it is left translatable. */
+  var ERR = 'I\'m sorry, I had a little trouble connecting. Please try again!';
+  if (typeof window.addMessage === 'function') {
+    var baseAdd = window.addMessage;
+    window.addMessage = function (role, text) {
+      var r = baseAdd.apply(this, arguments);
+      try {
+        if (String(text) !== ERR) {
+          var m = document.getElementById('messages'), el = m && m.lastElementChild, b = el && el.querySelector('.msg-bubble');
+          if (b) { var w = document.createTreeWalker(b, NodeFilter.SHOW_TEXT, null), n, list = []; while ((n = w.nextNode())) list.push(n); list.forEach(function (t) { if (t.data.trim()) t.data += '​'; }); }
+        }
+      } catch (e) {}
+      return r;
+    };
+  }
+
+  var tw = function (s) { return nvI18n.t(s); };
+  var idx = function (l) { return l === 'fa' ? 0 : 1; };
+  var I = function (s) { return '⁦' + s + '⁩'; };
+  var N = function (n, l) { return l === 'fa' ? I(n) : String(n); };
+  var CODE = '(A1|A2|B1|B2|C1|C2)';
+  var FOC = { Fluency: ['روانی', 'Akıcılık'], Pronunciation: ['تلفظ', 'Telaffuz'], Grammar: ['گرامر', 'Dilbilgisi'], Vocabulary: ['واژگان', 'Kelime Bilgisi'] };
+  var P = [
+    [/^Focus: (.+)$/, function (m, l) {
+      var a = m[1].split(' · ').map(function (x) { return FOC[x] ? FOC[x][idx(l)] : x; });
+      return (l === 'fa' ? 'تمرکز: ' : 'Odak: ') + a.join(' · '); }],
+    [/^Dismiss notification$/, function (m, l) { return tw('Dismiss notification'); }]
+  ];
+  function conv(en, l) { for (var i = 0; i < P.length; i++) { var m = en.match(P[i][0]); if (m) { var r = P[i][1](m, l); if (r != null) return r; } } return null; }
+
+  var recs = new WeakMap(), list = [], attrRecs = new WeakMap(), attrList = [], busy = false;
+  function render(rec) {
+    var l = nvI18n.lang, lead = rec.en.match(/^\s*/)[0], trail = rec.en.match(/\s*$/)[0];
+    var out = l === 'en' ? null : conv(rec.en.trim(), l); var v = out ? lead + out + trail : rec.en;
+    rec.out = v; if (rec.n.data !== v) rec.n.data = v;
+  }
+  function visit(n) {
+    var rec = recs.get(n);
+    if (rec) { if (n.data === rec.out) return; rec.en = n.data; }
+    var core = n.data.trim(); if (!core) return;
+    if (!rec) { if (!conv(core, 'fa')) return; rec = { n: n, en: n.data, out: n.data }; recs.set(n, rec); list.push(rec); }
+    render(rec);
+  }
+  function renderAttr(r) { var l = nvI18n.lang, o = l === 'en' ? null : tw2(r.en, l); r.out = o || r.en; if (r.el.getAttribute('aria-label') !== r.out) r.el.setAttribute('aria-label', r.out); }
+  function tw2(en, l) { var t = nvI18n.t(en); return t !== en ? t : conv(en, l); }
+  function visitAttr(el) {
+    var v = el.getAttribute('aria-label'); if (v == null) return;
+    var rec = attrRecs.get(el);
+    if (rec) { if (v === rec.out) return; rec.en = v; } else { if (v !== 'Dismiss notification') return; rec = { el: el, en: v, out: v }; attrRecs.set(el, rec); attrList.push(rec); }
+    renderAttr(rec);
+  }
+  function walk(root) {
+    var w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null), n;
+    while ((n = w.nextNode())) { if (n.parentNode && /^(SCRIPT|STYLE)$/.test(n.parentNode.nodeName)) continue; visit(n); }
+    if (root.nodeType === 1) visitAttr(root);
+    if (root.querySelectorAll) { var e = root.querySelectorAll('[aria-label]'); for (var i = 0; i < e.length; i++) visitAttr(e[i]); }
+  }
+  function refresh() {
+    busy = true;
+    list = list.filter(function (r) { return r.n.isConnected; }); list.forEach(render);
+    attrList = attrList.filter(function (r) { return r.el.isConnected; }); attrList.forEach(renderAttr);
+    walk(document.body); busy = false;
+  }
+  new MutationObserver(function (ms) {
+    if (busy) return; busy = true;
+    try { ms.forEach(function (m) {
+      if (m.type === 'characterData') visit(m.target);
+      else if (m.type === 'attributes') visitAttr(m.target);
+      else m.addedNodes.forEach(function (a) { if (a.nodeType === 3) visit(a); else if (a.nodeType === 1) walk(a); });
+    }); } catch (e) {}
+    busy = false;
+  }).observe(document.body, { childList: true, characterData: true, subtree: true, attributes: true, attributeFilter: ['aria-label'] });
+  document.addEventListener('nvlangchange', refresh);
+  refresh();
+})();
+</script>
+
 </body>
 </html>
