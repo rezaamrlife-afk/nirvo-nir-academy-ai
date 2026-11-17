@@ -1105,12 +1105,12 @@ Give 3-4 feedback items covering grammar and vocabulary only. In memory.mistakes
   if (box) {
     var d = Object.getOwnPropertyDescriptor(Element.prototype, 'innerHTML');
     Object.defineProperty(box, 'innerHTML', { configurable: true, get: function () { return d.get.call(this); },
-      set: function (v) { d.set.call(this, /font-style:italic/.test(v) ? v : String(v).replace(/(<span[^>]*>)([^<]+)(<\/span>)/g, '$1$2​$3')); } });
+      set: function (v) { d.set.call(this, /font-style:italic/.test(v) ? v : String(v).replace(/(<span[^>]*>)([^<]+)(<\/span>)/g, '$1$2\u200b$3')); } });
   }
 
   var tw = function (s) { return nvI18n.t(s); };
   var idx = function (l) { return l === 'fa' ? 0 : 1; };
-  var I = function (s) { return '⁦' + s + '⁩'; };
+  var I = function (s) { return '\u2066' + s + '\u2069'; };
   var N = function (n, l) { return l === 'fa' ? I(n) : String(n); };
   var CODE = '(A1|A2|B1|B2|C1|C2)';
   var BAND = { Excellent: ['عالی', 'Mükemmel'], Good: ['خوب', 'İyi'], Fair: ['قابل‌قبول', 'Orta'], 'Keep Practicing': ['به تمرین ادامه دهید', 'Pratiğe Devam Edin'] };
