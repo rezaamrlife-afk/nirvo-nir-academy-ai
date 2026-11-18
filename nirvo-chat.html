@@ -975,7 +975,17 @@ async function getNirvoResponse(userMsg) {
   // Language of tips/explanations follows the UI language; English learning content stays English
   const nvL = (window.nvI18n && nvI18n.lang) || 'en', nvLN = { fa: 'Persian (Farsi)', tr: 'Turkish' }[nvL];
   const langNote0 = nvLN ? `\nLANGUAGE RULE: Write every tip explanation, feedback comment, explanation and instruction in ${nvLN}. Format the tip as: 💡 Tip: <explanation in ${nvLN}> '<corrected English sentence>'. Start any other non-English explanation line with 🌐. Keep the "💡 Tip:" label, corrected sentences, example phrases, vocabulary words and your normal in-character or conversational replies in English.` : '';
-  const langNote = nvFaMode ? `\nBILINGUAL LEARNING MODE: The learner may write or speak in Persian (Farsi) or English; understand both. Reply in English first, then repeat the reply in Persian on a new line. Correct any English sentence the learner produces. Explain grammar and vocabulary in both English and Persian. Format the tip as: 💡 Tip: <English explanation> / <Persian explanation> '<corrected English sentence>'. Keep corrected sentences and examples in English.` : langNote0;
+  const langNote = nvFaMode ? `\n\nBILINGUAL LEARNING MODE (ACTIVE — these rules OVERRIDE any rule above about reply length, English-only replies, explanations or format):
+The learner may write or speak in Persian (Farsi) or English; understand both. EVERY reply MUST have this exact shape, in this order:
+Line 1: your normal reply in English (1-2 sentences; stay in role in Roleplay).
+Line 2: the same reply written in Persian (Farsi), on its own line.
+Line 3 (skip this line only in Free Conversation unless the learner asks for feedback): 💡 Tip: <short English explanation of the grammar or vocabulary point> / <the same explanation in Persian> '<corrected English sentence>'
+Always write the Persian line, even when the learner wrote only in English. Never write the corrected sentence, examples or vocabulary words in Persian; keep them in English. If the learner wrote Persian, also give the natural English version of what they meant as the corrected sentence.
+Example:
+Learner: "Yesterday I go to airport"
+You: "Sounds like a busy day! Did you travel somewhere?
+به نظر روز پرمشغله‌ای بود! جایی سفر کردید؟
+💡 Tip: Use the past tense for finished actions / برای کارهای تمام‌شده از زمان گذشته استفاده کنید 'Yesterday I went to the airport'` : langNote0;
 
   setNirvoState('thinking');
   showTyping();
