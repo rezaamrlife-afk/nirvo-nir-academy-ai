@@ -1164,7 +1164,9 @@ function speak(text) {
 
   function doSpeak() {
     if (started) return; started = true;
-    const chunks = speechChunks(text).filter(c => !(nvFaMode && /[\u0600-\u06FF]/.test(c) && !nvFaVoice()));
+    // Persian mode without a Persian voice: still read the English parts, skip only the Persian runs
+    const noFa = nvFaMode && !nvFaVoice();
+    const chunks = speechChunks(text).map(c => noFa ? c.replace(/[\u0600-\u06FF][\u0600-\u06FF\u200c\s\u060c\u061b\u061f.!?\d]*/g, ' ').trim() : c).filter(Boolean);
     if (!chunks.length) { finish(); return; }
     const voice = pickEnglishVoice();
     const phone = window.matchMedia && matchMedia('(pointer:coarse)').matches;
