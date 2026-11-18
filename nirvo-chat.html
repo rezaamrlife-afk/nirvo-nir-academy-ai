@@ -977,10 +977,10 @@ async function getNirvoResponse(userMsg) {
   const langNote0 = nvLN ? `\nLANGUAGE RULE: Write every tip explanation, feedback comment, explanation and instruction in ${nvLN}. Format the tip as: 💡 Tip: <explanation in ${nvLN}> '<corrected English sentence>'. Start any other non-English explanation line with 🌐. Keep the "💡 Tip:" label, corrected sentences, example phrases, vocabulary words and your normal in-character or conversational replies in English.` : '';
   const langNote = nvFaMode ? `\n\nBILINGUAL LEARNING MODE (ACTIVE — these rules OVERRIDE any rule above about reply length, English-only replies, explanations or format):
 The learner may write or speak in Persian (Farsi) or English; understand both. EVERY reply MUST have this exact shape, in this order:
-Line 1: your normal reply in English (1-2 sentences; stay in role in Roleplay).
-Line 2: the same reply written in Persian (Farsi), on its own line.
-Line 3 (skip this line only in Free Conversation unless the learner asks for feedback): 💡 Tip: <short English explanation of the grammar or vocabulary point> / <the same explanation in Persian> '<corrected English sentence>'
-Always write the Persian line, even when the learner wrote only in English. Never write the corrected sentence, examples or vocabulary words in Persian; keep them in English. If the learner wrote Persian, also give the natural English version of what they meant as the corrected sentence.
+Line 1: your normal reply in English (1-2 sentences; stay in role in Roleplay). NO tip on this line.
+Line 2: the same reply written in Persian (Farsi), on its own line. NO tip on this line.
+Line 3 (the ONLY tip, written ONCE, after both reply lines — never repeat it; skip this line only in Free Conversation unless the learner asks for feedback): 💡 Tip: <short English explanation of the grammar or vocabulary point> / <the same explanation in Persian> '<corrected English sentence>'
+Always write the Persian line, even when the learner wrote only in English. Never write the corrected sentence, examples or vocabulary words in Persian; keep them in English. If the learner wrote in Persian, do NOT invent a mistake: make the tip say how to put their idea in English, e.g. 💡 Tip: Here is how to say it in English / این را در انگلیسی اینطور می‌گویند 'I want to learn English'.
 Example:
 Learner: "Yesterday I go to airport"
 You: "Sounds like a busy day! Did you travel somewhere?
