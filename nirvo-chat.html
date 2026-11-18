@@ -191,6 +191,7 @@ a{color:inherit;text-decoration:none}
 .msg-bubble{max-width:min(78%,640px);padding:12px 16px;font-size:15px;line-height:1.7;font-weight:400;letter-spacing:-.006em;text-wrap:pretty;overflow-wrap:anywhere}
 .msg.nirvo .msg-bubble{background:rgba(var(--rose-rgb),.05);border:1px solid rgba(var(--rose-rgb),.2);border-radius:6px 18px 18px 18px;color:var(--t0_75)}
 html.light-mode .msg.nirvo .msg-bubble{background:var(--f0_04);border-color:var(--line-strong)}
+html.nv-fa-mode .msg-bubble{unicode-bidi:plaintext}
 .msg.user .msg-bubble{background:rgba(var(--gold-rgb),.12);border:1px solid rgba(var(--gold-rgb),.28);border-radius:18px 6px 18px 18px;color:var(--white)}
 .msg-bubble strong{color:var(--gold);font-weight:600}
 .msg-tip{display:flex;align-items:flex-start;gap:10px;margin-top:12px;padding:10px 14px;border-left:2px solid rgba(var(--rose-rgb),.6);border-radius:4px 12px 12px 4px;background:rgba(var(--rose-rgb),.08);color:var(--rose);font-size:14px;line-height:1.55}
@@ -567,6 +568,10 @@ html[lang="fa"] #nv-mob-nav a{font-size:clamp(9.5px,2.7vw,11.5px)}
     <button type="button" class="mode-btn" onclick="setMode(this,'conversation')" data-mode="conversation" aria-pressed="false"><svg class="i" aria-hidden="true"><use href="#i-chat"/></svg>Free Conversation</button>
     <button type="button" class="mode-btn" onclick="setMode(this,'roleplay')" data-mode="roleplay" aria-pressed="false"><svg class="i" aria-hidden="true"><use href="#i-users"/></svg>Roleplay</button>
   </div>
+  <div class="segmented" id="fa-seg" role="group" aria-label="Learning Mode">
+    <button type="button" class="mode-btn" id="fa-mode-btn" onclick="toggleFaMode()" aria-pressed="false" title="English + Persian Learning Mode">English + Persian</button>
+    <button type="button" class="mode-btn" id="fa-mic-btn" onclick="toggleMicLang()" style="display:none" title="Microphone language" aria-label="Microphone language">FA</button>
+  </div>
 
   <div class="custom-select-wrap" id="topic-dropdown">
     <button type="button" class="cd-trigger" onclick="toggleDropdown()" aria-haspopup="listbox" aria-expanded="false" aria-label="Topic">
@@ -682,6 +687,21 @@ waveHeights.forEach((h,i) => {
 let greetingStarted = false;
 let nvAccent = 'American';
 try { if (localStorage.getItem('nirvo_accent') === 'British') nvAccent = 'British'; } catch (e) {}
+// ── Optional English + Persian Learning Mode (off by default; English mode is untouched when off) ──
+let nvFaMode = false, nvMicFa = true;
+try { nvFaMode = localStorage.getItem('nirvo_fa_mode') === '1'; nvMicFa = localStorage.getItem('nirvo_mic_lang') !== 'en'; } catch (e) {}
+function nvMicLang() { return nvFaMode && nvMicFa ? 'fa-IR' : 'en-US'; }
+function nvFaVoice() { return window.speechSynthesis.getVoices().find(v => /^fa[-_]/i.test(v.lang || '')) || null; }
+function nvFaSync() {
+  const b = document.getElementById('fa-mode-btn'), m = document.getElementById('fa-mic-btn');
+  b.classList.toggle('active', nvFaMode); b.setAttribute('aria-pressed', String(nvFaMode));
+  m.style.display = nvFaMode ? '' : 'none'; m.textContent = nvMicFa ? 'FA' : 'EN';
+  document.documentElement.classList.toggle('nv-fa-mode', nvFaMode);
+}
+function toggleFaMode() { nvFaMode = !nvFaMode; try { localStorage.setItem('nirvo_fa_mode', nvFaMode ? '1' : '0'); } catch (e) {} nvFaSync(); }
+function toggleMicLang() { nvMicFa = !nvMicFa; try { localStorage.setItem('nirvo_mic_lang', nvMicFa ? 'fa' : 'en'); } catch (e) {} nvFaSync(); }
+nvFaSync();
+if (window.nvI18n && nvI18n.add) nvI18n.add({ 'English + Persian': { fa: 'انگلیسی + فارسی', tr: 'İngilizce + Farsça' }, 'English + Persian Learning Mode': { fa: 'حالت یادگیری انگلیسی + فارسی', tr: 'İngilizce + Farsça Öğrenme Modu' }, 'Learning Mode': { fa: 'حالت یادگیری', tr: 'Öğrenme Modu' }, 'Microphone language': { fa: 'زبان میکروفون', tr: 'Mikrofon dili' } });
 sb.auth.onAuthStateChange((event, session) => {
   if (session) {
     const user = session.user;
@@ -954,7 +974,8 @@ async function getNirvoResponse(userMsg) {
     .replace('{TOPIC}', topic) + (currentMode === 'conversation' ? '' : focusLine) + (vocabFocusOn() ? VOCAB_FOCUS_PROMPT : '') + (currentMode === 'conversation' ? '' : nvMemoryBlock); // Free Conversation stays purely conversational
   // Language of tips/explanations follows the UI language; English learning content stays English
   const nvL = (window.nvI18n && nvI18n.lang) || 'en', nvLN = { fa: 'Persian (Farsi)', tr: 'Turkish' }[nvL];
-  const langNote = nvLN ? `\nLANGUAGE RULE: Write every tip explanation, feedback comment, explanation and instruction in ${nvLN}. Format the tip as: 💡 Tip: <explanation in ${nvLN}> '<corrected English sentence>'. Start any other non-English explanation line with 🌐. Keep the "💡 Tip:" label, corrected sentences, example phrases, vocabulary words and your normal in-character or conversational replies in English.` : '';
+  const langNote0 = nvLN ? `\nLANGUAGE RULE: Write every tip explanation, feedback comment, explanation and instruction in ${nvLN}. Format the tip as: 💡 Tip: <explanation in ${nvLN}> '<corrected English sentence>'. Start any other non-English explanation line with 🌐. Keep the "💡 Tip:" label, corrected sentences, example phrases, vocabulary words and your normal in-character or conversational replies in English.` : '';
+  const langNote = nvFaMode ? `\nBILINGUAL LEARNING MODE: The learner may write or speak in Persian (Farsi) or English; understand both. Reply in English first, then repeat the reply in Persian on a new line. Correct any English sentence the learner produces. Explain grammar and vocabulary in both English and Persian. Format the tip as: 💡 Tip: <English explanation> / <Persian explanation> '<corrected English sentence>'. Keep corrected sentences and examples in English.` : langNote0;
 
   setNirvoState('thinking');
   showTyping();
@@ -1029,10 +1050,10 @@ function pickEnglishVoice() {
 }
 function speechChunks(text) {
   // Voice engines here are English-only: in FA/TR skip the translated tip/explanation lines
-  if (window.nvI18n && nvI18n.lang !== 'en') text = String(text).split('\n').map(l => {
+  if (window.nvI18n && nvI18n.lang !== 'en' && !nvFaMode) text = String(text).split('\n').map(l => {
     const k = l.indexOf('💡 Tip:'), pre = k < 0 ? l : l.slice(0, k), tip = k < 0 ? '' : l.slice(k);
-    const q = (tip.match(/(?:^|[\s:(—-])['"“‘]([^\n"“”]+?)['"”’](?=$|[\s.,;:!?)—-])/g) || []).map(x => x.replace(/^[^'"“‘]*['"“‘]|['"”’]$/g, '')).filter(x => !/[؀-ۿ]/.test(x)).join('. ');
-    return ((/^\s*\u{1F310}/u.test(pre) || /[؀-ۿ]/.test(pre)) ? '' : pre) + (q ? ' ' + q + '.' : '');
+    const q = (tip.match(/(?:^|[\s:(—-])['"“‘]([^\n"“”]+?)['"”’](?=$|[\s.,;:!?)—-])/g) || []).map(x => x.replace(/^[^'"“‘]*['"“‘]|['"”’]$/g, '')).filter(x => !/[\u0600-\u06FF]/.test(x)).join('. ');
+    return ((/^\s*\u{1F310}/u.test(pre) || /[\u0600-\u06FF]/.test(pre)) ? '' : pre) + (q ? ' ' + q + '.' : '');
   }).join('\n');
   const clean = String(text).replace(/https?:\/\/\S+/g, '').replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/gu, '').replace(/[*_`#~>]+/g, '').replace(/\s+/g, ' ').trim();
   const parts = clean.match(/[^.!?\n]+[.!?]*\s*/g) || [clean];
@@ -1105,7 +1126,7 @@ function cloudSpeak(text, done, fallback) {
   if (cur) pieces.push(cur);
   if (!pieces.length) { done(); return; }
   const seq = ++cloudSeq;
-  const fetchPiece = t => fetch('/api/tts', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text: t, accent: nvAccent }) })
+  const fetchPiece = t => fetch('/api/tts', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text: t, accent: nvAccent, ...(nvFaMode ? { lang: 'fa' } : {}) }) })
     .then(r => { if (!r.ok) throw new Error('tts'); return r.arrayBuffer(); }).then(fixWav);
   let next = fetchPiece(pieces[0]);
   const play = i => {
@@ -1143,14 +1164,15 @@ function speak(text) {
 
   function doSpeak() {
     if (started) return; started = true;
-    const chunks = speechChunks(text);
+    const chunks = speechChunks(text).filter(c => !(nvFaMode && /[\u0600-\u06FF]/.test(c) && !nvFaVoice()));
     if (!chunks.length) { finish(); return; }
     const voice = pickEnglishVoice();
     const phone = window.matchMedia && matchMedia('(pointer:coarse)').matches;
     chunks.forEach((c, i) => {
       const u = new SpeechSynthesisUtterance(c);
-      u.lang = voice ? voice.lang : 'en-US';      // always tell the engine the text is English
-      if (voice) u.voice = voice;
+      const isFa = nvFaMode && /[\u0600-\u06FF]/.test(c), v = isFa ? nvFaVoice() : voice;
+      u.lang = v ? v.lang : (isFa ? 'fa-IR' : 'en-US');      // English text is always told to the engine as English
+      if (v) u.voice = v;
       u.rate = phone ? 0.95 : 0.9;
       u.pitch = 1;                                 // 1.15 sounded distorted on phone voices
       u.volume = 1;
@@ -1204,7 +1226,7 @@ function startListening() {
 
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   recognition = new SR();
-  recognition.lang = 'en-US';
+  recognition.lang = nvMicLang();
   recognition.continuous = false;
   recognition.interimResults = false;
   recognition.maxAlternatives = 1;
@@ -1493,7 +1515,7 @@ if (window.speechSynthesis.getVoices().length === 0) {
       if ((window.speechSynthesis && window.speechSynthesis.speaking) || cloudAudio) { timer = setTimeout(listen, 300); return; }
       const me = new SR();
       rec = me;
-      me.lang = 'en-US'; me.continuous = false; me.interimResults = true; me.maxAlternatives = 1;
+      me.lang = nvMicLang(); me.continuous = false; me.interimResults = true; me.maxAlternatives = 1;
       let gotFinal = false, failed = false;
 
       me.onstart = () => { if (rec === me) ui('listening'); };
