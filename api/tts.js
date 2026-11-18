@@ -10,6 +10,8 @@ const STYLE = {
   American: 'warm, friendly and encouraging, like a professional female English tutor, natural American English accent',
   British: 'warm, friendly and encouraging, like a professional female English tutor, natural British English accent'
 };
+// Persian mode (client sends lang:'fa'): bilingual tutor, English stays American, Persian is spoken naturally
+const STYLE_FA = 'warm, friendly and encouraging, like a professional bilingual English tutor; speak English with a natural American accent and speak Persian (Farsi) naturally and clearly like a native Iranian speaker';
 const MAX_CHARS = 600;
 const RATE_LIMIT = 30, RATE_WINDOW_MS = 60000;
 const hits = new Map();
@@ -51,6 +53,7 @@ module.exports = async function handler(req, res) {
   const text = b && typeof b.text === 'string' ? b.text.trim() : '';
   if (!text || text.length > MAX_CHARS) return res.status(400).json({ error: 'Invalid text' });
   const accent = b.accent === 'British' ? 'British' : 'American';
+  const style = b.lang === 'fa' ? STYLE_FA : STYLE[accent];
 
   try {
     const r = await fetch('https://generativelanguage.googleapis.com/v1beta/interactions', {
@@ -58,7 +61,7 @@ module.exports = async function handler(req, res) {
       headers: { 'Content-Type': 'application/json', 'x-goog-api-key': KEY },
       body: JSON.stringify({
         model: MODEL,
-        input: [{ type: 'user_input', content: [{ type: 'text', text, annotations: [{ type: 'speech_metadata', style: STYLE[accent] }] }] }],
+        input: [{ type: 'user_input', content: [{ type: 'text', text, annotations: [{ type: 'speech_metadata', style }] }] }],
         response_format: { type: 'audio' },
         generation_config: { speech_config: [{ voice: VOICES[accent] }] }
       })
