@@ -417,6 +417,18 @@ html[lang="fa"] .nvn-word,html[lang="fa"] .nvn-word *,html[lang="fa"] .nvd-word,
 html[lang="fa"] .nvd-word{letter-spacing:.3em!important}
 html[lang="fa"] #nv-mob-nav a{font-size:clamp(9.5px,2.7vw,11.5px)}
 </style>
+<style id="nv-custom-topic">
+#custom-topic-input{width:100%;box-sizing:border-box;padding:13px 16px;border-radius:14px;border:1px solid rgba(var(--gold-rgb),.35);background:var(--f0_03);color:var(--t0_7);font:inherit;font-size:14.5px;outline:none;transition:border-color .2s,box-shadow .2s}
+#custom-topic-input::placeholder{color:var(--t0_3)}
+#custom-topic-input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(var(--gold-rgb),.15)}
+.ct-hint{font-size:12px;color:var(--t0_3);margin-top:8px;line-height:1.5}
+</style>
+<style id="nv-ielts-soon">
+.ielts-soon{display:flex;align-items:center;gap:12px;width:100%;margin:0 0 20px;padding:12px 16px;border-radius:18px;border:1px dashed var(--g0_3,rgba(212,175,55,.3));background:var(--f0_03,rgba(255,255,255,.03));color:var(--t0_5,rgba(255,255,255,.5));font:inherit;font-size:14px;text-align:start;cursor:not-allowed;opacity:.8;pointer-events:none}
+.ielts-soon .tp-ic{flex:0 0 auto;width:30px;height:30px;padding:6px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.ielts-soon .ielts-t{flex:1;min-width:0}
+.ielts-soon .ielts-b{flex:0 0 auto;font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:999px;border:1px solid currentColor;color:#d4af37;white-space:nowrap}
+</style>
 </head>
 <body>
 <script>
@@ -506,8 +518,20 @@ try{if(localStorage.getItem('nirvo-theme')==='light'){document.documentElement.c
       <div class="topic-pill" onclick="setTopic(this,'Travel')"><svg class="tp-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/></svg>Travel</div>
       <div class="topic-pill" onclick="setTopic(this,'Job Interview')"><svg class="tp-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="m16 11 2 2 4-4"/><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Job Interview</div>
       <div class="topic-pill" onclick="setTopic(this,'Public Speaking')"><svg class="tp-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 3h20"/><path d="M21 3v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V3"/><path d="m7 21 5-5 5 5"/></svg>Public Speaking</div>
+      <div class="topic-pill" id="custom-topic-pill" onclick="setCustomTopic(this)"><svg class="tp-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>Custom Topic</div>
+    </div>
+    <div id="custom-topic-wrap" style="display:none;margin-top:14px">
+      <input type="text" id="custom-topic-input" maxlength="80" autocomplete="off" dir="auto" placeholder="Type your own topic, e.g. My first day at work" aria-label="Custom topic" oninput="setCustomTopicText(this.value)">
+      <div class="ct-hint">Your topic is used for the AI analysis and saved with this session.</div>
     </div>
   </div>
+
+  <!-- IELTS Mock Speaking (disabled until ielts-speaking.html is ready) -->
+  <button type="button" id="ielts-soon" class="ielts-soon" disabled aria-disabled="true" tabindex="-1">
+    <svg class="tp-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><path d="M12 19v3"/></svg>
+    <span class="ielts-t">IELTS Mock Speaking</span>
+    <span class="ielts-b">Coming Soon</span>
+  </button>
 
   <!-- Conversation + Mic area -->
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px" class="practice-grid">
@@ -595,6 +619,7 @@ try{if(localStorage.getItem('nirvo-theme')==='light'){document.documentElement.c
   let recognition = null;
   let fullTranscript = '';
   let currentTopic = 'Daily Life';
+  let customActive = false;   // Custom Topic selected (currentTopic then holds the cleaned custom text)
   let sessionStart = Date.now();
 
   // ── Speech measurement (real timing + ASR confidence from recognition events) ──
@@ -671,8 +696,31 @@ try{if(localStorage.getItem('nirvo-theme')==='light'){document.documentElement.c
   // ── Topic ──
   function setTopic(el, topic) {
     currentTopic = topic;
+    customActive = false;
+    document.getElementById('custom-topic-wrap').style.display = 'none';
     document.querySelectorAll('.topic-pill').forEach(p => p.classList.remove('active'));
     el.classList.add('active');
+  }
+
+  // Custom topic: cleaned (no quotes/newlines, max 80 chars) so it is safe inside the analysis prompt
+  const cleanTopic = v => String(v).replace(/[\r\n"\u201c\u201d]+/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 80);
+  function setCustomTopic(el) {
+    customActive = true;
+    document.querySelectorAll('.topic-pill').forEach(p => p.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById('custom-topic-wrap').style.display = 'block';
+    const i = document.getElementById('custom-topic-input');
+    currentTopic = cleanTopic(i.value);
+    i.focus();
+  }
+  function setCustomTopicText(v) { if (customActive) currentTopic = cleanTopic(v); }
+  function customTopicReady() {
+    if (customActive && !currentTopic) {
+      nvToast('Please type your topic first.', 'warning');
+      document.getElementById('custom-topic-input').focus();
+      return false;
+    }
+    return true;
   }
 
   // ── Mic toggle ──
@@ -681,6 +729,7 @@ try{if(localStorage.getItem('nirvo-theme')==='light'){document.documentElement.c
       nvToast('Your browser does not support speech recognition. Please use Chrome.', 'warning');
       return;
     }
+    if (!isListening && !customTopicReady()) return;
     isListening ? stopListening() : startListening();
   }
 
@@ -748,6 +797,7 @@ try{if(localStorage.getItem('nirvo-theme')==='light'){document.documentElement.c
   async function analyzeSpeech() {
     const text = fullTranscript.trim();
     if (!text) return;
+    if (!customTopicReady()) return;
 
     stopListening();
     document.getElementById('feedback-section').style.display = 'none';
@@ -1151,6 +1201,15 @@ Give 3-4 feedback items covering grammar and vocabulary only. In memory.mistakes
     'Text-based suggestions only. NIRVO did not hear how you pronounced these words; they are words from your speech that learners often find tricky.': ['فقط پیشنهاد مبتنی بر متن. NIRVO نشنیده است که این واژه‌ها را چگونه تلفظ کرده‌اید؛ این‌ها واژه‌هایی از گفتار شما هستند که زبان‌آموزان اغلب آن‌ها را دشوار می‌یابند.', 'Yalnızca metne dayalı öneriler. NIRVO bu sözcükleri nasıl telaffuz ettiğinizi duymadı; bunlar konuşmanızdaki, öğrencilerin sık zorlandığı sözcüklerdir.'],
     'No suggestions this time.': ['این بار پیشنهادی نیست.', 'Bu sefer öneri yok.'],
     'Phoneme-level pronunciation, word stress and intonation are not measured. This card does not change your scores.': ['تلفظ در سطح واج، تکیه‌ی واژه و آهنگ گفتار اندازه‌گیری نمی‌شوند. این کارت امتیازهای شما را تغییر نمی‌دهد.', 'Ses (fonem) düzeyinde telaffuz, sözcük vurgusu ve tonlama ölçülmez. Bu kart puanlarınızı değiştirmez.']
+  });
+  Object.assign(T, {
+    'IELTS Mock Speaking': ['\u0622\u0632\u0645\u0648\u0646 \u0622\u0632\u0645\u0627\u06cc\u0634\u06cc \u0627\u0633\u067e\u06cc\u06a9\u06cc\u0646\u06af IELTS', 'IELTS Deneme Konu\u015fma'],
+    'Coming Soon': ['\u0628\u0647\u200c\u0632\u0648\u062f\u06cc', '\u00c7ok Yak\u0131nda'],
+    'Custom Topic': ['موضوع دلخواه', 'Özel Konu'],
+    'Custom topic': ['موضوع دلخواه', 'Özel konu'],
+    'Type your own topic, e.g. My first day at work': ['موضوع خودتان را بنویسید، مثلاً: اولین روز کاری من', 'Kendi konunuzu yazın, ör. İş yerindeki ilk günüm'],
+    'Your topic is used for the AI analysis and saved with this session.': ['موضوع شما برای تحلیل هوش مصنوعی استفاده می‌شود و همراه این جلسه ذخیره می‌شود.', 'Konunuz yapay zekâ analizi için kullanılır ve bu oturumla birlikte kaydedilir.'],
+    'Please type your topic first.': ['لطفاً ابتدا موضوع خود را بنویسید.', 'Lütfen önce konunuzu yazın.']
   });
   var add = {}; for (var k in T) add[k] = { fa: T[k][0], tr: T[k][1] };
   nvI18n.add(add);
