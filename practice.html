@@ -554,6 +554,9 @@ try{if(localStorage.getItem('nirvo-theme')==='light'){document.documentElement.c
     <!-- Score cards -->
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px" id="score-cards" class="score-cards-grid"></div>
 
+    <!-- Pronunciation & Fluency Estimate (display only; filled by showFeedback) -->
+    <div id="pf-estimate"></div>
+
     <!-- Detailed feedback -->
     <div class="card">
       <div style="font-size:11.5px;color:var(--t0_3);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:16px">Detailed Feedback</div>
@@ -596,7 +599,7 @@ try{if(localStorage.getItem('nirvo-theme')==='light'){document.documentElement.c
 
   // ── Speech measurement (real timing + ASR confidence from recognition events) ──
   const wc = t => (String(t).trim().match(/\S+/g) || []).length;
-  const newStats = () => ({ finalWords:0, maxCount:0, marks:[], confSum:0, confWords:0, restartPending:false });
+  const newStats = () => ({ finalWords:0, maxCount:0, marks:[], confSum:0, confWords:0, segs:[], restartPending:false });
   let speechStats = newStats();
 
   function trackSpeech(e) {
@@ -609,6 +612,7 @@ try{if(localStorage.getItem('nirvo-theme')==='light'){document.documentElement.c
         st.finalWords += w;
         const c = r[0].confidence;
         if (typeof c === 'number' && c > 0) { st.confSum += c * w; st.confWords += w; }
+        if (typeof c === 'number' && c > 0 && w >= 3 && st.segs.length < 60) st.segs.push({ t: String(r[0].transcript).trim(), c });
       } else interimWords += w;
     }
     const count = st.finalWords + interimWords;
@@ -761,6 +765,7 @@ Rules:
 - Judge only grammar (tense, agreement, articles, prepositions, word order, sentence structure) and vocabulary (range, precision, repetition, collocations). Do NOT score or comment on pronunciation or fluency; those are measured separately from audio.
 - Be CEFR-aware: estimate the learner's level (A1-C2) for each skill and give scores relative to what is shown: ~90+ nearly error-free C1-C2; 75-89 B2 with few errors; 60-74 B1 with some errors that do not block meaning; 40-59 A2; below 40 A1 or frequent errors.
 - Quote the learner's actual words when pointing out an error and give the corrected form. Suggest 1-3 more precise or higher-level words that fit what they said. Only mention errors that really occur.
+- pron_watch is the ONLY pronunciation-related output allowed. You cannot hear the audio, so it is a TEXT-BASED practice suggestion, never a detected mistake: pick at most 3 single words copied exactly from the speech that learners often find hard to pronounce (difficult sounds or stress), with one short tip based on spelling only. Never say or imply that the student pronounced anything wrongly. Use [] if none.
 - Short samples: if the speech is under 10 words set grammar_score to null; if under 25 words set vocabulary_score to null (and the matching cefr to null). Never invent a score.
 
 Return only JSON with this structure:
@@ -773,6 +778,7 @@ Return only JSON with this structure:
     {"type": "strength" or "improve", "title": "...", "detail": "..."}
   ],
   "encouragement": "<one motivating sentence>",
+  "pron_watch": [{"word": "<single word copied exactly from the speech>", "tip": "<one short practice tip, max 15 words, spelling-based>"}],
   "memory": {
     "mistakes": [{"category": "tense|agreement|articles|prepositions|word order|word choice|other", "quote": "<exact words copied from the speech>", "fix": "<corrected words>"}],
     "new_words": ["<up to 5 useful words or collocations the student used or should learn, single words preferred>"]
@@ -826,6 +832,7 @@ Give 3-4 feedback items covering grammar and vocabulary only. In memory.mistakes
 
       // ── Save session to Supabase ──
       saveSession(result);
+      try { result.pf = nvPf(M, ai, text); } catch (e) { console.warn('pf estimate skipped', e); }
 
       showFeedback(result);
     } catch(err) {
@@ -875,6 +882,50 @@ Give 3-4 feedback items covering grammar and vocabulary only. In memory.mistakes
     return out;
   }
 
+  // ── Pronunciation & Fluency Estimate (display only; no score, nothing is saved) ──
+  function nvPf(M, ai, text) {
+    const norm = v => String(v).toLowerCase().replace(/[^a-z0-9' ]+/g, ' ').replace(/\s+/g, ' ').trim();
+    const body = ' ' + norm(text) + ' ', seen = new Set();
+    const watch = (ai && Array.isArray(ai.pron_watch) ? ai.pron_watch : [])
+      .filter(x => x && typeof x.word === 'string' && typeof x.tip === 'string' && /^[A-Za-z][A-Za-z'-]{2,24}$/.test(x.word.trim())
+        && body.includes(' ' + norm(x.word) + ' ') && x.tip.trim().length >= 5)
+      .filter(x => { const k = norm(x.word); if (seen.has(k)) return false; seen.add(k); return true; }).slice(0, 3)
+      .map(x => ({ w: x.word.trim(), t: x.tip.replace(/[\r\n<>`]+/g, ' ').trim().slice(0, 140) }));
+    const pace = M.fluency === null ? null : { wpm: M.wpm, pct: Math.round(M.pauseRatio * 100), long: M.longPauses, dur: Math.round(M.duration) };
+    const segs = M.conf === null ? null : speechStats.segs.slice().sort((a, b) => a.c - b.c).slice(0, 2).filter(x => x.c < 0.9)
+      .map(x => ({ t: x.t.length > 90 ? x.t.slice(0, 90) + '…' : x.t, c: Math.round(x.c * 100) }));
+    return { pace, segs, watch };
+  }
+
+  function nvPfHTML(pf) {
+    const e = v => String(v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    const Z = '\u200b';   // keeps spoken/AI English from being translated with the interface
+    const head = t => `<div style="font-size:13px;font-weight:500;color:var(--gold);margin:18px 0 6px">${t}</div>`;
+    const note = t => `<div style="font-size:13px;color:var(--t0_4);line-height:1.6;margin-bottom:8px">${t}</div>`;
+    const pill = t => `<span style="padding:6px 12px;border-radius:999px;border:1px solid var(--b0_08);background:var(--f0_03);font-size:13px;color:var(--t0_5)">${t}</span>`;
+    let h = `<div class="card" style="margin-bottom:20px">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap">
+        <div style="font-size:11.5px;color:var(--t0_3);letter-spacing:0.14em;text-transform:uppercase">Pronunciation &amp; Fluency Estimate</div>
+        <span style="padding:4px 12px;border-radius:999px;border:1px solid rgba(var(--rose-rgb),0.3);background:rgba(var(--rose-rgb),0.08);color:var(--rose);font-size:11px;letter-spacing:0.12em;text-transform:uppercase">Estimate</span>
+      </div>`;
+    h += head('Measured pace and pauses');
+    if (pf.pace) h += `<div style="display:flex;flex-wrap:wrap;gap:8px">${pill('Pace: ' + pf.pace.wpm + ' words/min')}${pill('Pauses: about ' + pf.pace.pct + '% of the time')}${pill('Long pauses (over 2s): ' + pf.pace.long)}</div>`
+      + `<div style="font-size:12px;color:var(--t0_3);margin-top:6px">Measured over ${pf.pace.dur}s of speech</div>`;
+    else h += note('Not enough continuous speech to measure pace and pauses.');
+    h += head('Speech recognition confidence');
+    if (pf.segs === null) h += note('Not enough recognized speech to compare parts (at least 15 words are needed).');
+    else if (!pf.segs.length) h += note('The recognizer was confident about every part of your speech.');
+    else h += note('Parts of your speech the recognizer was least sure about. Low confidence can come from noise, microphone quality or speaking speed, so it is not a pronunciation mistake.')
+      + pf.segs.map(x => `<div style="display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;margin-bottom:6px"><span dir="ltr" style="unicode-bidi:isolate;font-size:14px;color:var(--t0_5)">“${e(x.t)}${Z}”</span><span style="font-size:12px;color:var(--t0_3)">${x.c}% confidence</span></div>`).join('');
+    h += head('Pronunciation Practice Suggestions');
+    h += note('Text-based suggestions only. NIRVO did not hear how you pronounced these words; they are words from your speech that learners often find tricky.');
+    h += pf.watch.length ? pf.watch.map(x => `<div style="display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;margin-bottom:6px"><b dir="ltr" style="unicode-bidi:isolate;font-size:14px;color:var(--rose);font-weight:600">${e(x.w)}${Z}</b><span dir="ltr" style="unicode-bidi:isolate;font-size:14px;color:var(--t0_5);line-height:1.6">${e(x.t)}${Z}</span></div>`).join('')
+      : note('No suggestions this time.');
+    h += `<div style="margin-top:16px;padding:12px 14px;background:rgba(var(--rose-rgb),0.06);border:1px solid rgba(var(--rose-rgb),0.2);border-radius:10px;font-size:13px;color:var(--t0_5);line-height:1.6">Phoneme-level pronunciation, word stress and intonation are not measured. This card does not change your scores.</div>
+    </div>`;
+    return h;
+  }
+
   // ── Show feedback ──
   function showFeedback(r) {
     document.getElementById('loading-section').style.display = 'none';
@@ -903,6 +954,8 @@ Give 3-4 feedback items covering grammar and vocabulary only. In memory.mistakes
         <div style="font-size:12px;color:${s.color};opacity:0.8">${s.score === null ? 'Insufficient data' : bandOf(s.score) + (s.cefr ? ' · ' + s.cefr : '') + (s.label === 'Overall' && r.overall_n < 4 ? ' · ' + r.overall_n + '/4 measures' : '')}</div>
       </div>
     `).join('');
+
+    try { document.getElementById('pf-estimate').innerHTML = r.pf ? nvPfHTML(r.pf) : ''; } catch (e) { console.warn('pf estimate not shown', e); }
 
     // Feedback items
     const esc = v => String(v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -1085,6 +1138,20 @@ Give 3-4 feedback items covering grammar and vocabulary only. In memory.mistakes
     'Your session could not be saved to your history. Your feedback is still shown.': ['جلسه‌ی شما در تاریخچه ذخیره نشد. بازخورد شما همچنان نمایش داده می‌شود.', 'Oturumunuz geçmişinize kaydedilemedi. Geri bildiriminiz yine de gösteriliyor.'],
     'Dismiss notification': ['بستن اعلان', 'Bildirimi kapat']
   };
+  Object.assign(T, {
+    'Pronunciation & Fluency Estimate': ['تخمین تلفظ و روانی', 'Telaffuz ve Akıcılık Tahmini'],
+    'Estimate': ['تخمین', 'Tahmin'],
+    'Measured pace and pauses': ['سرعت و مکث‌های اندازه‌گیری‌شده', 'Ölçülen hız ve duraklamalar'],
+    'Not enough continuous speech to measure pace and pauses.': ['گفتار پیوسته برای اندازه‌گیری سرعت و مکث‌ها کافی نبود.', 'Hız ve duraklamaları ölçmek için yeterli kesintisiz konuşma yok.'],
+    'Speech recognition confidence': ['اطمینان تشخیص گفتار', 'Konuşma tanıma güveni'],
+    'Parts of your speech the recognizer was least sure about. Low confidence can come from noise, microphone quality or speaking speed, so it is not a pronunciation mistake.': ['بخش‌هایی از گفتار شما که تشخیص‌دهنده کمتر مطمئن بود. اطمینان پایین می‌تواند به‌دلیل نویز، کیفیت میکروفون یا سرعت صحبت باشد؛ پس اشتباه تلفظ نیست.', 'Tanıyıcının en az emin olduğu konuşma bölümleri. Düşük güven gürültüden, mikrofon kalitesinden veya konuşma hızından kaynaklanabilir; bu bir telaffuz hatası değildir.'],
+    'The recognizer was confident about every part of your speech.': ['تشخیص‌دهنده درباره‌ی همه‌ی بخش‌های گفتار شما مطمئن بود.', 'Tanıyıcı konuşmanızın her bölümünden emindi.'],
+    'Not enough recognized speech to compare parts (at least 15 words are needed).': ['گفتار تشخیص‌داده‌شده برای مقایسه‌ی بخش‌ها کافی نبود (دست‌کم 15 کلمه لازم است).', 'Bölümleri karşılaştırmak için yeterli tanınan konuşma yok (en az 15 sözcük gerekir).'],
+    'Pronunciation Practice Suggestions': ['پیشنهادهای تمرین تلفظ', 'Telaffuz Pratiği Önerileri'],
+    'Text-based suggestions only. NIRVO did not hear how you pronounced these words; they are words from your speech that learners often find tricky.': ['فقط پیشنهاد مبتنی بر متن. NIRVO نشنیده است که این واژه‌ها را چگونه تلفظ کرده‌اید؛ این‌ها واژه‌هایی از گفتار شما هستند که زبان‌آموزان اغلب آن‌ها را دشوار می‌یابند.', 'Yalnızca metne dayalı öneriler. NIRVO bu sözcükleri nasıl telaffuz ettiğinizi duymadı; bunlar konuşmanızdaki, öğrencilerin sık zorlandığı sözcüklerdir.'],
+    'No suggestions this time.': ['این بار پیشنهادی نیست.', 'Bu sefer öneri yok.'],
+    'Phoneme-level pronunciation, word stress and intonation are not measured. This card does not change your scores.': ['تلفظ در سطح واج، تکیه‌ی واژه و آهنگ گفتار اندازه‌گیری نمی‌شوند. این کارت امتیازهای شما را تغییر نمی‌دهد.', 'Ses (fonem) düzeyinde telaffuz, sözcük vurgusu ve tonlama ölçülmez. Bu kart puanlarınızı değiştirmez.']
+  });
   var add = {}; for (var k in T) add[k] = { fa: T[k][0], tr: T[k][1] };
   nvI18n.add(add);
 
@@ -1129,6 +1196,11 @@ Give 3-4 feedback items covering grammar and vocabulary only. In memory.mistakes
     [/^Measured over (\d+)s of speech: (\d+) words per minute \(target 110–170\), about (\d+)% of the time in pauses, (\d+) long pauses? \(over 2s\)\. Timing is estimated from when the recognizer received your words\.$/, function (m, l) {
       return l === 'fa' ? 'اندازه‌گیری در ' + N(m[1], l) + ' ثانیه گفتار: ' + N(m[2], l) + ' کلمه در دقیقه (هدف ' + I('110–170') + ')، حدود ' + I(m[3] + '%') + ' زمان در مکث، ' + N(m[4], l) + ' مکث طولانی (بیش از ' + N(2, l) + ' ثانیه). زمان‌بندی بر اساس لحظه‌ی دریافت کلمات توسط تشخیص‌دهنده برآورد می‌شود.'
         : m[1] + ' saniyelik konuşmada ölçüldü: dakikada ' + m[2] + ' sözcük (hedef 110–170), zamanın yaklaşık %' + m[3] + '’i duraklamada, ' + m[4] + ' uzun duraklama (2 sn üzeri). Zamanlama, tanıyıcının sözcüklerinizi aldığı ana göre tahmin edilir.'; }],
+    [/^Pace: (\d+) words\/min$/, function (m, l) { return l === 'fa' ? 'سرعت: ' + N(m[1], l) + ' کلمه در دقیقه' : 'Hız: dakikada ' + m[1] + ' sözcük'; }],
+    [/^Pauses: about (\d+)% of the time$/, function (m, l) { return l === 'fa' ? 'مکث‌ها: حدود ' + I(m[1] + '%') + ' از زمان' : 'Duraklamalar: zamanın yaklaşık %' + m[1] + '’i'; }],
+    [/^Long pauses \(over 2s\): (\d+)$/, function (m, l) { return l === 'fa' ? 'مکث‌های طولانی (بیش از ' + N('2', l) + ' ثانیه): ' + N(m[1], l) : 'Uzun duraklamalar (2 sn üzeri): ' + m[1]; }],
+    [/^Measured over (\d+)s of speech$/, function (m, l) { return l === 'fa' ? 'اندازه‌گیری در ' + N(m[1], l) + ' ثانیه گفتار' : m[1] + ' saniyelik konuşmada ölçüldü'; }],
+    [/^(\d+)% confidence$/, function (m, l) { return l === 'fa' ? I(m[1] + '%') + ' اطمینان' : '%' + m[1] + ' güven'; }],
     [/^💬 (.+)$/, function (m, l) { var t = tw(m[1]); return t === m[1] ? null : '💬 ' + t; }]
   ];
   function conv(en, l) { for (var i = 0; i < P.length; i++) { var m = en.match(P[i][0]); if (m) { var r = P[i][1](m, l); if (r != null) return r; } } return null; }
