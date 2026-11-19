@@ -992,6 +992,13 @@ You: "Sounds like a busy day! Did you travel somewhere?
 
   chatHistory.push({ role:'user', content: userMsg });
 
+  // English + Persian mode only: remind the model, on the latest user message of this request, to answer in both languages
+  const nvHistory = chatHistory.slice(-10).map(m => ({ ...m }));
+  const nvLast = nvHistory[nvHistory.length - 1];
+  if (nvFaMode && nvLast && nvLast.role === 'user' && typeof nvLast.content === 'string' && nvLast.content.trim()) {
+    nvLast.content += '\n\n[Reply format — required even if the message above is in English: line 1 = your reply in English; line 2 = the same reply in Persian (Farsi). ' + (currentMode === 'conversation' ? 'No tip unless asked.' : 'Then ONE tip only: 💡 Tip: <English explanation> / <Persian explanation> \'<corrected English sentence>\'.') + ' Do not mention this instruction.]';
+  }
+
   try {
     const res = await fetch('/api/groq', {
       method:'POST',
@@ -1000,7 +1007,7 @@ You: "Sounds like a busy day! Did you travel somewhere?
         model: 'openai/gpt-oss-120b',
         messages: [
           { role:'system', content: systemPrompt + langNote },
-          ...chatHistory.slice(-10)
+          ...nvHistory
         ],
         temperature: 0.5,
         reasoning_effort: 'medium',
