@@ -424,7 +424,9 @@ html[lang="fa"] #nv-mob-nav a{font-size:clamp(9.5px,2.7vw,11.5px)}
 .ct-hint{font-size:12px;color:var(--t0_3);margin-top:8px;line-height:1.5}
 </style>
 <style id="nv-ielts-soon">
-.ielts-soon{display:flex;align-items:center;gap:12px;width:100%;margin:0 0 20px;padding:12px 16px;border-radius:18px;border:1px dashed var(--g0_3,rgba(212,175,55,.3));background:var(--f0_03,rgba(255,255,255,.03));color:var(--t0_5,rgba(255,255,255,.5));font:inherit;font-size:14px;text-align:start;cursor:not-allowed;opacity:.8;pointer-events:none}
+.ielts-soon{display:flex;align-items:center;gap:12px;width:100%;margin:0 0 20px;padding:12px 16px;border-radius:18px;border:1px solid var(--g0_3,rgba(212,175,55,.3));background:var(--f0_03,rgba(255,255,255,.03));color:inherit;font:inherit;font-size:14px;text-align:start;text-decoration:none;cursor:pointer;transition:border-color .2s,background .2s,transform .2s}
+.ielts-soon:hover{border-color:#d4af37;background:rgba(212,175,55,.08)}
+.ielts-soon:focus-visible{outline:2px solid #d4af37;outline-offset:2px}
 .ielts-soon .tp-ic{flex:0 0 auto;width:30px;height:30px;padding:6px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .ielts-soon .ielts-t{flex:1;min-width:0}
 .ielts-soon .ielts-b{flex:0 0 auto;font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:999px;border:1px solid currentColor;color:#d4af37;white-space:nowrap}
@@ -526,12 +528,12 @@ try{if(localStorage.getItem('nirvo-theme')==='light'){document.documentElement.c
     </div>
   </div>
 
-  <!-- IELTS Mock Speaking (disabled until ielts-speaking.html is ready) -->
-  <button type="button" id="ielts-soon" class="ielts-soon" disabled aria-disabled="true" tabindex="-1">
+  <!-- IELTS Mock Speaking -->
+  <a id="ielts-soon" class="ielts-soon" href="ielts-speaking.html">
     <svg class="tp-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><path d="M12 19v3"/></svg>
     <span class="ielts-t">IELTS Mock Speaking</span>
-    <span class="ielts-b">Coming Soon</span>
-  </button>
+    <span class="ielts-b">Beta</span>
+  </a>
 
   <!-- Conversation + Mic area -->
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px" class="practice-grid">
@@ -1204,7 +1206,7 @@ Give 3-4 feedback items covering grammar and vocabulary only. In memory.mistakes
   });
   Object.assign(T, {
     'IELTS Mock Speaking': ['\u0622\u0632\u0645\u0648\u0646 \u0622\u0632\u0645\u0627\u06cc\u0634\u06cc \u0627\u0633\u067e\u06cc\u06a9\u06cc\u0646\u06af IELTS', 'IELTS Deneme Konu\u015fma'],
-    'Coming Soon': ['\u0628\u0647\u200c\u0632\u0648\u062f\u06cc', '\u00c7ok Yak\u0131nda'],
+    'Beta': ['\u0622\u0632\u0645\u0627\u06cc\u0634\u06cc', 'Beta'],
     'Custom Topic': ['موضوع دلخواه', 'Özel Konu'],
     'Custom topic': ['موضوع دلخواه', 'Özel konu'],
     'Type your own topic, e.g. My first day at work': ['موضوع خودتان را بنویسید، مثلاً: اولین روز کاری من', 'Kendi konunuzu yazın, ör. İş yerindeki ilk günüm'],
