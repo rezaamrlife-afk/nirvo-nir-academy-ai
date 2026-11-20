@@ -424,12 +424,27 @@ html[lang="fa"] #nv-mob-nav a{font-size:clamp(9.5px,2.7vw,11.5px)}
 .ct-hint{font-size:12px;color:var(--t0_3);margin-top:8px;line-height:1.5}
 </style>
 <style id="nv-ielts-soon">
-.ielts-soon{display:flex;align-items:center;gap:12px;width:100%;margin:0 0 20px;padding:12px 16px;border-radius:18px;border:1px solid var(--g0_3,rgba(212,175,55,.3));background:var(--f0_03,rgba(255,255,255,.03));color:inherit;font:inherit;font-size:14px;text-align:start;text-decoration:none;cursor:pointer;transition:border-color .2s,background .2s,transform .2s}
-.ielts-soon:hover{border-color:#d4af37;background:rgba(212,175,55,.08)}
-.ielts-soon:focus-visible{outline:2px solid #d4af37;outline-offset:2px}
-.ielts-soon .tp-ic{flex:0 0 auto;width:30px;height:30px;padding:6px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.ielts-soon .ielts-t{flex:1;min-width:0}
-.ielts-soon .ielts-b{flex:0 0 auto;font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:999px;border:1px solid currentColor;color:#d4af37;white-space:nowrap}
+.ielts-soon{position:relative;display:flex;align-items:center;gap:18px;width:100%;margin:0 0 20px;padding:18px 20px;border-radius:22px;overflow:hidden;isolation:isolate;text-decoration:none;color:inherit;cursor:pointer;border:1px solid rgba(var(--gold-rgb),.38);background:radial-gradient(120% 160% at 0% 0%,rgba(var(--pink-rgb),.20),transparent 55%),radial-gradient(90% 140% at 100% 100%,rgba(var(--gold-rgb),.16),transparent 60%),linear-gradient(165deg,var(--f0_04),var(--f0_02));box-shadow:0 14px 38px rgba(var(--sh),calc(.28*var(--shk,1)));transition:transform .35s var(--ease),border-color .3s,box-shadow .35s var(--ease)}
+.ielts-soon::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(115deg,transparent 35%,rgba(var(--gold-rgb),.14) 50%,transparent 65%);transform:translateX(-120%);transition:transform .9s var(--ease)}
+.ielts-soon:hover{transform:translateY(-2px);border-color:rgba(var(--gold-rgb),.7);box-shadow:0 20px 48px rgba(var(--sh),calc(.36*var(--shk,1))),0 0 0 1px rgba(var(--gold-rgb),.18)}
+.ielts-soon:hover::before{transform:translateX(120%)}
+.ielts-soon:active{transform:translateY(0)}
+.ielts-soon:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+.ielts-soon .ielts-ic{flex:0 0 auto;width:58px;height:58px;border-radius:18px;display:grid;place-items:center;background:linear-gradient(135deg,var(--pink),var(--gold));color:#fff;box-shadow:0 8px 22px rgba(var(--pink-rgb),.38)}
+.ielts-soon .ielts-ic svg{width:28px;height:28px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.ielts-soon .ielts-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px}
+.ielts-soon .ielts-eyebrow{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.ielts-soon .ielts-b{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:3px 10px;border-radius:999px;border:1px solid rgba(var(--gold-rgb),.6);color:var(--gold);white-space:nowrap}
+.ielts-soon .ielts-t{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:700;line-height:1.15;letter-spacing:-.01em}
+.ielts-soon .ielts-d{font-size:14px;line-height:1.5;opacity:.78}
+.ielts-soon .ielts-meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:2px}
+.ielts-soon .ielts-meta span{font-size:12px;padding:4px 10px;border-radius:999px;background:var(--b0_06);border:1px solid var(--b0_1);white-space:nowrap}
+.ielts-soon .ielts-go{flex:0 0 auto;display:inline-flex;align-items:center;gap:8px;padding:12px 20px;border-radius:999px;font-size:14px;font-weight:600;background:linear-gradient(135deg,var(--pink),var(--gold));color:#fff;box-shadow:0 8px 22px rgba(var(--pink-rgb),.34);transition:gap .3s var(--ease),box-shadow .3s}
+.ielts-soon .ielts-go svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;transition:transform .3s var(--ease)}
+.ielts-soon:hover .ielts-go{gap:12px}
+[dir="rtl"] .ielts-soon .ielts-go svg{transform:scaleX(-1)}
+@media(max-width:640px){.ielts-soon{flex-wrap:wrap;gap:14px;padding:16px}.ielts-soon .ielts-ic{width:50px;height:50px;border-radius:16px}.ielts-soon .ielts-body{flex:1 1 calc(100% - 70px)}.ielts-soon .ielts-t{font-size:22px}.ielts-soon .ielts-go{width:100%;justify-content:center}}
+@media(prefers-reduced-motion:reduce){.ielts-soon,.ielts-soon::before,.ielts-soon .ielts-go{transition:none}.ielts-soon:hover{transform:none}}
 </style>
 </head>
 <body>
@@ -530,9 +545,14 @@ try{if(localStorage.getItem('nirvo-theme')==='light'){document.documentElement.c
 
   <!-- IELTS Mock Speaking -->
   <a id="ielts-soon" class="ielts-soon" href="ielts-speaking.html">
-    <svg class="tp-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><path d="M12 19v3"/></svg>
-    <span class="ielts-t">IELTS Mock Speaking</span>
-    <span class="ielts-b">Beta</span>
+    <span class="ielts-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><path d="M12 19v3"/></svg></span>
+    <span class="ielts-body">
+      <span class="ielts-eyebrow"><span class="ielts-b">Beta</span></span>
+      <span class="ielts-t">IELTS Mock Speaking</span>
+      <span class="ielts-d">A full three-part speaking test with an AI examiner and an estimated band score.</span>
+      <span class="ielts-meta"><span>11&ndash;14 min</span><span>3 parts</span><span>4 criteria</span></span>
+    </span>
+    <span class="ielts-go"><span>Start test</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
   </a>
 
   <!-- Conversation + Mic area -->
@@ -1206,6 +1226,11 @@ Give 3-4 feedback items covering grammar and vocabulary only. In memory.mistakes
   });
   Object.assign(T, {
     'IELTS Mock Speaking': ['\u0622\u0632\u0645\u0648\u0646 \u0622\u0632\u0645\u0627\u06cc\u0634\u06cc \u0627\u0633\u067e\u06cc\u06a9\u06cc\u0646\u06af IELTS', 'IELTS Deneme Konu\u015fma'],
+    'A full three-part speaking test with an AI examiner and an estimated band score.': ['\u06cc\u06a9 \u0622\u0632\u0645\u0648\u0646 \u06a9\u0627\u0645\u0644 \u0633\u0647\u200c\u0628\u062e\u0634\u06cc \u0627\u0633\u067e\u06cc\u06a9\u06cc\u0646\u06af \u0628\u0627 \u0645\u0645\u062a\u062d\u0646 \u0647\u0648\u0634 \u0645\u0635\u0646\u0648\u0639\u06cc \u0648 \u062a\u062e\u0645\u06cc\u0646 \u0646\u0645\u0631\u0647 \u0628\u0627\u0646\u062f.', 'Yapay zeka s\u0131nav g\u00f6revlisiyle tam \u00fc\u00e7 b\u00f6l\u00fcml\u00fc konu\u015fma s\u0131nav\u0131 ve tahmini band puan\u0131.'],
+    '11\u201314 min': ['\u06f1\u06f1 \u062a\u0627 \u06f1\u06f4 \u062f\u0642\u06cc\u0642\u0647', '11\u201314 dk'],
+    '3 parts': ['\u06f3 \u0628\u062e\u0634', '3 b\u00f6l\u00fcm'],
+    '4 criteria': ['\u06f4 \u0645\u0639\u06cc\u0627\u0631', '4 kriter'],
+    'Start test': ['\u0634\u0631\u0648\u0639 \u0622\u0632\u0645\u0648\u0646', 'Testi ba\u015flat'],
     'Beta': ['\u0622\u0632\u0645\u0627\u06cc\u0634\u06cc', 'Beta'],
     'Custom Topic': ['موضوع دلخواه', 'Özel Konu'],
     'Custom topic': ['موضوع دلخواه', 'Özel konu'],
