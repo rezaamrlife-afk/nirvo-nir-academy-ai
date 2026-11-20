@@ -6,6 +6,7 @@ const STATIC_ASSETS = [
   '/auth.html',
   '/dashboard.html',
   '/practice.html',
+  '/ielts-speaking.html',
   '/progress.html',
   '/nirvo-chat.html',
   '/manifest.json',
