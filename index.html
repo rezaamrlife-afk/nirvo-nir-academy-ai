@@ -841,6 +841,124 @@ html[lang="fa"] #nv-mob-nav a{font-size:clamp(9.5px,2.7vw,11.5px)}
 @media(max-width:900px){.nvw{padding:0 20px 28px}.nvw-body{grid-template-columns:1fr}.nvw-side{display:none}.nvw-main{padding:14px}.nvw-name small{display:none}}
 @media(max-width:380px){.nvw-b{font-size:13.5px}}
 </style>
+<style id="nvx-header">
+/* ═══════════ NIRVO header redesign (visual only; markup ids, links, JS hooks unchanged) ═══════════ */
+:root{--nvx-h:72px}
+/* announcement strip */
+html body .tagline-bar.nvx-top{position:relative;z-index:11;overflow:hidden;text-align:center;padding:7px 60px!important;background:linear-gradient(90deg,transparent,rgba(var(--gold-rgb),.07),transparent)!important;border-bottom:1px solid var(--b0_05)!important}
+html body .tagline-bar.nvx-top>p{font-size:11px!important;letter-spacing:.26em!important}
+/* bar */
+html body nav.nvx{position:sticky;top:0;z-index:50;display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:16px;min-height:var(--nvx-h);padding:0 clamp(16px,4vw,60px)!important;padding-top:env(safe-area-inset-top)!important;background:rgba(var(--black-rgb),.72)!important;-webkit-backdrop-filter:blur(18px) saturate(1.6);backdrop-filter:blur(18px) saturate(1.6);border-bottom:1px solid var(--b0_07)!important;transition:min-height .3s var(--ease),background .3s,box-shadow .3s}
+html body nav.nvx::after{content:"";position:absolute;inset-inline:0;bottom:-1px;height:1px;background:linear-gradient(90deg,transparent,rgba(var(--gold-rgb),.5),transparent);opacity:0;transition:opacity .3s;pointer-events:none}
+html body nav.nvx.is-stuck{min-height:60px;background:rgba(var(--black-rgb),.9)!important;box-shadow:0 12px 34px rgba(var(--sh),calc(.28*var(--shk)))}
+html body nav.nvx.is-stuck::after{opacity:1}
+/* brand */
+html body nav.nvx .nvn-brand-wrap{justify-self:start;margin:0!important}
+html body nav.nvx .nvn-brand{gap:12px;border-radius:14px;transition:opacity .2s}
+html body nav.nvx .nvn-brand:hover{opacity:.9}
+html body nav.nvx .nvn-logo img{width:42px!important;height:42px!important;border-radius:13px;border:1px solid rgba(var(--gold-rgb),.4);box-shadow:0 6px 18px rgba(var(--gold-rgb),.22);transition:transform .35s var(--ease)}
+html body nav.nvx .nvn-brand:hover .nvn-logo img{transform:rotate(-4deg) scale(1.05)}
+html body nav.nvx .nvn-word{font-size:19px;letter-spacing:.3em}
+html body nav.nvx .nvn-sub{display:block!important;margin-top:5px;font-size:9.5px;letter-spacing:.3em;font-weight:500}
+/* centre links */
+html body nav.nvx .nav-links{display:flex;gap:2px!important;padding:4px!important;border-radius:999px;background:var(--f0_04);border:1px solid var(--b0_08);box-shadow:inset 0 1px 0 var(--b0_05);justify-self:center}
+html body nav.nvx .nav-link-item{display:inline-flex;align-items:center;gap:8px;padding:9px 16px!important;border-radius:999px;font-size:12.5px!important;font-weight:500;letter-spacing:.12em!important;text-transform:uppercase;color:var(--t0_5)!important;transition:background .25s,color .25s,box-shadow .25s}
+html body nav.nvx .nav-link-item::after{display:none}
+html body nav.nvx .nav-link-item:hover{background:rgba(var(--gold-rgb),.12);color:var(--white)!important;box-shadow:inset 0 0 0 1px rgba(var(--gold-rgb),.22)}
+html body nav.nvx .nav-link-item:focus-visible,html body nav.nvx .nvx-cta:focus-visible,html body nav.nvx .nvn-chip:focus-visible,html body nav.nvx .hamburger:focus-visible,html body nav.nvx .nvn-brand:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+html body nav.nvx .nvx-dot{width:6px;height:6px;border-radius:50%;background:var(--rose);animation:alivePulse 2s ease infinite;flex-shrink:0}
+/* right cluster */
+html body nav.nvx .nav-cta{display:flex;align-items:center;justify-self:end;gap:10px!important}
+html body nav.nvx .nvn-chip{height:42px;padding:0 16px;border-radius:999px;font-size:13px!important;letter-spacing:.04em;text-decoration:none}
+html body nav.nvx .nvn-theme{width:42px;padding:0;justify-content:center;font-size:0!important;gap:0}
+html body nav.nvx .nvn-theme::before{content:"\2600";font-size:17px;line-height:1;color:var(--t0_5);transition:transform .4s var(--ease),color .2s}
+html.light-mode body nav.nvx .nvn-theme::before{content:"\263E"}
+html body nav.nvx .nvn-theme:hover::before{transform:rotate(25deg);color:var(--gold)}
+@media(min-width:1221px){html body nav.nvx #nav-login[style*="inline"],html body nav.nvx #nav-dashboard[style*="inline"],html body nav.nvx #nav-profile[style*="inline"]{display:inline-flex!important;align-items:center}}
+html body nav.nvx #nav-dashboard,html body nav.nvx #nav-profile{width:42px;padding:0!important;justify-content:center;font-size:0!important;gap:0;color:var(--gold)!important;border-color:rgba(var(--gold-rgb),.3);background:rgba(var(--gold-rgb),.07)}
+html body nav.nvx #nav-dashboard::before,html body nav.nvx #nav-profile::before{content:"";width:18px;height:18px;background:currentColor;-webkit-mask:var(--nvx-ic) center/contain no-repeat;mask:var(--nvx-ic) center/contain no-repeat}
+html body nav.nvx #nav-dashboard{--nvx-ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 3v18h18'/%3E%3Cpath d='M8 17V9'/%3E%3Cpath d='M13 17V5'/%3E%3Cpath d='M18 17v-6'/%3E%3C/svg%3E")}
+html body nav.nvx #nav-profile{--nvx-ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2'/%3E%3Ccircle cx='12' cy='7' r='4'/%3E%3C/svg%3E")}
+html body nav.nvx .nvx-cta{position:relative;overflow:hidden;isolation:isolate;display:inline-flex;align-items:center;gap:8px;height:44px;padding:0 22px;border-radius:999px;background:linear-gradient(135deg,var(--gold),var(--gold-light));color:var(--on-gold)!important;font-family:'Outfit',sans-serif;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;white-space:nowrap;box-shadow:0 8px 24px rgba(var(--gold-rgb),.32),inset 0 1px 0 rgba(255,255,255,.35);transition:transform .3s var(--ease),box-shadow .3s}
+html body nav.nvx .nvx-cta::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.4) 50%,transparent 70%);transform:translateX(-120%);transition:transform .7s var(--ease)}
+html body nav.nvx .nvx-cta::after{content:"\2192";font-size:15px;line-height:1;transition:transform .3s var(--ease)}
+html body nav.nvx .nvx-cta:hover{transform:translateY(-2px);box-shadow:0 14px 34px rgba(var(--gold-rgb),.45),inset 0 1px 0 rgba(255,255,255,.35)}
+html body nav.nvx .nvx-cta:hover::before{transform:translateX(120%)}
+html body nav.nvx .nvx-cta:hover::after{transform:translateX(3px)}
+html body nav.nvx .nvx-cta:active{transform:translateY(0)}
+html[dir="rtl"] body nav.nvx .nvx-cta::after,html[dir="rtl"] nav.nvx .nvx-cta::after{content:"\2190"}
+html[dir="rtl"] nav.nvx .nvx-cta:hover::after{transform:translateX(-3px)}
+/* hamburger */
+html body nav.nvx .hamburger{display:none!important;position:relative;width:44px;height:44px;min-width:44px;min-height:44px;padding:0;border-radius:14px;background:var(--f0_04);border:1px solid var(--b0_1);flex-direction:column;align-items:center;justify-content:center;gap:5px;cursor:pointer;justify-self:end;transition:background .25s,border-color .25s,transform .2s}
+html body nav.nvx .hamburger:hover{background:rgba(var(--gold-rgb),.1);border-color:rgba(var(--gold-rgb),.5)}
+html body nav.nvx .hamburger:active{transform:scale(.94)}
+html body nav.nvx .hamburger span{display:block;width:18px;height:2px;border-radius:2px;background:var(--gold);transition:transform .35s var(--ease),opacity .2s,width .3s}
+html body nav.nvx .hamburger span:nth-child(2){width:12px;align-self:center;transform:translateX(3px)}
+html[dir="rtl"] body nav.nvx .hamburger span:nth-child(2){transform:translateX(-3px)}
+html body nav.nvx .hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+html body nav.nvx .hamburger.open span:nth-child(2){opacity:0;transform:scaleX(0)}
+html body nav.nvx .hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+/* breakpoints */
+@media(max-width:1279px){html body nav.nvx .nvn-sub{display:none!important}}
+@media(max-width:1280px){html body nav.nvx .nav-link-item{padding:9px 12px!important;font-size:12px!important;letter-spacing:.07em!important}html body nav.nvx .nvx-cta{padding:0 18px}}
+@media(max-width:1220px){
+  html body nav.nvx{display:flex;justify-content:space-between;gap:10px}
+  html body nav.nvx .nav-links{display:none!important}
+  html body nav.nvx .nav-cta a[id]{display:none!important}
+  html body nav.nvx .hamburger{display:flex!important}
+  html body nav.nvx .nav-cta{margin-inline-start:auto!important}
+  html body .tagline-bar.nvx-top{padding:7px 20px!important}
+}
+@media(max-width:1220px) and (min-width:769px){html body nav.nvx .nvn-sub{display:block!important}}
+@media(max-width:768px){
+  :root{--nvx-h:60px}
+  html body nav.nvx{padding:0 14px!important;padding-top:env(safe-area-inset-top)!important}
+  html body nav.nvx .nvn-theme,html body nav.nvx .nav-cta a[id]{display:none!important}
+  html body nav.nvx .nvn-logo img{width:38px!important;height:38px!important;border-radius:12px}
+  html body nav.nvx .nvn-word{font-size:17px;letter-spacing:.22em}
+  html body nav.nvx .nvx-cta{height:40px;padding:0 15px;font-size:12px;letter-spacing:.05em;text-transform:none;box-shadow:0 6px 18px rgba(var(--gold-rgb),.3),inset 0 1px 0 rgba(255,255,255,.35)}
+  html body nav.nvx .nvx-cta::after{font-size:14px}
+  html body nav.nvx .hamburger{width:42px;height:42px;min-width:42px;min-height:42px;border-radius:13px}
+  html body .tagline-bar.nvx-top{padding:6px 12px!important}
+  html body .tagline-bar.nvx-top>p{font-size:10px!important;letter-spacing:.16em!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  html body .tagline-bar.nvx-top>p>span:first-of-type{display:none!important}
+}
+@media(max-width:400px){html body nav.nvx .nvn-word{font-size:15.5px;letter-spacing:.16em}html body nav.nvx .nvn-brand{gap:8px}html body nav.nvx .nvx-cta{padding:0 12px;font-size:11.5px;gap:5px}html body nav.nvx .nvx-cta::after{display:none}}
+@media(max-width:360px){html body .tagline-bar.nvx-top>p{font-size:9.5px!important;letter-spacing:.1em!important}}
+@media(max-width:340px){html body nav.nvx .nvn-name{display:none}}
+/* ─────────── mobile drawer: right-hand glass sheet ─────────── */
+html body .mobile-menu{--nvx-dir:1;z-index:400!important;display:none;flex-direction:row!important;align-items:stretch!important;justify-content:flex-end!important;gap:0!important;padding:0!important;overflow:hidden!important;background:rgba(var(--sh),.52)!important;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+html[dir="rtl"] body .mobile-menu{--nvx-dir:-1}
+html body .mobile-menu.open{display:flex!important;animation:nvxFade .28s ease both}
+@keyframes nvxFade{from{opacity:0}to{opacity:1}}
+@keyframes nvxSheet{from{transform:translateX(calc(100% * var(--nvx-dir)))}to{transform:none}}
+@keyframes nvxRow{from{opacity:0;transform:translateX(calc(18px * var(--nvx-dir)))}to{opacity:1;transform:none}}
+html body .mobile-menu .nvd{width:min(392px,92vw);max-width:none;height:100%;max-height:none;margin:0;border-radius:30px 0 0 30px;border:0;border-inline-start:1px solid rgba(var(--gold-rgb),.28);background:radial-gradient(380px 260px at 100% 0,rgba(var(--gold-rgb),.16),transparent 70%),linear-gradient(180deg,rgba(var(--black-rgb),.97),rgba(var(--black-rgb),.995));box-shadow:-24px 0 70px rgba(var(--sh),calc(.5*var(--shk)));-webkit-backdrop-filter:blur(26px) saturate(1.5);backdrop-filter:blur(26px) saturate(1.5);padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}
+html[dir="rtl"] body .mobile-menu .nvd{border-radius:0 30px 30px 0}
+html body .mobile-menu.open .nvd{animation:nvxSheet .42s var(--ease) both}
+html body .mobile-menu .nvd-head{padding:16px 18px 14px 20px;border-bottom:1px solid var(--b0_07)}
+html body .mobile-menu .nvd-brand img{width:42px;height:42px;border-radius:13px;box-shadow:0 6px 18px rgba(var(--gold-rgb),.28)}
+html body .mobile-menu .nvd-word{font-size:17px}
+html body .mobile-menu .nvd-close{width:42px;height:42px;border-radius:13px;background:var(--f0_04);border:1px solid var(--b0_1);transition:background .2s,transform .2s}
+html body .mobile-menu .nvd-close:hover{background:rgba(var(--gold-rgb),.12)}
+html body .mobile-menu .nvd-body{padding:6px 14px 12px;flex:1}
+html body .mobile-menu .nvd-label{margin:14px 8px 6px;font-size:11px;letter-spacing:.26em}
+html body .mobile-menu.open .nvd-body>*{animation:nvxRow .5s var(--ease) both}
+html body .mobile-menu.open .nvd-body>*:nth-child(1){animation-delay:.10s}html body .mobile-menu.open .nvd-body>*:nth-child(2){animation-delay:.14s}html body .mobile-menu.open .nvd-body>*:nth-child(3){animation-delay:.18s}html body .mobile-menu.open .nvd-body>*:nth-child(4){animation-delay:.22s}html body .mobile-menu.open .nvd-body>*:nth-child(5){animation-delay:.26s}html body .mobile-menu.open .nvd-body>*:nth-child(6){animation-delay:.30s}html body .mobile-menu.open .nvd-body>*:nth-child(7){animation-delay:.34s}html body .mobile-menu.open .nvd-body>*:nth-child(8){animation-delay:.38s}html body .mobile-menu.open .nvd-body>*:nth-child(9){animation-delay:.42s}html body .mobile-menu.open .nvd-body>*:nth-child(10){animation-delay:.46s}html body .mobile-menu.open .nvd-body>*:nth-child(11){animation-delay:.50s}html body .mobile-menu.open .nvd-body>*:nth-child(12){animation-delay:.54s}html body .mobile-menu.open .nvd-body>*:nth-child(13){animation-delay:.58s}html body .mobile-menu.open .nvd-body>*:nth-child(14){animation-delay:.62s}
+html body .mobile-menu .nvd .nvd-row{min-height:52px;padding:6px 12px;margin-bottom:4px;border-radius:18px;border:1px solid transparent;background:transparent;font-size:16px;font-weight:500;transition:background .2s,border-color .2s,transform .2s}
+html body .mobile-menu .nvd .nvd-row:hover{background:var(--f0_04);border-color:var(--b0_07)}
+html body .mobile-menu .nvd .nvd-row:active{transform:scale(.98)}
+html body .mobile-menu .nvd .nvd-row:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+html body .mobile-menu .nvd .nvd-primary{min-height:68px;background:linear-gradient(135deg,rgba(var(--gold-rgb),.16),rgba(var(--gold-rgb),.05));border-color:rgba(var(--gold-rgb),.34);box-shadow:0 10px 28px rgba(var(--gold-rgb),.12)}
+html body .mobile-menu .nvd .nvd-primary .nvd-ic{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-light));color:var(--on-gold);border:0}
+html body .mobile-menu .nvd .nvd-ic{width:38px;height:38px;border-radius:12px;background:rgba(var(--gold-rgb),.1);border:1px solid rgba(var(--gold-rgb),.24)}
+html body .mobile-menu .nvd .nvd-toggle{background:var(--f0_04);border-color:var(--b0_07)}
+html body .mobile-menu .nvd .nvd-danger{margin-top:12px}
+html body .mobile-menu .nvd-langrow{padding:10px 12px;margin-bottom:6px;border-radius:18px;background:var(--f0_04);border:1px solid var(--b0_07)}
+html body .mobile-menu .nvd-foot{padding:10px 20px 12px;font-size:10.5px!important;letter-spacing:.16em!important;line-height:1.8!important;background:linear-gradient(0deg,rgba(var(--gold-rgb),.05),transparent)}
+@media(max-height:620px){html body .mobile-menu .nvd .nvd-row{min-height:50px}html body .mobile-menu .nvd-label{margin-top:12px}}
+@media(prefers-reduced-motion:reduce){html body nav.nvx,html body nav.nvx *,html body .mobile-menu,html body .mobile-menu *{animation-duration:.01ms!important;animation-delay:0s!important;transition-duration:.01ms!important}}
+</style>
 </head>
 <body>
 <script>
@@ -888,7 +1006,7 @@ window.addEventListener('load',function(){
 <!-- ═══════════════════════════════ NAVBAR ═══════════════════════════════ -->
 
 <!-- Top tagline bar with pulse animation -->
-<div style="background:linear-gradient(90deg,rgba(var(--gold-rgb),0.04),rgba(var(--gold-rgb),0.08),rgba(var(--gold-rgb),0.04));border-bottom:0.5px solid rgba(var(--gold-rgb),0.12);padding:8px 60px;text-align:center;position:relative;z-index:11;overflow:hidden" class="tagline-bar">
+<div class="tagline-bar nvx-top">
   <!-- animated glow sweep -->
   <div style="position:absolute;top:0;left:-100%;width:60%;height:100%;background:linear-gradient(90deg,transparent,rgba(var(--gold-rgb),0.08),transparent);animation:sweep 4s ease-in-out infinite;pointer-events:none"></div>
   <p style="font-size:12px;color:var(--goldt0_7);letter-spacing:0.22em;text-transform:uppercase;font-weight:400;font-family:'Outfit',sans-serif;position:relative">
@@ -899,40 +1017,36 @@ window.addEventListener('load',function(){
   <div class="nv-langbar" role="group" aria-label="Language"><button type="button" data-lang-btn="en" aria-pressed="true">EN</button><button type="button" data-lang-btn="fa" aria-pressed="false">FA</button><button type="button" data-lang-btn="tr" aria-pressed="false">TR</button></div>
 </div>
 
-<nav class="anim-fade d1" style="display:flex;align-items:center;justify-content:space-between;padding:16px 60px;padding-top:max(16px,env(safe-area-inset-top));border-bottom:0.5px solid var(--b0_07);position:sticky;top:0;z-index:10;background:rgba(var(--black-rgb),0.96);backdrop-filter:blur(20px)">
+<nav class="nvx anim-fade d1" id="nvx" aria-label="Main">
 
-  <!-- Logo + Brand — with subtle glow -->
+  <!-- Logo + Brand -->
   <div class="nvn-brand-wrap"><a class="nvn-brand" href="index.html" aria-label="NIRVO home"><span class="nvn-logo"><img src="data:image/webp;base64,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" id="nav-logo"></span><span class="nvn-name"><span class="nvn-word">NIR<b>VO</b></span><span class="nvn-sub">Speaking Intelligence</span></span></a></div>
 
   <!-- Nav links -->
-  <div style="display:flex;gap:36px;align-items:center" class="nav-links">
-    <a href="#features" style="font-size:14px;color:var(--t0_5);text-decoration:none;letter-spacing:0.04em;transition:color 0.2s;position:relative" class="nav-link-item">Features</a>
-    <a href="practice.html" style="font-size:14px;color:var(--t0_5);text-decoration:none;letter-spacing:0.04em;transition:color 0.2s" class="nav-link-item">Practice</a>
-    <a href="learning-path.html" style="font-size:14px;color:var(--t0_5);text-decoration:none;letter-spacing:0.04em;transition:color 0.2s" class="nav-link-item">Learning Path</a>
-    <a href="nirvo-chat.html" style="font-size:14px;color:var(--t0_5);text-decoration:none;letter-spacing:0.04em;transition:color 0.2s;display:flex;align-items:center;gap:6px" class="nav-link-item">
-      <span style="width:6px;height:6px;border-radius:50%;background:var(--rose);animation:alivePulse 2s ease infinite;flex-shrink:0"></span>
+  <div class="nav-links">
+    <a href="#features" class="nav-link-item">Features</a>
+    <a href="practice.html" class="nav-link-item">Practice</a>
+    <a href="learning-path.html" class="nav-link-item">Learning Path</a>
+    <a href="nirvo-chat.html" class="nav-link-item">
+      <span class="nvx-dot"></span>
       Chat with NIRVO
     </a>
-    <a href="auth.html" style="font-size:14px;color:var(--t0_5);text-decoration:none;letter-spacing:0.04em;transition:color 0.2s" class="nav-link-item">Pricing</a>
+    <a href="auth.html" class="nav-link-item">Pricing</a>
   </div>
 
   <!-- CTA -->
-  <div style="display:flex;gap:12px;align-items:center" class="nav-cta">
+  <div class="nav-cta">
     <button type="button" class="nvn-chip nvn-theme" onclick="toggleTheme()" aria-label="Switch to light mode">☀ Light</button>
-    <a class="nvn-chip" href="auth.html" id="nav-login" style="color:var(--t0_45);text-decoration:none;font-size:14px;letter-spacing:0.04em;display:none;transition:color 0.2s" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--t0_45)'">Log in</a>
-    <a class="nvn-chip" href="dashboard.html" id="nav-dashboard" style="color:var(--gold);text-decoration:none;font-size:14px;letter-spacing:0.04em;display:none;transition:opacity 0.2s" onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity='1'">Dashboard →</a>
-    <a class="nvn-chip" href="profile.html" id="nav-profile" style="color:var(--gold);text-decoration:none;font-size:14px;letter-spacing:0.04em;display:none;transition:opacity 0.2s" onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity='1'">Profile</a>
-    <a href="auth.html" style="text-decoration:none">
-      <button style="background:linear-gradient(135deg,var(--gold),var(--gold-light));border:none;border-radius:8px;color:var(--on-gold);font-size:14px;font-weight:600;padding:10px 22px;cursor:pointer;font-family:'Outfit',sans-serif;letter-spacing:0.05em;transition:all 0.25s;position:relative;overflow:hidden" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 24px rgba(var(--gold-rgb),0.4)'" onmouseout="this.style.transform='none';this.style.boxShadow='none'">
-        Get Started Free
-      </button>
-    </a>
+    <a class="nvn-chip" href="auth.html" id="nav-login" style="display:none">Log in</a>
+    <a class="nvn-chip" href="dashboard.html" id="nav-dashboard" style="display:none">Dashboard →</a>
+    <a class="nvn-chip" href="profile.html" id="nav-profile" style="display:none">Profile</a>
+    <a class="nvx-cta" href="auth.html">Get Started Free</a>
   </div>
 
-  <!-- Hamburger -->
-  <div class="hamburger" id="hamburger" onclick="toggleMenu()">
+  <!-- Menu button -->
+  <button type="button" class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu" aria-controls="mobile-menu" aria-expanded="false">
     <span></span><span></span><span></span>
-  </div>
+  </button>
 
 </nav>
 
@@ -967,6 +1081,9 @@ window.addEventListener('load',function(){
   </div>
 </div>
 
+<script id="nvx-header-js">
+(function(){var n=document.getElementById('nvx');if(!n)return;var on=false;function f(){var s=(window.pageYOffset||document.documentElement.scrollTop)>8;if(s!==on){on=s;n.classList.toggle('is-stuck',s)}}f();window.addEventListener('scroll',f,{passive:true})})();
+</script>
 <!-- ═══ HERO ═══ -->
 <header class="nvh">
   <div class="nvh-left anim-fade-up d2">
