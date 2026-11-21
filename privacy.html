@@ -35,12 +35,168 @@
   .controller-box strong { color:rgba(255,255,255,0.9); }
   footer { text-align:center;padding:24px;border-top:1px solid rgba(255,255,255,0.06);color:rgba(255,255,255,0.2);font-size:12px;font-family:'Arial',sans-serif; }
 </style>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600&display=swap" rel="stylesheet">
+<style id="nvx-header">
+/* ═══════════ NIRVO header — shared standard (ported from index.html; visual only, ids/handlers/links unchanged) ═══════════ */
+:root{--nvx-h:72px}
+.nvn-brand-wrap{display:flex;align-items:center;min-width:0}
+.nvn-brand{display:flex;align-items:center;gap:12px;text-decoration:none;min-width:0}
+.nvn-logo{display:block;flex-shrink:0}
+html body .nvx .nvn-logo img{display:block;object-fit:contain;background:#000}
+.nvn-name{display:flex;flex-direction:column;min-width:0}
+.nvn-word{font-family:'Outfit',sans-serif;font-size:20px;font-weight:600;letter-spacing:.3em;line-height:1;color:var(--gold);white-space:nowrap}
+.nvn-word b{font-weight:600;color:var(--rose)}
+.nvn-sub{margin-top:6px;font-family:'Outfit',sans-serif;font-size:11.5px;font-weight:600;letter-spacing:.3em;text-transform:uppercase;color:var(--t0_3);white-space:nowrap}
+html body .nvx .nvn-chip{display:inline-flex;align-items:center;gap:8px;padding:9px 14px;border-radius:12px;background:var(--f0_04);border:1px solid var(--b0_1);color:var(--t0_5)!important;font-family:'Outfit',sans-serif;font-size:13.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;cursor:pointer;white-space:nowrap;transition:background .2s,border-color .2s,color .2s}
+html body .nvx .nvn-chip:hover{background:rgba(var(--gold-rgb),.1);border-color:rgba(var(--gold-rgb),.4);color:var(--gold)!important}
+html body .nvx .nav-link{text-decoration:none}
+/* bar */
+html body .nvx{position:sticky;top:0;z-index:200;display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:16px;min-height:var(--nvx-h);padding:0 clamp(16px,4vw,60px)!important;padding-top:env(safe-area-inset-top)!important;background:rgba(var(--black-rgb),.72)!important;-webkit-backdrop-filter:blur(18px) saturate(1.6);backdrop-filter:blur(18px) saturate(1.6);border-bottom:1px solid var(--b0_07)!important;transition:min-height .3s var(--ease),background .3s,box-shadow .3s}
+html body .nvx::after{content:"";position:absolute;inset-inline:0;bottom:-1px;height:1px;background:linear-gradient(90deg,transparent,rgba(var(--gold-rgb),.5),transparent);opacity:0;transition:opacity .3s;pointer-events:none}
+html body .nvx.is-stuck{min-height:60px;background:rgba(var(--black-rgb),.9)!important;box-shadow:0 12px 34px rgba(var(--sh),calc(.28*var(--shk)))}
+html body .nvx.is-stuck::after{opacity:1}
+/* brand */
+html body .nvx .nvn-brand-wrap{justify-self:start;margin:0!important}
+html body .nvx .nvn-brand{gap:12px;border-radius:14px;transition:opacity .2s}
+html body .nvx .nvn-brand:hover{opacity:.9}
+html body .nvx .nvn-logo img{width:42px!important;height:42px!important;border-radius:13px;border:1px solid rgba(var(--gold-rgb),.4);box-shadow:0 6px 18px rgba(var(--gold-rgb),.22);transition:transform .35s var(--ease)}
+html body .nvx .nvn-brand:hover .nvn-logo img{transform:rotate(-4deg) scale(1.05)}
+html body .nvx .nvn-word{font-size:19px;letter-spacing:.3em}
+html body .nvx .nvn-sub{display:block!important;margin-top:5px;font-size:9.5px;letter-spacing:.3em;font-weight:500}
+/* centre links */
+html body .nvx .nav-links{display:flex;gap:2px!important;padding:4px!important;border-radius:999px;background:var(--f0_04);border:1px solid var(--b0_08);box-shadow:inset 0 1px 0 var(--b0_05);justify-self:center}
+html body .nvx .nav-link-item{display:inline-flex;align-items:center;gap:8px;padding:9px 16px!important;border-radius:999px;font-size:12.5px!important;font-weight:500;letter-spacing:.12em!important;text-transform:uppercase;color:var(--t0_5)!important;transition:background .25s,color .25s,box-shadow .25s}
+html body .nvx .nav-link-item::after{display:none}
+html body .nvx .nav-link-item:hover{background:rgba(var(--gold-rgb),.12);color:var(--white)!important;box-shadow:inset 0 0 0 1px rgba(var(--gold-rgb),.22)}
+html body .nvx .nav-link-item:focus-visible,html body .nvx .nvx-cta:focus-visible,html body .nvx .nvn-chip:focus-visible,html body .nvx .hamburger:focus-visible,html body .nvx .nvn-brand:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+html body .nvx .nvx-dot{width:6px;height:6px;border-radius:50%;background:var(--rose);animation:alivePulse 2s ease infinite;flex-shrink:0}
+/* right cluster */
+html body .nvx .nav-cta{display:flex;align-items:center;justify-self:end;gap:10px!important}
+html body .nvx .nvn-chip{height:42px;padding:0 16px;border-radius:999px;font-size:13px!important;letter-spacing:.04em;text-decoration:none}
+html body .nvx .nvn-theme{width:42px;padding:0;justify-content:center;font-size:0!important;gap:0}
+html body .nvx .nvn-theme::before{content:"\2600";font-size:17px;line-height:1;color:var(--t0_5);transition:transform .4s var(--ease),color .2s}
+html.light-mode body .nvx .nvn-theme::before{content:"\263E"}
+html body .nvx .nvn-theme:hover::before{transform:rotate(25deg);color:var(--gold)}
+@media(min-width:1221px){html body .nvx #nav-login[style*="inline"],html body .nvx #nav-dashboard[style*="inline"],html body .nvx #nav-profile[style*="inline"]{display:inline-flex!important;align-items:center}}
+html body .nvx #nav-dashboard,html body .nvx #nav-profile{width:42px;padding:0!important;justify-content:center;font-size:0!important;gap:0;color:var(--gold)!important;border-color:rgba(var(--gold-rgb),.3);background:rgba(var(--gold-rgb),.07)}
+html body .nvx #nav-dashboard::before,html body .nvx #nav-profile::before{content:"";width:18px;height:18px;background:currentColor;-webkit-mask:var(--nvx-ic) center/contain no-repeat;mask:var(--nvx-ic) center/contain no-repeat}
+html body .nvx #nav-dashboard{--nvx-ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 3v18h18'/%3E%3Cpath d='M8 17V9'/%3E%3Cpath d='M13 17V5'/%3E%3Cpath d='M18 17v-6'/%3E%3C/svg%3E")}
+html body .nvx #nav-profile{--nvx-ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2'/%3E%3Ccircle cx='12' cy='7' r='4'/%3E%3C/svg%3E")}
+html body .nvx .nvx-cta{position:relative;overflow:hidden;isolation:isolate;display:inline-flex;align-items:center;gap:8px;height:44px;padding:0 22px;border-radius:999px;background:linear-gradient(135deg,var(--gold),var(--gold-light));color:var(--on-gold)!important;font-family:'Outfit',sans-serif;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;white-space:nowrap;box-shadow:0 8px 24px rgba(var(--gold-rgb),.32),inset 0 1px 0 rgba(255,255,255,.35);transition:transform .3s var(--ease),box-shadow .3s}
+html body .nvx .nvx-cta::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.4) 50%,transparent 70%);transform:translateX(-120%);transition:transform .7s var(--ease)}
+html body .nvx .nvx-cta::after{content:"\2192";font-size:15px;line-height:1;transition:transform .3s var(--ease)}
+html body .nvx .nvx-cta:hover{transform:translateY(-2px);box-shadow:0 14px 34px rgba(var(--gold-rgb),.45),inset 0 1px 0 rgba(255,255,255,.35)}
+html body .nvx .nvx-cta:hover::before{transform:translateX(120%)}
+html body .nvx .nvx-cta:hover::after{transform:translateX(3px)}
+html body .nvx .nvx-cta:active{transform:translateY(0)}
+html[dir="rtl"] body .nvx .nvx-cta::after,html[dir="rtl"] .nvx .nvx-cta::after{content:"\2190"}
+html[dir="rtl"] .nvx .nvx-cta:hover::after{transform:translateX(-3px)}
+/* hamburger */
+html body .nvx .hamburger{display:none!important;position:relative;width:44px;height:44px;min-width:44px;min-height:44px;padding:0;border-radius:14px;background:var(--f0_04);border:1px solid var(--b0_1);flex-direction:column;align-items:center;justify-content:center;gap:5px;cursor:pointer;justify-self:end;transition:background .25s,border-color .25s,transform .2s}
+html body .nvx .hamburger:hover{background:rgba(var(--gold-rgb),.1);border-color:rgba(var(--gold-rgb),.5)}
+html body .nvx .hamburger:active{transform:scale(.94)}
+html body .nvx .hamburger span{display:block;width:18px;height:2px;border-radius:2px;background:var(--gold);transition:transform .35s var(--ease),opacity .2s,width .3s}
+html body .nvx .hamburger span:nth-child(2){width:12px;align-self:center;transform:translateX(3px)}
+html[dir="rtl"] body .nvx .hamburger span:nth-child(2){transform:translateX(-3px)}
+html body .nvx .hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+html body .nvx .hamburger.open span:nth-child(2){opacity:0;transform:scaleX(0)}
+html body .nvx .hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+/* breakpoints */
+@media(max-width:1279px){html body .nvx .nvn-sub{display:none!important}}
+@media(max-width:1280px){html body .nvx .nav-link-item{padding:9px 12px!important;font-size:12px!important;letter-spacing:.07em!important}html body .nvx .nvx-cta{padding:0 18px}}
+@media(max-width:1220px){
+  html body .nvx{display:flex;justify-content:space-between;gap:10px}
+  html body .nvx .nav-links{display:none!important}
+  html body .nvx .nav-cta a[id]{display:none!important}
+  html body .nvx .hamburger{display:flex!important}
+  html body .nvx .nav-cta{margin-inline-start:auto!important}
+  html body .tagline-bar.nvx-top{padding:7px 20px!important}
+}
+@media(max-width:1220px) and (min-width:769px){html body .nvx .nvn-sub{display:block!important}}
+@media(max-width:768px){
+  :root{--nvx-h:60px}
+  html body .nvx{padding:0 14px!important;padding-top:env(safe-area-inset-top)!important}
+  html body .nvx .nvn-theme,html body .nvx .nav-cta a[id]{display:none!important}
+  html body .nvx .nvn-logo img{width:38px!important;height:38px!important;border-radius:12px}
+  html body .nvx .nvn-word{font-size:17px;letter-spacing:.22em}
+  html body .nvx .nvx-cta{height:40px;padding:0 15px;font-size:12px;letter-spacing:.05em;text-transform:none;box-shadow:0 6px 18px rgba(var(--gold-rgb),.3),inset 0 1px 0 rgba(255,255,255,.35)}
+  html body .nvx .nvx-cta::after{font-size:14px}
+  html body .nvx .hamburger{width:42px;height:42px;min-width:42px;min-height:42px;border-radius:13px}
+  html body .tagline-bar.nvx-top{padding:6px 12px!important}
+  html body .tagline-bar.nvx-top>p{font-size:10px!important;letter-spacing:.16em!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  html body .tagline-bar.nvx-top>p>span:first-of-type{display:none!important}
+}
+@media(max-width:400px){html body .nvx .nvn-word{font-size:15.5px;letter-spacing:.16em}html body .nvx .nvn-brand{gap:8px}html body .nvx .nvx-cta{padding:0 12px;font-size:11.5px;gap:5px}html body .nvx .nvx-cta::after{display:none}}
+@media(max-width:360px){html body .tagline-bar.nvx-top>p{font-size:9.5px!important;letter-spacing:.1em!important}}
+@media(max-width:340px){html body .nvx .nvn-name{display:none}}
+/* ─────────── mobile drawer: right-hand glass sheet ─────────── */
+html body .mobile-menu{--nvx-dir:1;z-index:400!important;display:none;flex-direction:row!important;align-items:stretch!important;justify-content:flex-end!important;gap:0!important;padding:0!important;overflow:hidden!important;background:rgba(var(--sh),.52)!important;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+html[dir="rtl"] body .mobile-menu{--nvx-dir:-1}
+html body .mobile-menu.open{display:flex!important;animation:nvxFade .28s ease both}
+@keyframes nvxFade{from{opacity:0}to{opacity:1}}
+@keyframes nvxSheet{from{transform:translateX(calc(100% * var(--nvx-dir)))}to{transform:none}}
+@keyframes nvxRow{from{opacity:0;transform:translateX(calc(18px * var(--nvx-dir)))}to{opacity:1;transform:none}}
+html body .mobile-menu .nvd{width:min(392px,92vw);max-width:none;height:100%;max-height:none;margin:0;border-radius:30px 0 0 30px;border:0;border-inline-start:1px solid rgba(var(--gold-rgb),.28);background:radial-gradient(380px 260px at 100% 0,rgba(var(--gold-rgb),.16),transparent 70%),linear-gradient(180deg,rgba(var(--black-rgb),.97),rgba(var(--black-rgb),.995));box-shadow:-24px 0 70px rgba(var(--sh),calc(.5*var(--shk)));-webkit-backdrop-filter:blur(26px) saturate(1.5);backdrop-filter:blur(26px) saturate(1.5);padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}
+html[dir="rtl"] body .mobile-menu .nvd{border-radius:0 30px 30px 0}
+html body .mobile-menu.open .nvd{animation:nvxSheet .42s var(--ease) both}
+html body .mobile-menu .nvd-head{padding:16px 18px 14px 20px;border-bottom:1px solid var(--b0_07)}
+html body .mobile-menu .nvd-brand img{width:42px;height:42px;border-radius:13px;box-shadow:0 6px 18px rgba(var(--gold-rgb),.28)}
+html body .mobile-menu .nvd-word{font-size:17px}
+html body .mobile-menu .nvd-close{width:42px;height:42px;border-radius:13px;background:var(--f0_04);border:1px solid var(--b0_1);transition:background .2s,transform .2s}
+html body .mobile-menu .nvd-close:hover{background:rgba(var(--gold-rgb),.12)}
+html body .mobile-menu .nvd-body{padding:6px 14px 12px;flex:1}
+html body .mobile-menu .nvd-label{margin:14px 8px 6px;font-size:11px;letter-spacing:.26em}
+html body .mobile-menu.open .nvd-body>*{animation:nvxRow .5s var(--ease) both}
+html body .mobile-menu.open .nvd-body>*:nth-child(1){animation-delay:.10s}html body .mobile-menu.open .nvd-body>*:nth-child(2){animation-delay:.14s}html body .mobile-menu.open .nvd-body>*:nth-child(3){animation-delay:.18s}html body .mobile-menu.open .nvd-body>*:nth-child(4){animation-delay:.22s}html body .mobile-menu.open .nvd-body>*:nth-child(5){animation-delay:.26s}html body .mobile-menu.open .nvd-body>*:nth-child(6){animation-delay:.30s}html body .mobile-menu.open .nvd-body>*:nth-child(7){animation-delay:.34s}html body .mobile-menu.open .nvd-body>*:nth-child(8){animation-delay:.38s}html body .mobile-menu.open .nvd-body>*:nth-child(9){animation-delay:.42s}html body .mobile-menu.open .nvd-body>*:nth-child(10){animation-delay:.46s}html body .mobile-menu.open .nvd-body>*:nth-child(11){animation-delay:.50s}html body .mobile-menu.open .nvd-body>*:nth-child(12){animation-delay:.54s}html body .mobile-menu.open .nvd-body>*:nth-child(13){animation-delay:.58s}html body .mobile-menu.open .nvd-body>*:nth-child(14){animation-delay:.62s}
+html body .mobile-menu .nvd .nvd-row{min-height:52px;padding:6px 12px;margin-bottom:4px;border-radius:18px;border:1px solid transparent;background:transparent;font-size:16px;font-weight:500;transition:background .2s,border-color .2s,transform .2s}
+html body .mobile-menu .nvd .nvd-row:hover{background:var(--f0_04);border-color:var(--b0_07)}
+html body .mobile-menu .nvd .nvd-row:active{transform:scale(.98)}
+html body .mobile-menu .nvd .nvd-row:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+html body .mobile-menu .nvd .nvd-primary{min-height:68px;background:linear-gradient(135deg,rgba(var(--gold-rgb),.16),rgba(var(--gold-rgb),.05));border-color:rgba(var(--gold-rgb),.34);box-shadow:0 10px 28px rgba(var(--gold-rgb),.12)}
+html body .mobile-menu .nvd .nvd-primary .nvd-ic{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-light));color:var(--on-gold);border:0}
+html body .mobile-menu .nvd .nvd-ic{width:38px;height:38px;border-radius:12px;background:rgba(var(--gold-rgb),.1);border:1px solid rgba(var(--gold-rgb),.24)}
+html body .mobile-menu .nvd .nvd-toggle{background:var(--f0_04);border-color:var(--b0_07)}
+html body .mobile-menu .nvd .nvd-danger{margin-top:12px}
+html body .mobile-menu .nvd-langrow{padding:10px 12px;margin-bottom:6px;border-radius:18px;background:var(--f0_04);border:1px solid var(--b0_07)}
+html body .mobile-menu .nvd-foot{padding:10px 20px 12px;font-size:10.5px!important;letter-spacing:.16em!important;line-height:1.8!important;background:linear-gradient(0deg,rgba(var(--gold-rgb),.05),transparent)}
+@media(max-height:620px){html body .mobile-menu .nvd .nvd-row{min-height:50px}html body .mobile-menu .nvd-label{margin-top:12px}}
+@media(prefers-reduced-motion:reduce){html body .nvx,html body .nvx *,html body .mobile-menu,html body .mobile-menu *{animation-duration:.01ms!important;animation-delay:0s!important;transition-duration:.01ms!important}}
+
+/* ─────────── app-page additions ─────────── */
+html body .nvx{top:0!important;width:100%!important;max-width:none!important;margin:0!important;border:0!important;border-bottom:1px solid var(--b0_07)!important;border-radius:0!important;box-shadow:none;height:auto!important;flex-shrink:0}
+html body .nvx .nav-link-item{white-space:nowrap}
+html body .nvx .nav-link-item.active,html body .nvx .nav-link-item[aria-current="page"]{background:rgba(var(--gold-rgb),.14);color:var(--gold)!important;box-shadow:inset 0 0 0 1px rgba(var(--gold-rgb),.32)}
+html body .nvx .nav-link-item svg{width:15px;height:15px;flex-shrink:0;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+html body .nvx .nv-langbar{margin:0}
+html body .nvx .nvx-user{display:flex;align-items:center;gap:10px;min-width:0}
+html body .nvx .nav-user-info{display:flex;flex-direction:column;align-items:flex-end;gap:2px;line-height:1.15;text-align:end;min-width:0}
+html body .nvx #user-name-nav{font-size:13px;font-weight:600;color:var(--white);max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+html body .nvx #user-email-nav{font-size:11px;color:var(--t0_3);max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+html body .nvx #user-avatar{width:42px;height:42px;margin:0;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--gold),var(--gold-light));color:var(--on-gold);font-size:15px;font-weight:700;letter-spacing:0;box-shadow:0 0 0 1px rgba(var(--gold-rgb),.4),0 6px 18px rgba(var(--gold-rgb),.22)}
+html body .nvx #user-avatar[onclick]{cursor:pointer}
+html body .nvx .nvx-out svg{width:16px;height:16px;flex-shrink:0;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+html body .nvx .nvn-theme-ic{width:42px;padding:0;justify-content:center;font-size:0!important;gap:0}
+html body .nvx .nvn-theme-ic svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+html body .nvx .nvn-theme-ic::before{content:none}
+html body .nvx .nvn-theme-ic:hover{color:var(--gold)!important}
+@media(min-width:769px){html body .nv-theme{display:none!important}}
+@media(max-width:1380px){html body .nvx .nav-user-info{display:none!important}}
+@media(max-width:1220px){html body .nvx .nv-langbar{display:none!important}}
+@media(max-width:768px){html body .nvx .nvn-theme-ic,html body .nvx .nav-theme,html body .nvx .nv-signout{display:none!important}}
+@media(max-width:560px){html body .nvx [onclick*="handleLogout"]{display:none!important}}
+html[dir="rtl"] body .nvx .nvn-sub,html[dir="rtl"] body .nvx .nav-link-item,html[dir="rtl"] body .nvx .nvn-chip,html[lang="fa"] body .nvx .nvn-sub,html[lang="fa"] body .nvx .nav-link-item,html[lang="fa"] body .nvx .nvn-chip{letter-spacing:0!important;text-transform:none!important}
+html body .nvx{--gold:#D4AF37;--gold-light:#F7C948;--gold-rgb:212,175,55;--on-gold:#000;--black-rgb:8,8,8;--white:#fff;--rose:#E8A0A0;--sh:0,0,0;--shk:1;--ease:cubic-bezier(.22,1,.36,1);--f0_04:rgba(255,255,255,.04);--b0_05:rgba(255,255,255,.05);--b0_07:rgba(255,255,255,.07);--b0_08:rgba(255,255,255,.08);--b0_1:rgba(255,255,255,.1);--t0_3:rgba(255,255,255,.3);--t0_5:rgba(255,255,255,.5)}
+html body .nvx{font-family:'Outfit',sans-serif}
+html body .nvx .nvn-name{align-items:flex-start}
+html body .nvx .nvn-sub{text-transform:uppercase}
+@media(max-width:768px){html body .nvx{grid-template-columns:auto 1fr}}
+</style>
 </head>
 <body>
 
-<nav class="navbar">
-  <div class="brand">NIRVO AI<span>BY NIR ACADEMY</span></div>
-  <a href="index.html" class="back-btn">← Back to Home</a>
+<nav class="nvx" id="nvx" aria-label="Main">
+  <div class="nvn-brand-wrap"><a class="nvn-brand" href="index.html" aria-label="NIRVO home"><span class="nvn-logo"><img src="icons/icon-192.png" alt=""></span><span class="nvn-name"><span class="nvn-word">NIR<b>VO</b></span><span class="nvn-sub">BY NIR ACADEMY</span></span></a></div>
+  <div class="nav-cta"><a href="index.html" class="back-btn nvn-chip">← Back to Home</a></div>
 </nav>
 
 <div class="container">
@@ -171,5 +327,8 @@
   <a href="privacy.html">Privacy Policy</a>
 </footer>
 
+<script id="nvx-header-js">
+(function(){var n=document.getElementById('nvx');if(!n)return;var on=false;function f(){var s=(window.pageYOffset||document.documentElement.scrollTop)>8;if(s!==on){on=s;n.classList.toggle('is-stuck',s)}}f();window.addEventListener('scroll',f,{passive:true})})();
+</script>
 </body>
 </html>
