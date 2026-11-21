@@ -359,6 +359,31 @@ h1:focus,h2:focus{outline:none}
 .notice.warn{border-color:rgba(242,179,92,.55);color:var(--warn)}
 .res-actions{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:28px}
 </style>
+<style id="nvx-header">
+/* NIRVO header — same visual standard as index.html, using this page's own accent tokens (visual only; markup, ids and handlers unchanged) */
+html body header.top{min-height:72px;gap:16px;padding-block:env(safe-area-inset-top) 0;padding-inline:clamp(16px,4vw,60px);z-index:50;background:color-mix(in srgb,var(--bg) 72%,transparent);-webkit-backdrop-filter:blur(18px) saturate(1.6);backdrop-filter:blur(18px) saturate(1.6);border-block-end:1px solid var(--line);transition:min-height .3s var(--ease),background .3s,box-shadow .3s}
+html body header.top::after{content:"";position:absolute;inset-inline:0;bottom:-1px;height:1px;background:linear-gradient(90deg,transparent,rgba(var(--pk-rgb),.55),transparent);opacity:0;transition:opacity .3s;pointer-events:none}
+html body header.top.is-stuck{min-height:60px;background:color-mix(in srgb,var(--bg) 90%,transparent);box-shadow:0 12px 34px rgba(0,0,0,.28)}
+html body header.top.is-stuck::after{opacity:1}
+:root[data-theme="light"] body header.top.is-stuck{box-shadow:0 12px 30px rgba(20,23,43,.10)}
+html body .top .brand{gap:12px;border-radius:14px;transition:opacity .2s}
+html body .top .brand:hover{opacity:.9}
+html body .top .brand img{width:42px;height:42px;border-radius:13px;object-fit:contain;background:#000;border:1px solid rgba(var(--pk-rgb),.4);box-shadow:0 0 0 1px rgba(var(--pk-rgb),.1),0 6px 20px rgba(var(--pk-rgb),.25);transition:transform .35s var(--ease)}
+html body .top .brand:hover img{transform:rotate(-4deg) scale(1.05)}
+html body .top .brand b{font-family:var(--font);font-size:19px;font-weight:600;letter-spacing:.3em;line-height:1;color:var(--pk2)}
+html body .top .brand span{margin-top:5px;font-size:9.5px;font-weight:500;letter-spacing:.3em}
+html body .top .chip{min-height:42px;padding:0 16px;gap:8px;font-weight:600;letter-spacing:.04em}
+html body .top .theme-btn{width:42px;height:42px}
+html body .top .theme-btn:hover{color:var(--pk2);border-color:rgba(var(--pk-rgb),.5);background:rgba(var(--pk-rgb),.08)}
+html body .top .lang{background:var(--card2);box-shadow:inset 0 1px 0 var(--line)}
+html body .top .top-r{gap:10px}
+html body .top :focus-visible{outline:2px solid var(--pk);outline-offset:2px}
+html[dir="rtl"] body .top .brand span,html[lang="fa"] body .top .brand span{letter-spacing:0;text-transform:none}
+@media(max-width:768px){html body header.top{min-height:60px;padding-inline:14px}html body .top .brand img{width:38px;height:38px;border-radius:12px}html body .top .brand b{font-size:17px;letter-spacing:.22em}}
+@media(max-width:560px){html body .top .top-r{gap:6px}html body .top .chip{padding:0 12px}}
+@media(max-width:400px){html body .top .brand{gap:8px}html body .top .brand b{font-size:15.5px;letter-spacing:.12em}html body .top .lang button{min-width:32px}}
+@media(prefers-reduced-motion:reduce){html body header.top,html body header.top *{transition-duration:.01ms!important}}
+</style>
 </head>
 <body>
 
@@ -377,6 +402,10 @@ h1:focus,h2:focus{outline:none}
     </a>
   </div>
 </header>
+<script id="nvx-header-js">
+(function(){var n=document.querySelector('header.top');if(!n)return;var on=false;function f(){var s=(window.pageYOffset||document.documentElement.scrollTop)>8;if(s!==on){on=s;n.classList.toggle('is-stuck',s)}}f();window.addEventListener('scroll',f,{passive:true})})();
+</script>
+
 
 <main id="main">
   <ol class="steps" id="steps" aria-label="Progress">
